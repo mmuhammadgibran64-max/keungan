@@ -1,0 +1,78 @@
+/**
+ * Google Apps Script (Kode.gs)
+ * Berfungsi untuk menghubungkan formulir login (Index.html) dengan Google Sheet Anda.
+ * Disesuaikan untuk Google Sheet "login masuk aplikasi" -> Lembar "login"
+ */
+
+/**
+ * 1. FUNGSI TES MANUAL (Diletakkan paling atas agar mudah dipilih)
+ * Langkah Aktivasi & Otorisasi:
+ * a. Klik ikon "Simpan" (disket) di atas.
+ * b. Di menu dropdown fungsi (sebelah kanan tombol 'Debug'), PILIH "testSimpan" (bukan doGet).
+ * c. Klik tombol "Jalankan" (Run).
+ * d. Selesaikan proses Otorisasi Izin Akses yang muncul pada layar Anda.
+ */
+function testSimpan() {
+  var hasil = simpanDataKeSheet("Tes Koneksi Baru", "08123456789");
+  Logger.log("=== HASIL EKSEKUSI PENGUJIAN ===");
+  Logger.log(JSON.stringify(hasil));
+}
+
+/**
+ * 2. Fungsi Utama untuk melayani Web App (menampilkan halaman login)
+ * JANGAN dijalankan langsung melalui tombol "Jalankan" di editor.
+ * Fungsi ini akan dipanggil otomatis oleh Google saat link Web App diakses.
+ */
+function doGet() {
+  return HtmlService.createTemplateFromFile('Index')
+      .evaluate()
+      .setTitle('Login Aplikasi')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+/**
+ * 3. Fungsi utama untuk menyimpan data Nama & WA ke Sheet Anda
+ * @param {string} nama - Input Nama dari Form
+ * @param {string} wa - Input WhatsApp dari Form
+ */
+function simpanDataKeSheet(nama, wa) {
+  try {
+    // ID Spreadsheet target Anda dari gambar screen Anda
+    var spreadsheetId = "19SJPZGjEXkCkqKfQVAIj-gdXtU_vkOJk2TmxwPVU-UY";
+    
+    // Membuka Spreadsheet Anda langsung menggunakan ID spesifik Anda
+    var ss = SpreadsheetApp.openById(spreadsheetId);
+    
+    // Mengambil sheet bernama "login"
+    var sheet = ss.getSheetByName("login");
+    
+    // Jika sheet "login" belum ada atau terhapus, buat baru secara otomatis
+    if (!sheet) {
+      sheet = ss.insertSheet("login");
+    }
+    
+    // Periksa apakah baris pertama (Header) sudah ada. Jika kosong, buat header baru
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(["Timestamp", "Nama Lengkap", "Nomor WhatsApp"]);
+    }
+    
+    // Membuat stempel waktu otomatis dengan Zona Waktu Jakarta (WIB)
+    var timestamp = Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd HH:mm:ss");
+    
+    // Menuliskan data ke baris terakhir sheet (Kolom A: Timestamp, B: Nama, C: WA)
+    sheet.appendRow([timestamp, nama, wa]);
+    
+    // Memastikan semua data yang tertunda langsung ditulis ke sheet tanpa ditunda oleh sistem
+    SpreadsheetApp.flush();
+    
+    return {
+      success: true,
+      message: "Data " + nama + " berhasil disimpan ke Google Sheets!"
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Gagal menyimpan data: " + error.toString()
+    };
+  }
+}
