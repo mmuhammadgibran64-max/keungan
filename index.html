@@ -1,78 +1,227 @@
-/**
- * Google Apps Script (Kode.gs)
- * Berfungsi untuk menghubungkan formulir login (Index.html) dengan Google Sheet Anda.
- * Disesuaikan untuk Google Sheet "login masuk aplikasi" -> Lembar "login"
- */
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login WhatsApp</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100 min-h-screen flex items-center justify-center p-4">
 
-/**
- * 1. FUNGSI TES MANUAL (Diletakkan paling atas agar mudah dipilih)
- * Langkah Aktivasi & Otorisasi:
- * a. Klik ikon "Simpan" (disket) di atas.
- * b. Di menu dropdown fungsi (sebelah kanan tombol 'Debug'), PILIH "testSimpan" (bukan doGet).
- * c. Klik tombol "Jalankan" (Run).
- * d. Selesaikan proses Otorisasi Izin Akses yang muncul pada layar Anda.
- */
-function testSimpan() {
-  var hasil = simpanDataKeSheet("Tes Koneksi Baru", "08123456789");
-  Logger.log("=== HASIL EKSEKUSI PENGUJIAN ===");
-  Logger.log(JSON.stringify(hasil));
-}
+    <!-- Container Utama -->
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-emerald-100/50 overflow-hidden transition-all duration-300 hover:shadow-2xl">
+        
+        <!-- Header Card -->
+        <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-8 text-white relative overflow-hidden">
+            <!-- Dekorasi Lingkaran Latar Belakang -->
+            <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+            <div class="absolute -left-10 -bottom-10 w-24 h-24 bg-teal-400/20 rounded-full blur-lg"></div>
+            
+            <div class="relative z-10 flex flex-col items-center text-center">
+                <!-- Logo / Icon WA Palsu yang Elegan -->
+                <div class="w-16 h-16 bg-white/15 backdrop-blur-md rounded-2xl flex items-center justify-center mb-4 shadow-inner">
+                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.458 5.704 1.459h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold tracking-wide">Selamat Datang</h1>
+                <p class="text-emerald-100 text-sm mt-1">Silakan masuk menggunakan data Anda</p>
+            </div>
+        </div>
 
-/**
- * 2. Fungsi Utama untuk melayani Web App (menampilkan halaman login)
- * JANGAN dijalankan langsung melalui tombol "Jalankan" di editor.
- * Fungsi ini akan dipanggil otomatis oleh Google saat link Web App diakses.
- */
-function doGet() {
-  return HtmlService.createTemplateFromFile('Index')
-      .evaluate()
-      .setTitle('Login Aplikasi')
-      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-}
+        <!-- Form & Konten Utama -->
+        <div class="p-8" id="form-container">
+            <!-- Alert Error Pengiriman -->
+            <div id="submitErrorAlert" class="hidden mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-xl text-sm text-red-700">
+                <span class="font-bold">Gagal mengirim data!</span> Silakan periksa koneksi internet Anda dan coba lagi.
+            </div>
 
-/**
- * 3. Fungsi utama untuk menyimpan data Nama & WA ke Sheet Anda
- * @param {string} nama - Input Nama dari Form
- * @param {string} wa - Input WhatsApp dari Form
- */
-function simpanDataKeSheet(nama, wa) {
-  try {
-    // ID Spreadsheet target Anda dari gambar screen Anda
-    var spreadsheetId = "19SJPZGjEXkCkqKfQVAIj-gdXtU_vkOJk2TmxwPVU-UY";
-    
-    // Membuka Spreadsheet Anda langsung menggunakan ID spesifik Anda
-    var ss = SpreadsheetApp.openById(spreadsheetId);
-    
-    // Mengambil sheet bernama "login"
-    var sheet = ss.getSheetByName("login");
-    
-    // Jika sheet "login" belum ada atau terhapus, buat baru secara otomatis
-    if (!sheet) {
-      sheet = ss.insertSheet("login");
-    }
-    
-    // Periksa apakah baris pertama (Header) sudah ada. Jika kosong, buat header baru
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(["Timestamp", "Nama Lengkap", "Nomor WhatsApp"]);
-    }
-    
-    // Membuat stempel waktu otomatis dengan Zona Waktu Jakarta (WIB)
-    var timestamp = Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd HH:mm:ss");
-    
-    // Menuliskan data ke baris terakhir sheet (Kolom A: Timestamp, B: Nama, C: WA)
-    sheet.appendRow([timestamp, nama, wa]);
-    
-    // Memastikan semua data yang tertunda langsung ditulis ke sheet tanpa ditunda oleh sistem
-    SpreadsheetApp.flush();
-    
-    return {
-      success: true,
-      message: "Data " + nama + " berhasil disimpan ke Google Sheets!"
-    };
-  } catch (error) {
-    return {
-      success: false,
-      message: "Gagal menyimpan data: " + error.toString()
-    };
-  }
-}
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-6">
+                <!-- Input Nama -->
+                <div>
+                    <label for="nama" class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                            <!-- Icon User -->
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </span>
+                        <input type="text" id="nama" name="nama" required placeholder="Masukkan nama lengkap" 
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-gray-800 placeholder-gray-400">
+                    </div>
+                    <p id="namaError" class="text-xs text-red-500 mt-1 hidden">Nama harus diisi minimal 3 karakter.</p>
+                </div>
+
+                <!-- Input WA -->
+                <div>
+                    <label for="wa" class="block text-sm font-semibold text-gray-700 mb-2">Nomor WhatsApp</label>
+                    <div class="relative flex rounded-xl border border-gray-300 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 transition-all overflow-hidden">
+                        <span class="bg-gray-100 px-4 py-3 text-gray-600 font-medium flex items-center border-r border-gray-200 text-sm select-none">
+                            +62
+                        </span>
+                        <input type="tel" id="wa" name="wa" required placeholder="812345678xx" 
+                            class="w-full px-4 py-3 focus:outline-none text-gray-800 placeholder-gray-400 text-base"
+                            oninput="formatPhoneNumber(this)">
+                    </div>
+                    <p id="waError" class="text-xs text-red-500 mt-1 hidden font-normal">Masukkan nomor WhatsApp yang valid (minimal 9 digit setelah kode negara).</p>
+                    <p class="text-[11px] text-gray-400 mt-1.5">Contoh: 81234567890 (Tanpa angka 0 di depan)</p>
+                </div>
+
+                <!-- Tombol Submit -->
+                <button type="submit" id="submitBtn"
+                    class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
+                    <span id="btnText">Masuk Sekarang</span>
+                    <!-- Icon Arrow Right -->
+                    <svg class="w-5 h-5 transition-transform duration-200" id="arrowIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                    <!-- Spinner Loading (Tersembunyi secara default) -->
+                    <svg class="animate-spin h-5 w-5 text-white hidden" id="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <!-- Tampilan Sukses (Akan muncul setelah disubmit) -->
+        <div class="p-8 hidden text-center" id="success-container">
+            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner animate-bounce">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Data Terkirim!</h2>
+            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
+                Halo <span id="display-nama" class="font-semibold text-emerald-600"></span>, selamat datang kembali! Data Anda telah berhasil disimpan menggunakan nomor WhatsApp <span id="display-wa" class="font-semibold text-emerald-600"></span>.
+            </p>
+            <div class="space-y-3">
+                <button onclick="resetForm()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 rounded-xl transition-colors">
+                    Keluar / Reset Form
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer Card -->
+        <div class="bg-gray-50 px-8 py-4 border-t border-gray-100 text-center">
+            <p class="text-xs text-gray-400">Hubungi admin jika menemui kendala teknis.</p>
+        </div>
+    </div>
+
+    <script>
+        // URL Google Apps Script Web App Baru
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyN4pTBlLVsIPy43vUTMhiPn_scqzwYUuc43Hceti8-refD3lX_QGOhwNbpDmyDyr6x/exec';
+
+        // Membatasi input agar hanya angka saja yang masuk di input WA
+        // Dan menghapus angka 0 di depan secara otomatis
+        function formatPhoneNumber(input) {
+            input.value = input.value.replace(/[^0-9]/g, '');
+            if (input.value.startsWith('0')) {
+                input.value = input.value.substring(1);
+            }
+        }
+
+        // Fungsi penanganan submit form
+        function handleLogin(event) {
+            event.preventDefault();
+
+            // Ambil element input & error
+            const namaInput = document.getElementById('nama');
+            const waInput = document.getElementById('wa');
+            const namaError = document.getElementById('namaError');
+            const waError = document.getElementById('waError');
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const arrowIcon = document.getElementById('arrowIcon');
+            const spinner = document.getElementById('spinner');
+            const errorAlert = document.getElementById('submitErrorAlert');
+
+            // Sembunyikan alert error di awal pengiriman
+            errorAlert.classList.add('hidden');
+
+            let isValid = true;
+
+            // Validasi Nama (minimal 3 karakter)
+            if (namaInput.value.trim().length < 3) {
+                namaError.classList.remove('hidden');
+                namaInput.classList.add('border-red-500', 'focus:ring-red-500', 'focus:border-red-500');
+                isValid = false;
+            } else {
+                namaError.classList.add('hidden');
+                namaInput.classList.remove('border-red-500', 'focus:ring-red-500', 'focus:border-red-500');
+            }
+
+            // Validasi WhatsApp (minimal 9 digit angka setelah +62)
+            if (waInput.value.length < 9) {
+                waError.classList.remove('hidden');
+                waInput.parentElement.classList.add('border-red-500', 'focus-within:ring-red-500', 'focus-within:border-red-500');
+                isValid = false;
+            } else {
+                waError.classList.add('hidden');
+                waInput.parentElement.classList.remove('border-red-500', 'focus-within:ring-red-500', 'focus-within:border-red-500');
+            }
+
+            // Jika validasi lolos, lakukan post data ke Google Sheets
+            if (isValid) {
+                // Nonaktifkan tombol dan tampilkan spinner
+                submitBtn.disabled = true;
+                btnText.textContent = "Sedang Memproses...";
+                arrowIcon.classList.add('hidden');
+                spinner.classList.remove('hidden');
+
+                const namaValue = namaInput.value.trim();
+                const waValue = '+62' + waInput.value;
+
+                // Mempersiapkan Form Data untuk dikirim
+                const formData = new FormData();
+                formData.append('nama', namaValue);
+                formData.append('wa', waValue);
+
+                // Kirim data ke Google Apps Script
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Mencegah error CORS saat berinteraksi dengan Google Web App redirect
+                    body: formData
+                })
+                .then(() => {
+                    // Mengisi info ke card sukses
+                    document.getElementById('display-nama').textContent = namaValue;
+                    document.getElementById('display-wa').textContent = waValue;
+
+                    // Transisi ke tampilan sukses
+                    document.getElementById('form-container').classList.add('hidden');
+                    document.getElementById('success-container').classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error saat mengirim data:', error);
+                    errorAlert.classList.remove('hidden');
+                })
+                .finally(() => {
+                    // Mengembalikan keadaan tombol seperti semula
+                    submitBtn.disabled = false;
+                    btnText.textContent = "Masuk Sekarang";
+                    arrowIcon.classList.remove('hidden');
+                    spinner.classList.add('hidden');
+                });
+            }
+        }
+
+        // Fungsi mereset form ke kondisi semula
+        function resetForm() {
+            document.getElementById('loginForm').reset();
+            document.getElementById('form-container').classList.remove('hidden');
+            document.getElementById('success-container').classList.add('hidden');
+            document.getElementById('submitErrorAlert').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
