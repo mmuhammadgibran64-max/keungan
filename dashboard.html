@@ -26,7 +26,13 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-lg font-bold text-slate-900">Dashboard Keuangan</h1>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-lg font-bold text-slate-900">Dashboard Keuangan</h1>
+                        <!-- Tombol Icon Uang Keluar (💸) Berbentuk Icon Tanpa Isi di Layar Utama -->
+                        <button onclick="openOutcomeModal()" title="Catat Uang Keluar" class="w-8 h-8 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center hover:bg-rose-200 active:scale-95 transition-all text-base shadow-sm">
+                            💸
+                        </button>
+                    </div>
                     <p class="text-xs text-slate-500">Halo, <span id="user-display-name" class="font-semibold text-emerald-600">Pengguna</span> 👋</p>
                 </div>
             </div>
@@ -50,12 +56,12 @@
     <main class="max-w-7xl mx-auto p-6 space-y-8">
         
         <!-- Summary Cards Grid -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <!-- Balance Card -->
             <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 text-white relative overflow-hidden shadow-xl shadow-slate-950/10 border border-slate-700/50">
                 <div class="absolute -right-12 -bottom-12 w-40 h-40 bg-white/5 rounded-full blur-2xl"></div>
                 <p class="text-sm text-slate-400 font-medium mb-1">Total Saldo Keuangan</p>
-                <h3 class="text-3xl font-extrabold tracking-tight text-white mb-4" id="total-balance">Rp 0</h3>
+                <h3 class="text-2xl font-extrabold tracking-tight text-white mb-4" id="total-balance">Rp 0</h3>
                 <div class="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full w-fit">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
@@ -68,14 +74,30 @@
             <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-md flex items-center justify-between gap-4">
                 <div class="space-y-2">
                     <p class="text-sm text-slate-400 font-medium">Total Uang Masuk</p>
-                    <h3 class="text-2xl font-bold text-slate-900" id="total-income">Rp 0</h3>
+                    <h3 class="text-2xl font-bold text-slate-900 text-emerald-600" id="total-income">Rp 0</h3>
                     <p class="text-xs text-emerald-600 font-semibold flex items-center gap-1">
-                        <span class="flex h-2 w-2 rounded-full bg-emerald-500"></span> Berhasil Tercatat
+                        <span class="flex h-2 w-2 rounded-full bg-emerald-500"></span> Tercatat
                     </p>
                 </div>
-                <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Total Outcome Card (NEW!) -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-md flex items-center justify-between gap-4">
+                <div class="space-y-2">
+                    <p class="text-sm text-slate-400 font-medium">Total Uang Keluar</p>
+                    <h3 class="text-2xl font-bold text-rose-600" id="total-outcome">Rp 0</h3>
+                    <p class="text-xs text-rose-500 font-semibold flex items-center gap-1">
+                        <span class="flex h-2 w-2 rounded-full bg-rose-500"></span> Tercatat
+                    </p>
+                </div>
+                <div class="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-600">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110 18 9 9 0 010-18z"></path>
                     </svg>
                 </div>
             </div>
@@ -87,8 +109,8 @@
                     <h3 class="text-2xl font-bold text-slate-900" id="total-transactions">0 Kali</h3>
                     <p class="text-xs text-indigo-600 font-semibold" id="last-record-time">Belum ada aktivitas</p>
                 </div>
-                <div class="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <div class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                     </svg>
                 </div>
@@ -102,15 +124,13 @@
             <div class="lg:col-span-1 bg-white rounded-3xl border border-slate-100 shadow-md p-6 h-fit">
                 <div class="flex items-center gap-2 mb-6">
                     <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-lg">💰</div>
-                    <h3 class="text-lg font-bold text-slate-900">Menu: Catat Uang Masuk</h3>
+                    <h3 class="text-lg font-bold text-slate-900">Catat Uang Masuk</h3>
                 </div>
 
-                <!-- Alert Sukses Input -->
                 <div id="inputSuccessAlert" class="hidden mb-4 p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded-r-xl text-xs text-emerald-800">
                     <span class="font-bold">Sukses!</span> Pendapatan baru berhasil disimpan ke Google Sheets.
                 </div>
                 
-                <!-- Alert Gagal Input -->
                 <div id="inputErrorAlert" class="hidden mb-4 p-4 bg-rose-50 border-l-4 border-rose-500 rounded-r-xl text-xs text-rose-800">
                     <span class="font-bold">Error!</span> Gagal mengunggah data ke Google Sheets. Coba lagi.
                 </div>
@@ -173,7 +193,7 @@
                     <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
                         <div class="flex items-center gap-2">
                             <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center text-lg">📊</div>
-                            <h3 class="text-lg font-bold text-slate-900">Aliran Dana Masuk Terbaru</h3>
+                            <h3 class="text-lg font-bold text-slate-900">Riwayat Mutasi</h3>
                         </div>
                         <button onclick="clearHistory()" class="text-xs text-rose-500 font-semibold hover:bg-rose-50 px-3 py-1.5 rounded-lg transition-colors">
                             Hapus Riwayat
@@ -185,8 +205,7 @@
                             <thead>
                                 <tr class="border-b border-slate-100">
                                     <th class="pb-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Tanggal & Waktu</th>
-                                    <th class="pb-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Kategori</th>
-                                    <th class="pb-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Keterangan</th>
+                                    <th class="pb-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Kategori / Keterangan</th>
                                     <th class="pb-3 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">Nominal</th>
                                 </tr>
                             </thead>
@@ -203,7 +222,6 @@
                                 </svg>
                             </div>
                             <h4 class="text-slate-700 font-semibold">Belum Ada Catatan Keuangan</h4>
-                            <p class="text-xs text-slate-400 mt-1 max-w-xs">Silakan catat pendapatan pertama Anda di formulir sebelah kiri.</p>
                         </div>
                     </div>
                 </div>
@@ -222,23 +240,57 @@
         </section>
     </main>
 
+    <!-- 🗓️ Pop-up Modal Box: Catat Uang Keluar (Hanya muncul jika Icon 💸 di atas diklik) -->
+    <div id="outcomeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-2xl p-6 w-full max-w-md animate-in fade-in zoom-in-95 duration-150">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center text-lg">💸</div>
+                    <h3 class="text-lg font-bold text-slate-900">Catat Uang Keluar</h3>
+                </div>
+                <button onclick="closeOutcomeModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold p-1">&times;</button>
+            </div>
+
+            <form id="outcomeForm" onsubmit="addOutcome(event)" class="space-y-5">
+                <div>
+                    <label for="outcomeAmount" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Nominal Pengeluaran</label>
+                    <div class="relative flex rounded-xl border border-slate-200 focus-within:ring-2 focus-within:ring-rose-500 transition-all overflow-hidden">
+                        <span class="bg-slate-50 px-3.5 py-3 text-slate-600 font-semibold flex items-center text-sm">Rp</span>
+                        <input type="number" id="outcomeAmount" required placeholder="Contoh: 25000" class="w-full px-4 py-3 focus:outline-none text-slate-800 font-semibold">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="outcomeNotes" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Keterangan / Keperluan</label>
+                    <textarea id="outcomeNotes" rows="3" required placeholder="Misal: Beli makan siang..." class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 text-slate-700 resize-none"></textarea>
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closeOutcomeModal()" class="w-1/3 border border-slate-200 text-slate-500 font-semibold py-3 rounded-xl hover:bg-slate-50 transition-all active:scale-[0.98]">Batal</button>
+                    <button type="submit" id="saveOutcomeBtn" class="w-2/3 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-semibold py-3 rounded-xl shadow-lg shadow-rose-500/20 transition-all transform active:scale-[0.98]">
+                        <span id="saveOutcomeBtnText">Simpan Keluar</span>
+                        <svg class="animate-spin h-5 w-5 text-white hidden mx-auto" id="saveOutcomeSpinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         // URL Google Apps Script Web App Baru
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9KR-FxfqTipS0bfnPmBEIemYXgauY1Dm7z3B8KTTbfbaSQ-cjANpVuffaCBJinGRl/exec';
+        
+        let transactions = JSON.parse(localStorage.getItem('transactions_data') || '[]');
 
-        // Data internal penyimpanan state keuangan (In-Memory dan LocalStorage)
-        let transactions = [];
-        let totalIncome = 0;
-
-        // Ambil nama pengguna dari halaman login sebelumnya
         window.onload = function() {
             const userName = localStorage.getItem('user_name') || 'Pengguna Baru';
             document.getElementById('user-display-name').textContent = userName;
 
             // Muat data transaksi jika ada di local storage
-            const savedTransactions = localStorage.getItem('transactions_data');
-            if (savedTransactions) {
-                transactions = JSON.parse(savedTransactions);
+            if (transactions.length > 0) {
                 updateDashboardData();
             } else {
                 toggleEmptyState();
@@ -280,6 +332,16 @@
             }).format(number);
         }
 
+        // Modal Controls
+        function openOutcomeModal() { 
+            document.getElementById('outcomeModal').classList.remove('hidden'); 
+        }
+        
+        function closeOutcomeModal() { 
+            document.getElementById('outcomeModal').classList.add('hidden'); 
+            document.getElementById('outcomeForm').reset(); 
+        }
+
         // Event listener saat menambahkan uang masuk
         function addIncome(event) {
             event.preventDefault();
@@ -291,8 +353,6 @@
             const saveBtn = document.getElementById('saveBtn');
             const saveBtnText = document.getElementById('saveBtnText');
             const saveSpinner = document.getElementById('saveSpinner');
-            const successAlert = document.getElementById('inputSuccessAlert');
-            const errorAlert = document.getElementById('inputErrorAlert');
 
             const nominal = parseFloat(amountInput.value);
             const category = categorySelect.value;
@@ -300,94 +360,117 @@
 
             if (!nominal || isNaN(nominal) || !category) return;
 
-            // Sembunyikan alert di awal
-            successAlert.classList.add('hidden');
-            errorAlert.classList.add('hidden');
+            toggleLoading('income', true);
+            sendToSheets(nominal, category, notes, 'Pemasukan', 'income');
+        }
 
-            // Ambil info nama & wa dari localStorage
+        // Event listener saat menambahkan uang keluar
+        function addOutcome(event) {
+            event.preventDefault();
+
+            const nominal = parseFloat(document.getElementById('outcomeAmount').value);
+            const notes = document.getElementById('outcomeNotes').value.trim() || 'Tanpa Keterangan';
+
+            if (!nominal || isNaN(nominal)) return;
+
+            toggleLoading('outcome', true);
+            sendToSheets(-nominal, 'Pengeluaran', notes, 'Pengeluaran', 'outcome');
+        }
+
+        // Handler Loading Animasi
+        function toggleLoading(formType, isLoading) {
+            if (formType === 'income') {
+                const saveBtnText = document.getElementById('saveBtnText');
+                const saveSpinner = document.getElementById('saveSpinner');
+                const saveBtn = document.getElementById('saveBtn');
+                if (isLoading) {
+                    saveBtn.disabled = true;
+                    saveBtnText.classList.add('hidden');
+                    saveSpinner.classList.remove('hidden');
+                } else {
+                    saveBtn.disabled = false;
+                    saveBtnText.classList.remove('hidden');
+                    saveSpinner.classList.add('hidden');
+                }
+            } else {
+                const saveBtnText = document.getElementById('saveOutcomeBtnText');
+                const saveSpinner = document.getElementById('saveOutcomeSpinner');
+                const saveBtn = document.getElementById('saveOutcomeBtn');
+                if (isLoading) {
+                    saveBtn.disabled = true;
+                    saveBtnText.classList.add('hidden');
+                    saveSpinner.classList.remove('hidden');
+                } else {
+                    saveBtn.disabled = false;
+                    saveBtnText.classList.remove('hidden');
+                    saveSpinner.classList.add('hidden');
+                }
+            }
+        }
+
+        // Mengirimkan Transaksi ke Google Sheets & LocalStorage
+        function sendToSheets(nominal, category, notes, type, formType) {
+            const timeString = new Date().toLocaleString('id-ID');
             const userName = localStorage.getItem('user_name') || 'Anonim';
             const userWa = localStorage.getItem('user_wa') || 'Tidak Diketahui';
 
-            // Objek transaksi baru
-            const now = new Date();
-            const formattedTime = now.toLocaleDateString('id-ID', {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric'
-            }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const payload = new URLSearchParams({
+                nama: userName,
+                wa: userWa,
+                nominal: Math.abs(nominal), 
+                kategori: category, 
+                keterangan: notes,
+                tanggal: timeString
+            });
 
-            // Tampilkan loading spinner pada form simpan
-            saveBtn.disabled = true;
-            saveBtnText.classList.add('hidden');
-            saveSpinner.classList.remove('hidden');
-
-            // Format pengiriman data menggunakan URLSearchParams
-            const payload = new URLSearchParams();
-            payload.append('nama', userName);
-            payload.append('wa', userWa);
-            payload.append('nominal', nominal);
-            payload.append('kategori', category);
-            payload.append('keterangan', notes);
-            payload.append('tanggal', formattedTime);
-
-            // Kirim data transaksi secara real-time ke Google Sheets
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors', // Menghindari error CORS browser saat berinteraksi dengan Google Scripts
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: payload
-            })
+            fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: payload })
             .then(() => {
-                // Tambahkan transaksi ke penyimpanan lokal secara instan pasca-kirim
-                const newTransaction = {
-                    id: Date.now(),
-                    time: formattedTime,
-                    rawTime: now.getTime(),
-                    category: category,
-                    notes: notes,
-                    amount: nominal
-                };
-
-                // Tambahkan ke array state paling atas
-                transactions.unshift(newTransaction);
-
-                // Simpan ke localStorage
+                // Berhasil kirim, masukkan ke local storage
+                transactions.unshift({ 
+                    id: Date.now(), 
+                    time: timeString, 
+                    category: category, 
+                    notes: notes, 
+                    amount: nominal, 
+                    type: type 
+                });
+                
                 localStorage.setItem('transactions_data', JSON.stringify(transactions));
+                updateDashboardData();
 
-                // Tampilkan alert sukses input singkat
+                // Alert Sukses Input sesuai jenis form
+                const successAlert = document.getElementById('inputSuccessAlert');
                 successAlert.classList.remove('hidden');
                 setTimeout(() => successAlert.classList.add('hidden'), 4000);
 
-                // Reset form input
-                amountInput.value = '';
-                categorySelect.selectedIndex = 0;
-                notesInput.value = '';
-
-                // Perbarui grafik UI Dashboard
-                updateDashboardData();
+                if (formType === 'income') {
+                    document.getElementById('incomeForm').reset();
+                } else {
+                    document.getElementById('outcomeForm').reset();
+                    closeOutcomeModal();
+                }
             })
             .catch(err => {
-                console.error('Gagal mengirim data pendapatan:', err);
+                console.error('Error:', err);
+                const errorAlert = document.getElementById('inputErrorAlert');
                 errorAlert.classList.remove('hidden');
+                setTimeout(() => errorAlert.classList.add('hidden'), 4000);
             })
             .finally(() => {
-                // Kembalikan tombol seperti semula
-                saveBtn.disabled = false;
-                saveBtnText.classList.remove('hidden');
-                saveSpinner.classList.add('hidden');
+                toggleLoading(formType, false);
             });
         }
 
         // Fungsi memperbarui seluruh data visual dasbor
         function updateDashboardData() {
-            // Hitung total uang masuk
-            totalIncome = transactions.reduce((acc, current) => acc + current.amount, 0);
+            let balance = transactions.reduce((a, b) => a + b.amount, 0);
+            let totalIn = transactions.filter(t => t.amount > 0).reduce((a, b) => a + b.amount, 0);
+            let totalOut = Math.abs(transactions.filter(t => t.amount < 0).reduce((a, b) => a + b.amount, 0));
 
             // Perbarui Elemen Atas
-            document.getElementById('total-balance').textContent = formatRupiah(totalIncome);
-            document.getElementById('total-income').textContent = formatRupiah(totalIncome);
+            document.getElementById('total-balance').textContent = formatRupiah(balance);
+            document.getElementById('total-income').textContent = formatRupiah(totalIn);
+            document.getElementById('total-outcome').textContent = formatRupiah(totalOut);
             document.getElementById('total-transactions').textContent = `${transactions.length} Kali`;
 
             // Waktu pencatatan terakhir
@@ -412,11 +495,19 @@
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50/50 transition-colors duration-150';
 
+                const isIncome = tx.amount > 0;
+                const textClass = isIncome ? 'text-emerald-600' : 'text-rose-500';
+                const sign = isIncome ? '+' : '-';
+
                 tr.innerHTML = `
-                    <td class="py-4 text-xs font-semibold text-slate-500">${tx.time}</td>
-                    <td class="py-4 text-sm font-bold text-slate-700">${tx.category}</td>
-                    <td class="py-4 text-xs font-medium text-slate-400">${tx.notes}</td>
-                    <td class="py-4 text-sm font-bold text-emerald-600 text-right">+${formatRupiah(tx.amount)}</td>
+                    <td class="py-4 text-xs font-semibold text-slate-500">${tx.time.split(' ')[1] || tx.time}</td>
+                    <td class="py-4">
+                        <span class="text-sm font-bold text-slate-700">${tx.category}</span>
+                        <p class="text-xs text-slate-400 font-medium">${tx.notes}</p>
+                    </td>
+                    <td class="py-4 text-sm font-bold ${textClass} text-right">
+                        ${sign}${formatRupiah(Math.abs(tx.amount))}
+                    </td>
                 `;
                 tableBody.appendChild(tr);
             });
