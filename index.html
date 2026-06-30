@@ -91,7 +91,7 @@
             </form>
         </div>
 
-        <!-- Tampilan Sukses -->
+        <!-- Tampilan Sukses (Lengkap dengan tombol masuk ke Dashboard) -->
         <div class="p-8 hidden text-center" id="success-container">
             <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner animate-bounce">
                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -100,12 +100,16 @@
             </div>
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Data Terkirim!</h2>
             <p class="text-gray-500 text-sm mb-6 leading-relaxed">
-                Halo <span id="display-nama" class="font-semibold text-emerald-600"></span>, selamat datang kembali! Data Anda telah berhasil dikirim dengan nomor WhatsApp <span id="display-wa" class="font-semibold text-emerald-600"></span>.
+                Halo <span id="display-nama" class="font-semibold text-emerald-600"></span>, selamat datang kembali! Menyiapkan dashboard keuangan Anda secara otomatis...
             </p>
             <div class="space-y-3">
-                <button onclick="resetForm()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 rounded-xl transition-colors">
-                    Keluar / Reset Form
-                </button>
+                <!-- Tombol manual jika pengalihan otomatis lambat -->
+                <a href="dashboard.html" class="inline-flex w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3.5 rounded-xl transition-colors justify-center items-center gap-2 shadow-lg shadow-emerald-500/25">
+                    Masuk ke Dashboard
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
+                    </svg>
+                </a>
             </div>
         </div>
 
@@ -116,7 +120,7 @@
     </div>
 
     <script>
-        // URL Google Apps Script Web App Baru
+        // URL Google Apps Script Web App
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlW0Ie26Z7V3_xJo5R_YXVYIEB7wA5zf7ncEPujoQ7MbUcvMuNMXpKUmlcd2bDH5DH/exec';
 
         // Membatasi input agar hanya angka saja yang masuk di input WA
@@ -179,6 +183,10 @@
                 const namaValue = namaInput.value.trim();
                 const waValue = '+62' + waInput.value;
 
+                // Simpan nama di localStorage untuk digunakan di halaman dashboard
+                localStorage.setItem('user_name', namaValue);
+                localStorage.setItem('user_wa', waValue);
+
                 // Mengubah format kiriman menjadi application/x-www-form-urlencoded
                 const payload = new URLSearchParams();
                 payload.append('nama', namaValue);
@@ -196,11 +204,15 @@
                 .then(() => {
                     // Mengisi info ke card sukses
                     document.getElementById('display-nama').textContent = namaValue;
-                    document.getElementById('display-wa').textContent = waValue;
 
                     // Transisi ke tampilan sukses
                     document.getElementById('form-container').classList.add('hidden');
                     document.getElementById('success-container').classList.remove('hidden');
+
+                    // Alihkan ke dashboard.html otomatis setelah 1.5 detik
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
                 })
                 .catch(error => {
                     console.error('Error saat mengirim data:', error);
@@ -214,14 +226,6 @@
                     spinner.classList.add('hidden');
                 });
             }
-        }
-
-        // Fungsi mereset form ke kondisi semula
-        function resetForm() {
-            document.getElementById('loginForm').reset();
-            document.getElementById('form-container').classList.remove('hidden');
-            document.getElementById('success-container').classList.add('hidden');
-            document.getElementById('submitErrorAlert').classList.add('hidden');
         }
     </script>
 </body>
