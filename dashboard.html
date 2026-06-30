@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Keuangan</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-emerald-50/20 to-slate-100 min-h-screen text-slate-800">
+
+    <!-- Top Navigation Bar -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-30 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <!-- Brand & User Info -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-slate-900">Dashboard Keuangan</h1>
+                    <p class="text-xs text-slate-500">Halo, <span id="user-display-name" class="font-semibold text-emerald-600">Pengguna</span> 👋</p>
+                </div>
+            </div>
+
+            <!-- Jam Digital Real-time & Hari -->
+            <div class="flex items-center gap-4 bg-slate-900 text-slate-100 px-5 py-2.5 rounded-2xl border border-slate-800 shadow-xl shadow-slate-950/10">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
+                    <span class="text-xs text-slate-400 font-medium tracking-wider uppercase" id="current-day">SABTU</span>
+                </div>
+                <div class="w-px h-5 bg-slate-700"></div>
+                <!-- Moving Digital Clock -->
+                <div class="text-lg font-mono font-bold tracking-widest text-emerald-400" id="digital-clock">
+                    00:00:00
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-7xl mx-auto p-6 space-y-8">
+        
+        <!-- Summary Cards Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Balance Card -->
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 text-white relative overflow-hidden shadow-xl shadow-slate-950/10 border border-slate-700/50">
+                <div class="absolute -right-12 -bottom-12 w-40 h-40 bg-white/5 rounded-full blur-2xl"></div>
+                <p class="text-sm text-slate-400 font-medium mb-1">Total Saldo Keuangan</p>
+                <h3 class="text-3xl font-extrabold tracking-tight text-white mb-4" id="total-balance">Rp 0</h3>
+                <div class="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full w-fit">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                    Aktif & Akurat
+                </div>
+            </div>
+
+            <!-- Total Income Card -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-md flex items-center justify-between gap-4">
+                <div class="space-y-2">
+                    <p class="text-sm text-slate-400 font-medium">Total Uang Masuk</p>
+                    <h3 class="text-2xl font-bold text-slate-900" id="total-income">Rp 0</h3>
+                    <p class="text-xs text-emerald-600 font-semibold flex items-center gap-1">
+                        <span class="flex h-2 w-2 rounded-full bg-emerald-500"></span> Berhasil Tercatat
+                    </p>
+                </div>
+                <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Transaction Count Card -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-md flex items-center justify-between gap-4">
+                <div class="space-y-2">
+                    <p class="text-sm text-slate-400 font-medium">Total Transaksi</p>
+                    <h3 class="text-2xl font-bold text-slate-900" id="total-transactions">0 Kali</h3>
+                    <p class="text-xs text-indigo-600 font-semibold" id="last-record-time">Belum ada aktivitas</p>
+                </div>
+                <div class="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Workspace Area -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Side: Interactive Input Form (💰 Uang Masuk Menu) -->
+            <div class="lg:col-span-1 bg-white rounded-3xl border border-slate-100 shadow-md p-6 h-fit">
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-lg">💰</div>
+                    <h3 class="text-lg font-bold text-slate-900">Menu: Catat Uang Masuk</h3>
+                </div>
+
+                <!-- Alert Sukses Input -->
+                <div id="inputSuccessAlert" class="hidden mb-4 p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded-r-xl text-xs text-emerald-800">
+                    <span class="font-bold">Sukses!</span> Pendapatan baru berhasil disimpan.
+                </div>
+
+                <form id="incomeForm" onsubmit="addIncome(event)" class="space-y-5">
+                    <!-- Jumlah Nominal -->
+                    <div>
+                        <label for="amount" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Nominal Pendapatan (Rupiah)</label>
+                        <div class="relative flex rounded-xl border border-slate-200 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 transition-all overflow-hidden">
+                            <span class="bg-slate-50 px-3.5 py-3 text-slate-600 font-semibold flex items-center border-r border-slate-150 text-sm">
+                                Rp
+                            </span>
+                            <input type="number" id="amount" required placeholder="Contoh: 150000" 
+                                class="w-full px-4 py-3 focus:outline-none text-slate-800 text-base font-semibold">
+                        </div>
+                    </div>
+
+                    <!-- Kategori -->
+                    <div>
+                        <label for="category" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Kategori Sumber</label>
+                        <select id="category" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-700 bg-white">
+                            <option value="" disabled selected>Pilih Kategori</option>
+                            <option value="Gaji Bulanan">💼 Gaji Bulanan</option>
+                            <option value="Bisnis / Penjualan">📦 Penjualan Toko / Bisnis</option>
+                            <option value="Freelance">💻 Kerja Sampingan</option>
+                            <option value="Investasi">📈 Investasi / Dividen</option>
+                            <option value="Lainnya">🧩 Pendapatan Lain-lain</option>
+                        </select>
+                    </div>
+
+                    <!-- Keterangan Tambahan -->
+                    <div>
+                        <label for="notes" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Keterangan / Memo</label>
+                        <textarea id="notes" rows="3" placeholder="Tulis catatan singkat di sini..." 
+                            class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-700 resize-none"></textarea>
+                    </div>
+
+                    <!-- Tombol Catat Otomatis -->
+                    <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-3 rounded-xl shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Simpan Uang Masuk
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right Side: Recent Transactions & Database -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Riwayat Transaksi -->
+                <div class="bg-white rounded-3xl border border-slate-100 shadow-md p-6">
+                    <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center text-lg">📊</div>
+                            <h3 class="text-lg font-bold text-slate-900">Aliran Dana Masuk Terbaru</h3>
+                        </div>
+                        <button onclick="clearHistory()" class="text-xs text-rose-500 font-semibold hover:bg-rose-50 px-3 py-1.5 rounded-lg transition-colors">
+                            Hapus Riwayat
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-100">
+                                    <th class="pb-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Tanggal & Waktu</th>
+                                    <th class="pb-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Kategori</th>
+                                    <th class="pb-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Keterangan</th>
+                                    <th class="pb-3 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">Nominal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transaction-rows" class="divide-y divide-slate-50">
+                                <!-- Baris dinamis ditambahkan di sini -->
+                            </tbody>
+                        </table>
+                        
+                        <!-- Empty State -->
+                        <div id="empty-state" class="py-12 flex flex-col items-center justify-center text-center hidden">
+                            <div class="w-16 h-16 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center mb-3">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="text-slate-700 font-semibold">Belum Ada Catatan Keuangan</h4>
+                            <p class="text-xs text-slate-400 mt-1 max-w-xs">Silakan catat pendapatan pertama Anda di formulir sebelah kiri.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banner Informasi Singkat -->
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-6 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-emerald-500/10">
+                    <div class="space-y-1 text-center sm:text-left">
+                        <h4 class="font-bold text-lg">Keuangan Terpantau Lebih Sehat</h4>
+                        <p class="text-xs text-emerald-100">Semua data pencatatan Anda tersimpan dengan aman secara internal.</p>
+                    </div>
+                    <button onclick="logout()" class="bg-white/10 hover:bg-white/20 active:scale-[0.97] transition-all px-4 py-2 rounded-xl text-xs font-bold border border-white/25">
+                        Keluar Akun
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Data internal penyimpanan state keuangan (In-Memory dan LocalStorage)
+        let transactions = [];
+        let totalIncome = 0;
+
+        // Ambil nama pengguna dari halaman login sebelumnya
+        window.onload = function() {
+            const userName = localStorage.getItem('user_name') || 'Pengguna Baru';
+            document.getElementById('user-display-name').textContent = userName;
+
+            // Muat data transaksi jika ada di local storage
+            const savedTransactions = localStorage.getItem('transactions_data');
+            if (savedTransactions) {
+                transactions = JSON.parse(savedTransactions);
+                updateDashboardData();
+            } else {
+                toggleEmptyState();
+            }
+
+            // Start live jam digital
+            startLiveClock();
+        };
+
+        // Fungsi memperbarui jam digital secara real-time
+        function startLiveClock() {
+            const days = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
+            
+            function updateClock() {
+                const now = new Date();
+                
+                // Set Hari
+                const dayName = days[now.getDay()];
+                document.getElementById('current-day').textContent = dayName;
+
+                // Format Jam (HH:MM:SS)
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                
+                document.getElementById('digital-clock').textContent = `${hours}:${minutes}:${seconds}`;
+            }
+
+            updateClock(); // Jalankan sekali di awal
+            setInterval(updateClock, 1000); // Perbarui setiap 1 detik
+        }
+
+        // Memformat angka menjadi rupiah
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(number);
+        }
+
+        // Event listener saat menambahkan uang masuk
+        function addIncome(event) {
+            event.preventDefault();
+
+            const amountInput = document.getElementById('amount');
+            const categorySelect = document.getElementById('category');
+            const notesInput = document.getElementById('notes');
+
+            const nominal = parseFloat(amountInput.value);
+            const category = categorySelect.value;
+            const notes = notesInput.value.trim() || 'Tanpa Keterangan';
+
+            if (!nominal || isNaN(nominal) || !category) return;
+
+            // Objek transaksi baru
+            const now = new Date();
+            const formattedTime = now.toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+            const newTransaction = {
+                id: Date.now(),
+                time: formattedTime,
+                rawTime: now.getTime(),
+                category: category,
+                notes: notes,
+                amount: nominal
+            };
+
+            // Tambahkan ke array state (di paling atas)
+            transactions.unshift(newTransaction);
+
+            // Simpan ke localStorage
+            localStorage.setItem('transactions_data', JSON.stringify(transactions));
+
+            // Tampilkan alert sukses input singkat
+            const alertBox = document.getElementById('inputSuccessAlert');
+            alertBox.classList.remove('hidden');
+            setTimeout(() => alertBox.classList.add('hidden'), 3000);
+
+            // Reset form input
+            amountInput.value = '';
+            categorySelect.selectedIndex = 0;
+            notesInput.value = '';
+
+            // Perbarui UI Dasbor
+            updateDashboardData();
+        }
+
+        // Fungsi memperbarui seluruh data visual dasbor
+        function updateDashboardData() {
+            // Hitung total uang masuk
+            totalIncome = transactions.reduce((acc, current) => acc + current.amount, 0);
+
+            // Perbarui Elemen Atas
+            document.getElementById('total-balance').textContent = formatRupiah(totalIncome);
+            document.getElementById('total-income').textContent = formatRupiah(totalIncome);
+            document.getElementById('total-transactions').textContent = `${transactions.length} Kali`;
+
+            // Waktu pencatatan terakhir
+            if (transactions.length > 0) {
+                document.getElementById('last-record-time').textContent = `Terakhir: ${transactions[0].time}`;
+            } else {
+                document.getElementById('last-record-time').textContent = 'Belum ada aktivitas';
+            }
+
+            // Rendertable baris transaksi
+            renderTable();
+        }
+
+        // Fungsi render tabel transaksi
+        function renderTable() {
+            const tableBody = document.getElementById('transaction-rows');
+            tableBody.innerHTML = '';
+
+            toggleEmptyState();
+
+            transactions.forEach(tx => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50/50 transition-colors duration-150';
+
+                tr.innerHTML = `
+                    <td class="py-4 text-xs font-semibold text-slate-500">${tx.time}</td>
+                    <td class="py-4 text-sm font-bold text-slate-700">${tx.category}</td>
+                    <td class="py-4 text-xs font-medium text-slate-400">${tx.notes}</td>
+                    <td class="py-4 text-sm font-bold text-emerald-600 text-right">+${formatRupiah(tx.amount)}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Mengatur visibility empty-state jika tidak ada transaksi
+        function toggleEmptyState() {
+            const emptyState = document.getElementById('empty-state');
+            if (transactions.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+            }
+        }
+
+        // Fungsi untuk menghapus riwayat transaksi
+        function clearHistory() {
+            if (confirm('Apakah Anda yakin ingin menghapus seluruh riwayat keuangan?')) {
+                transactions = [];
+                localStorage.removeItem('transactions_data');
+                updateDashboardData();
+            }
+        }
+
+        // Fungsi Log out (keluar dari dashboard)
+        function logout() {
+            localStorage.removeItem('user_name');
+            localStorage.removeItem('user_wa');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
