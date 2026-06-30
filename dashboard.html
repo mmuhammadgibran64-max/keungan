@@ -7,7 +7,7 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700&display=swap');
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
@@ -107,7 +107,12 @@
 
                 <!-- Alert Sukses Input -->
                 <div id="inputSuccessAlert" class="hidden mb-4 p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded-r-xl text-xs text-emerald-800">
-                    <span class="font-bold">Sukses!</span> Pendapatan baru berhasil disimpan.
+                    <span class="font-bold">Sukses!</span> Pendapatan baru berhasil disimpan ke Google Sheets.
+                </div>
+                
+                <!-- Alert Gagal Input -->
+                <div id="inputErrorAlert" class="hidden mb-4 p-4 bg-rose-50 border-l-4 border-rose-500 rounded-r-xl text-xs text-rose-800">
+                    <span class="font-bold">Error!</span> Gagal mengunggah data ke Google Sheets. Coba lagi.
                 </div>
 
                 <form id="incomeForm" onsubmit="addIncome(event)" class="space-y-5">
@@ -144,11 +149,18 @@
                     </div>
 
                     <!-- Tombol Catat Otomatis -->
-                    <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-3 rounded-xl shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+                    <button type="submit" id="saveBtn" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-3 rounded-xl shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
+                        <span id="saveBtnText" class="flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Simpan Uang Masuk
+                        </span>
+                        <!-- Spinner loading di dalam form simpan -->
+                        <svg class="animate-spin h-5 w-5 text-white hidden" id="saveSpinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        Simpan Uang Masuk
                     </button>
                 </form>
             </div>
@@ -200,7 +212,7 @@
                 <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-6 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-emerald-500/10">
                     <div class="space-y-1 text-center sm:text-left">
                         <h4 class="font-bold text-lg">Keuangan Terpantau Lebih Sehat</h4>
-                        <p class="text-xs text-emerald-100">Semua data pencatatan Anda tersimpan dengan aman secara internal.</p>
+                        <p class="text-xs text-emerald-100">Semua data pencatatan Anda tersimpan dengan aman secara internal dan terbackup ke Google Sheets.</p>
                     </div>
                     <button onclick="logout()" class="bg-white/10 hover:bg-white/20 active:scale-[0.97] transition-all px-4 py-2 rounded-xl text-xs font-bold border border-white/25">
                         Keluar Akun
@@ -211,6 +223,9 @@
     </main>
 
     <script>
+        // URL Google Apps Script Web App Baru
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9KR-FxfqTipS0bfnPmBEIemYXgauY1Dm7z3B8KTTbfbaSQ-cjANpVuffaCBJinGRl/exec';
+
         // Data internal penyimpanan state keuangan (In-Memory dan LocalStorage)
         let transactions = [];
         let totalIncome = 0;
@@ -273,11 +288,25 @@
             const categorySelect = document.getElementById('category');
             const notesInput = document.getElementById('notes');
 
+            const saveBtn = document.getElementById('saveBtn');
+            const saveBtnText = document.getElementById('saveBtnText');
+            const saveSpinner = document.getElementById('saveSpinner');
+            const successAlert = document.getElementById('inputSuccessAlert');
+            const errorAlert = document.getElementById('inputErrorAlert');
+
             const nominal = parseFloat(amountInput.value);
             const category = categorySelect.value;
             const notes = notesInput.value.trim() || 'Tanpa Keterangan';
 
             if (!nominal || isNaN(nominal) || !category) return;
+
+            // Sembunyikan alert di awal
+            successAlert.classList.add('hidden');
+            errorAlert.classList.add('hidden');
+
+            // Ambil info nama & wa dari localStorage
+            const userName = localStorage.getItem('user_name') || 'Anonim';
+            const userWa = localStorage.getItem('user_wa') || 'Tidak Diketahui';
 
             // Objek transaksi baru
             const now = new Date();
@@ -287,33 +316,68 @@
                 year: 'numeric'
             }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-            const newTransaction = {
-                id: Date.now(),
-                time: formattedTime,
-                rawTime: now.getTime(),
-                category: category,
-                notes: notes,
-                amount: nominal
-            };
+            // Tampilkan loading spinner pada form simpan
+            saveBtn.disabled = true;
+            saveBtnText.classList.add('hidden');
+            saveSpinner.classList.remove('hidden');
 
-            // Tambahkan ke array state (di paling atas)
-            transactions.unshift(newTransaction);
+            // Format pengiriman data menggunakan URLSearchParams
+            const payload = new URLSearchParams();
+            payload.append('nama', userName);
+            payload.append('wa', userWa);
+            payload.append('nominal', nominal);
+            payload.append('kategori', category);
+            payload.append('keterangan', notes);
+            payload.append('tanggal', formattedTime);
 
-            // Simpan ke localStorage
-            localStorage.setItem('transactions_data', JSON.stringify(transactions));
+            // Kirim data transaksi secara real-time ke Google Sheets
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Menghindari error CORS browser saat berinteraksi dengan Google Scripts
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: payload
+            })
+            .then(() => {
+                // Tambahkan transaksi ke penyimpanan lokal secara instan pasca-kirim
+                const newTransaction = {
+                    id: Date.now(),
+                    time: formattedTime,
+                    rawTime: now.getTime(),
+                    category: category,
+                    notes: notes,
+                    amount: nominal
+                };
 
-            // Tampilkan alert sukses input singkat
-            const alertBox = document.getElementById('inputSuccessAlert');
-            alertBox.classList.remove('hidden');
-            setTimeout(() => alertBox.classList.add('hidden'), 3000);
+                // Tambahkan ke array state paling atas
+                transactions.unshift(newTransaction);
 
-            // Reset form input
-            amountInput.value = '';
-            categorySelect.selectedIndex = 0;
-            notesInput.value = '';
+                // Simpan ke localStorage
+                localStorage.setItem('transactions_data', JSON.stringify(transactions));
 
-            // Perbarui UI Dasbor
-            updateDashboardData();
+                // Tampilkan alert sukses input singkat
+                successAlert.classList.remove('hidden');
+                setTimeout(() => successAlert.classList.add('hidden'), 4000);
+
+                // Reset form input
+                amountInput.value = '';
+                categorySelect.selectedIndex = 0;
+                notesInput.value = '';
+
+                // Perbarui grafik UI Dashboard
+                updateDashboardData();
+            })
+            .catch(err => {
+                console.error('Gagal mengirim data pendapatan:', err);
+                errorAlert.classList.remove('hidden');
+            })
+            .finally(() => {
+                // Kembalikan tombol seperti semula
+                saveBtn.disabled = false;
+                saveBtnText.classList.remove('hidden');
+                saveSpinner.classList.add('hidden');
+            });
         }
 
         // Fungsi memperbarui seluruh data visual dasbor
