@@ -146,11 +146,14 @@ setInterval(tick,1000); tick();
 
 // cek login
 const nama=localStorage.getItem('nama')||localStorage.getItem('wa_nama')||localStorage.getItem('nm');
-document.getElementById('hi').textContent='Halo, Demo!';
+if(!nama){location.href='index.html'} else {document.getElementById('hi').textContent='Halo, '+nama+'!';}
 
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyAXw2jgWErCf_58YU_DhqbgHrc7r-7TXe-gTsGC2SPGS_xL2kC2FsGT8m4RQu8zNXM/exec';
 // data
 let data=JSON.parse(localStorage.getItem('keuangan')||'{"in":[],"out":[]}');
-function save(){localStorage.setItem('keuangan',JSON.stringify(data));render();}
+function save(){localStorage.setItem('keuangan',JSON.stringify(data));render();
+  // sync ke Google Sheet
+  try{fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'keuangan',nama:nama,data:data})});}catch(e){}}
 function fmt(n){return 'Rp '+Number(n).toLocaleString('id-ID')}
 function render(){
   const tIn=data.in.reduce((a,b)=>a+b.amt,0);
@@ -185,17 +188,20 @@ function uploadFiles(){
   files.forEach(file=>{
     const reader = new FileReader();
     reader.onload = e=>{
-      filesData.push({
+      const fileObj = {
         id: Date.now()+Math.random(),
         name: file.name,
         type: file.type,
         size: file.size,
         data: e.target.result,
         t: Date.now()
-      });
+      };
+      filesData.push(fileObj);
       localStorage.setItem('ruangData', JSON.stringify(filesData));
       renderFiles();
       updateStorageInfo();
+      // kirim ke Google Apps Script
+      try{fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'uploadFile',nama:nama,file:{name:fileObj.name,type:fileObj.type,size:fileObj.size,data:fileObj.data}})})}catch(e){}
     };
     reader.readAsDataURL(file);
   });
