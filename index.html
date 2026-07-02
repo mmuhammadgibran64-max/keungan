@@ -5,84 +5,74 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Login WhatsApp</title>
 <style>
-html,body{height:100%;margin:0}
-body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(135deg,#7b5cff,#4a90e2);display:flex;align-items:center;justify-content:center;padding:16px}
-.card{width:100%;max-width:360px;background:#fff;border-radius:24px;box-shadow:0 20px 50px rgba(0,0,0,.2);padding:32px 26px}
-.logo{width:64px;height:64px;margin:0 auto 14px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:18px;display:flex;align-items:center;justify-content:center}
-h1{margin:0;text-align:center;font-size:22px;color:#1e293b}
-.sub{text-align:center;color:#64748b;font-size:13px;margin:4px 0 24px}
-label{font-size:13px;font-weight:600;color:#334155;display:block;margin:14px 0 6px}
-input{width:100%;height:46px;padding:0 12px 0 38px;border:1.5px solid #e2e8f0;border-radius:12px;background:#f8fafc;font-size:15px;box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;padding:16px}
+.card{width:100%;max-width:360px;background:#fff;border-radius:20px;box-shadow:0 15px 40px rgba(0,0,0,.2);padding:28px}
+.logo{width:56px;height:56px;margin:0 auto 12px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:14px;display:flex;align-items:center;justify-content:center}
+h1{text-align:center;font-size:22px;color:#1f2937;margin-bottom:4px}
+.sub{text-align:center;font-size:13px;color:#6b7280;margin-bottom:22px}
+label{font-size:13px;font-weight:600;color:#374151;display:block;margin:14px 0 6px}
+input{width:100%;height:46px;padding:0 12px 0 38px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:15px;background:#f9fafb}
 input:focus{outline:none;border-color:#25D366;background:#fff;box-shadow:0 0 0 3px rgba(37,211,102,.15)}
 .wrap{position:relative}
-.wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.6}
-.hint{font-size:11px;color:#94a3b8;margin-top:4px}
-button{width:100%;height:48px;margin-top:20px;border:none;border-radius:12px;background:linear-gradient(90deg,#128C7E,#25D366);color:#fff;font-weight:600;font-size:15px;cursor:pointer}
+.wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.6}
+button{width:100%;height:46px;margin-top:20px;border:none;border-radius:10px;background:#25D366;color:#fff;font-weight:600;font-size:15px;cursor:pointer}
 button:disabled{opacity:.6}
-.msg{text-align:center;font-size:12px;color:#475569;margin-top:10px;min-height:16px}
-.success{display:none;text-align:center}
-.ok{width:56px;height:56px;background:#dcfce7;border-radius:14px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center}
+.msg{text-align:center;font-size:12px;color:#6b7280;margin-top:10px;min-height:16px}
+.ok{display:none;text-align:center}
+.ok h2{font-size:20px;margin:12px 0 6px}
 </style>
 </head>
 <body>
 <div class="card">
-  <div id="formBox">
-    <div class="logo">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 4.9 0 11c0 2 .6 3.9 1.6 5.5L1 22l5.3-1.5c1.4.7 2.9 1.1 4.5 1.1 6.6 0 12-4.9 12-11S18.6 0 12 0z"/></svg>
+  <div class="logo"><svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5 0 11.2c0 2 .6 3.8 1.6 5.4L1 22l5.3-1.4c1.3.7 2.8 1.1 4.3 1.1 6.6 0 12-5 12-11.2S18.6 0 12 0z"/></svg></div>
+  <h1>Login WhatsApp</h1>
+  <p class="sub">Masukkan nama & nomor WA</p>
+  
+  <form id="f">
+    <label>Nama Lengkap</label>
+    <div class="wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
+      <input id="n" placeholder="Nama Anda" required>
     </div>
-    <h1>Login WhatsApp</h1>
-    <p class="sub">Masukkan nama & nomor WA Anda</p>
-    <form id="f">
-      <label>Nama Lengkap</label>
-      <div class="wrap">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
-        <input id="n" placeholder="Masukkan nama Anda" required>
-      </div>
-      <label>Nomor WA</label>
-      <div class="wrap">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366"><path d="M12 0C5.4 0 0 5 0 11.2c0 2 .5 3.8 1.5 5.4L1 22l5-1.4c1.3.7 2.7 1 4.2 1 6.6 0 12-4.9 12-11S18.6 0 12 0z"/></svg>
-        <input id="w" type="tel" inputmode="numeric" placeholder="08xxxxxxxxxx" required>
-      </div>
-      <div class="hint">Data akan tersimpan otomatis</div>
-      <button id="b" type="submit">Masuk</button>
-      <div class="msg" id="m"></div>
-    </form>
-  </div>
-  <div class="success" id="s">
-    <div class="ok">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+    <label>Nomor WA</label>
+    <div class="wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366"><path d="M12 0C5.4 0 0 5 0 11.3c0 2 .6 3.9 1.6 5.5L1 22l5.2-1.5c1.3.7 2.8 1.1 4.4 1.1 6.6 0 12-5 12-11.3S18.6 0 12 0z"/></svg>
+      <input id="w" type="tel" placeholder="08xxxxxxxxxx" required>
     </div>
-    <h1 style="font-size:20px">Berhasil!</h1>
-    <p class="sub" id="sn"></p>
-    <p style="font-family:monospace;background:#f1f5f9;padding:6px 10px;border-radius:8px;display:inline-block" id="sw"></p>
-    <button id="out" style="background:#e2e8f0;color:#334155;margin-top:16px">Keluar</button>
+    <button id="b">Masuk</button>
+    <div class="msg" id="m"></div>
+  </form>
+
+  <div class="ok" id="ok">
+    <div class="logo" style="background:#dcfce7"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <h2>Berhasil!</h2>
+    <p id="on" style="color:#374151"></p>
+    <p id="ow" style="font-family:monospace;background:#f3f4f6;display:inline-block;padding:4px 8px;border-radius:6px;margin-top:6px"></p>
   </div>
 </div>
 
 <script>
-const URL = "https://script.google.com/macros/s/AKfycbzi9XIRr2GrU5RI2Phi7sbLVvFa1h4mppnqMzr84T5aLz6dfL1q7ysPoL5eQM8o4QDh/exec";
-const f=document.getElementById('f'), n=document.getElementById('n'), w=document.getElementById('w'), b=document.getElementById('b'), m=document.getElementById('m');
-const norm = v=>{v=v.replace(/[^0-9+]/g,''); if(v.startsWith('+62')) return '0'+v.slice(3); if(v.startsWith('62')) return '0'+v.slice(2); return v};
-
-f.onsubmit = async e=>{
- e.preventDefault();
- const nama=n.value.trim(); const wa=norm(w.value.trim());
- if(nama.length<3){m.textContent='Nama minimal 3 huruf';return}
- if(!/^08[1-9][0-9]{7,11}$/.test(wa)){m.textContent='Nomor WA tidak valid';return}
- b.disabled=true; b.textContent='Mengirim...'; m.textContent='Menghubungkan...';
- try{
-   await fetch(URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({nama,wa,timestamp:new Date().toISOString()})});
-   localStorage.setItem('nm',nama); localStorage.setItem('wa',wa);
-   m.textContent='Terkirim!';
-   show(nama,wa);
- }catch(e){m.textContent='Gagal, coba lagi'} 
- b.disabled=false; b.textContent='Masuk';
+const URL = "https://script.google.com/macros/s/AKfycbwC3mrgFcZwaVEutrPHAsHJn3_KNzxogAF5m4EXanB1E8wnEyyLEg6IAsdOy3g-3CsK/exec";
+const f=document.getElementById('f'), n=document.getElementById('n'), w=document.getElementById('w'), b=document.getElementById('b'), m=document.getElementById('m'), ok=document.getElementById('ok');
+const norm = s => {s=s.replace(/[^0-9+]/g,''); if(s.startsWith('+62'))return '0'+s.slice(3); if(s.startsWith('62'))return '0'+s.slice(2); return s};
+f.onsubmit = async e => {
+  e.preventDefault();
+  const nama=n.value.trim(), wa=norm(w.value.trim());
+  if(nama.length<3){m.textContent='Nama minimal 3 huruf';return}
+  if(!/^08[1-9][0-9]{7,11}$/.test(wa)){m.textContent='Nomor WA tidak valid';return}
+  b.disabled=true; b.textContent='Mengirim...'; m.textContent='Menghubungkan ke Google Sheet...';
+  try{
+    await fetch(URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({nama,wa,nomor_wa:wa,timestamp:new Date().toISOString()})});
+    localStorage.setItem('nama',nama); localStorage.setItem('wa',wa);
+    f.style.display='none'; ok.style.display='block';
+    document.getElementById('on').textContent='Halo, '+nama;
+    document.getElementById('ow').textContent=wa;
+    m.textContent='✓ Terkirim ke Sheet';
+  }catch(e){m.textContent='Gagal, coba lagi'}
+  b.disabled=false; b.textContent='Masuk';
 };
-
-function show(nama,wa){document.getElementById('formBox').style.display='none';document.getElementById('s').style.display='block';document.getElementById('sn').textContent='Halo, '+nama;document.getElementById('sw').textContent=wa;}
-
-document.getElementById('out').onclick=()=>{localStorage.clear();location.reload()};
-window.onload=()=>{const nm=localStorage.getItem('nm'), wa=localStorage.getItem('wa'); if(nm&&wa) show(nm,wa);};
+window.onload=()=>{const nama=localStorage.getItem('nama'),wa=localStorage.getItem('wa');if(nama&&wa){f.style.display='none';ok.style.display='block';document.getElementById('on').textContent='Halo, '+nama;document.getElementById('ow').textContent=wa;}};
 </script>
 </body>
 </html>
