@@ -20,7 +20,7 @@ header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:20p
 .card h3{font-size:14px;color:#64748b;margin-bottom:6px}
 .card .val{font-size:24px;font-weight:700}
 .in{color:#16a34a}.out{color:#dc2626}.bal{color:#2563eb}
-.menu{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.menu{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
 .btn{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;border:none;border-radius:16px;padding:24px 16px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.06);transition:.2s;font-size:15px;font-weight:600;color:#1e293b}
 .btn:hover{transform:translateY(-2px)}
 .btn span{font-size:32px;margin-bottom:8px}
@@ -36,7 +36,7 @@ input:focus{outline:none;border-color:#667eea;background:#fff}
 .item .desc{color:#475569}
 .item .amt{font-weight:600}
 .logout{margin:30px auto;display:block;background:none;border:none;color:#64748b;text-decoration:underline;font-size:13px;cursor:pointer}
-@media(max-width:600px){.cards,.menu{grid-template-columns:1fr}}
+@media(max-width:700px){.cards,.menu{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -60,30 +60,77 @@ input:focus{outline:none;border-color:#667eea;background:#fff}
     <div class="card" style="grid-column:1/-1"><h3>Saldo</h3><div class="val bal" id="tBal">Rp 0</div></div>
   </div>
 
-  <div class="menu">
+    <div class="menu">
     <button class="btn" onclick="openPanel('in')"><span>💰</span>Uang Masuk</button>
     <button class="btn" onclick="openPanel('out')"><span>💸</span>Uang Keluar</button>
+    <button class="btn" onclick="openPanel('data')"><span>📁</span>Ruang Data Khusus</button>
   </div>
 
-  <div id="pIn" class="panel">
+    <div id="pIn" class="panel">
     <h4>Catat Uang Masuk</h4>
     <div class="row">
       <input id="inAmt" type="number" placeholder="Jumlah (Rp)">
       <input id="inDesc" placeholder="Keterangan">
+    </div>
+    <div class="row">
+      <select id="inCat">
+        <option value="Pemasukan hari ini">Pemasukan hari ini</option>
+        <option value="Gaji">Gaji</option>
+        <option value="Bonus">Bonus</option>
+        <option value="Usaha">Usaha</option>
+        <option value="Hadiah">Hadiah</option>
+        <option value="Lainnya">Lainnya</option>
+      </select>
       <button class="add" onclick="addTx('in')">Tambah</button>
     </div>
     <div class="list" id="lIn"></div>
   </div>
 
-  <div id="pOut" class="panel">
+    <div id="pOut" class="panel">
     <h4>Catat Uang Keluar</h4>
     <div class="row">
       <input id="outAmt" type="number" placeholder="Jumlah (Rp)">
       <input id="outDesc" placeholder="Keterangan">
+    </div>
+    <div class="row">
+      <select id="outCat">
+        <option value="Pengeluaran hari ini">Pengeluaran hari ini</option>
+        <option value="Makan">Makan</option>
+        <option value="Transport">Transport</option>
+        <option value="Belanja">Belanja</option>
+        <option value="Tagihan">Tagihan</option>
+        <option value="Hiburan">Hiburan</option>
+        <option value="Lainnya">Lainnya</option>
+      </select>
       <button class="add" onclick="addTx('out')">Tambah</button>
     </div>
     <div class="list" id="lOut"></div>
   </div>
+  
+  <div id="pData" class="panel">
+    <h4>📁 Ruang Data Khusus</h4>
+    <p style="color:#64748b;font-size:14px;margin-bottom:12px">Tempat menyimpan berbagai file penting dan arsip keuangan. (Penyimpanan browser, untuk unlimited gunakan Google Drive)</p>
+    
+    <div class="row" style="margin-bottom:12px">
+      <input type="file" id="fileInput" multiple accept="*/*" style="padding:8px">
+      <button class="add" onclick="uploadFiles()">Upload</button>
+    </div>
+    
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <button onclick="filterFiles('all')" class="filter-btn active" id="fAll" style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;background:#667eea;color:#fff;font-size:12px;cursor:pointer">Semua</button>
+      <button onclick="filterFiles('image')" class="filter-btn" id="fImg" style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-size:12px;cursor:pointer">Foto</button>
+      <button onclick="filterFiles('video')" class="filter-btn" id="fVid" style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-size:12px;cursor:pointer">Video</button>
+      <button onclick="filterFiles('other')" class="filter-btn" id="fOth" style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-size:12px;cursor:pointer">Dokumen</button>
+    </div>
+    
+    <div id="storageInfo" style="font-size:12px;color:#64748b;margin-bottom:10px"></div>
+    <div class="list" id="fileList" style="max-height:400px"></div>
+  </div>
+
+      <p>Fitur upload file akan segera hadir</p>
+    </div>
+  </div>
+
 
   <button class="logout" onclick="logout()">Keluar</button>
 </div>
@@ -99,7 +146,7 @@ setInterval(tick,1000); tick();
 
 // cek login
 const nama=localStorage.getItem('nama')||localStorage.getItem('wa_nama')||localStorage.getItem('nm');
-if(!nama){location.href='index.html'} else {document.getElementById('hi').textContent='Halo, '+nama+'!';}
+document.getElementById('hi').textContent='Halo, Demo!';
 
 // data
 let data=JSON.parse(localStorage.getItem('keuangan')||'{"in":[],"out":[]}');
@@ -111,19 +158,131 @@ function render(){
   document.getElementById('tIn').textContent=fmt(tIn);
   document.getElementById('tOut').textContent=fmt(tOut);
   document.getElementById('tBal').textContent=fmt(tIn-tOut);
-  document.getElementById('lIn').innerHTML=data.in.map((x,i)=>`<div class="item"><span class="desc">${x.desc} <small style="color:#94a3b8">${new Date(x.t).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</small></span><span class="amt in">+${fmt(x.amt)}</span></div>`).reverse().join('');
-  document.getElementById('lOut').innerHTML=data.out.map((x,i)=>`<div class="item"><span class="desc">${x.desc} <small style="color:#94a3b8">${new Date(x.t).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</small></span><span class="amt out">-${fmt(x.amt)}</span></div>`).reverse().join('');
+  document.getElementById('lIn').innerHTML=data.in.map((x,i)=>`<div class="item"><span class="desc">${x.desc} <small style="color:#10b981">[${x.cat||'Lainnya'}]</small> <small style="color:#94a3b8">${new Date(x.t).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</small></span><span class="amt in">+${fmt(x.amt)}</span></div>`).reverse().join('');
+  document.getElementById('lOut').innerHTML=data.out.map((x,i)=>`<div class="item"><span class="desc">${x.desc} <small style="color:#dc2626">[${x.cat||'Lainnya'}]</small> <small style="color:#94a3b8">${new Date(x.t).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</small></span><span class="amt out">-${fmt(x.amt)}</span></div>`).reverse().join('');
 }
-function openPanel(t){document.getElementById('pIn').classList.toggle('active',t==='in');document.getElementById('pOut').classList.toggle('active',t==='out');}
+function openPanel(t){document.getElementById('pIn').classList.toggle('active',t==='in');document.getElementById('pOut').classList.toggle('active',t==='out');document.getElementById('pData').classList.toggle('active',t==='data');}
 function addTx(t){
   const amt=Number(document.getElementById(t==='in'?'inAmt':'outAmt').value);
   const desc=document.getElementById(t==='in'?'inDesc':'outDesc').value||'-';
   if(!amt||amt<=0)return alert('Masukkan jumlah');
-  data[t].push({amt,desc,t:Date.now()}); save();
+  const cat = t==='in' ? document.getElementById('inCat').value : document.getElementById('outCat').value;
+  data[t].push({amt,desc,cat,t:Date.now()}); save();
   document.getElementById(t==='in'?'inAmt':'outAmt').value=''; document.getElementById(t==='in'?'inDesc':'outDesc').value='';
 }
 function logout(){localStorage.clear();location.href='index.html'}
 render();
+
+// Ruang Data Khusus
+let filesData = JSON.parse(localStorage.getItem('ruangData')||'[]');
+let currentFilter = 'all';
+
+function uploadFiles(){
+  const input = document.getElementById('fileInput');
+  const files = Array.from(input.files);
+  if(!files.length) return alert('Pilih file dulu');
+  
+  files.forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = e=>{
+      filesData.push({
+        id: Date.now()+Math.random(),
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        data: e.target.result,
+        t: Date.now()
+      });
+      localStorage.setItem('ruangData', JSON.stringify(filesData));
+      renderFiles();
+      updateStorageInfo();
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function renderFiles(){
+  const list = document.getElementById('fileList');
+  let filtered = filesData;
+  if(currentFilter==='image') filtered = filesData.filter(f=>f.type.startsWith('image/'));
+  else if(currentFilter==='video') filtered = filesData.filter(f=>f.type.startsWith('video/'));
+  else if(currentFilter==='other') filtered = filesData.filter(f=>!f.type.startsWith('image/') && !f.type.startsWith('video/'));
+  
+  if(!filtered.length){
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:#94a3b8">Belum ada file</div>';
+    return;
+  }
+  
+  list.innerHTML = filtered.reverse().map(f=>{
+    const isImg = f.type.startsWith('image/');
+    const isVid = f.type.startsWith('video/');
+    const size = (f.size/1024/1024).toFixed(2)+' MB';
+    const date = new Date(f.t).toLocaleString('id-ID');
+    
+    let preview = '';
+    if(isImg) preview = `<img src="${f.data}" style="width:60px;height:60px;object-fit:cover;border-radius:8px">`;
+    else if(isVid) preview = `<video src="${f.data}" style="width:60px;height:60px;object-fit:cover;border-radius:8px"></video>`;
+    else preview = `<div style="width:60px;height:60px;background:#f1f5f9;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px">📄</div>`;
+    
+    return `<div class="item" style="align-items:center;gap:12px">
+      ${preview}
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.name}</div>
+        <div style="font-size:12px;color:#64748b">${size} • ${date}</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button onclick="downloadFile('${f.id}')" style="padding:6px 10px;background:#10b981;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer">Download</button>
+        <button onclick="shareFile('${f.id}')" style="padding:6px 10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer">Link</button>
+        <button onclick="deleteFile('${f.id}')" style="padding:6px 10px;background:#ef4444;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer">Hapus</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function downloadFile(id){
+  const f = filesData.find(x=>x.id==id);
+  if(!f) return;
+  const a = document.createElement('a');
+  a.href = f.data;
+  a.download = f.name;
+  a.click();
+}
+
+function deleteFile(id){
+  if(!confirm('Hapus file ini?')) return;
+  filesData = filesData.filter(x=>x.id!=id);
+  localStorage.setItem('ruangData', JSON.stringify(filesData));
+  renderFiles();
+  updateStorageInfo();
+}
+
+function shareFile(id){
+  const f = filesData.find(x=>x.id==id);
+  if(!f) return;
+  // Untuk demo, copy data URL (bisa dibuka siapa saja yang punya link, tapi terbatas ukuran)
+  navigator.clipboard.writeText(f.data).then(()=>{
+    alert('Link file disalin! Bisa dibuka di browser mana saja (untuk file kecil). Untuk file besar & unlimited, gunakan Google Drive.');
+  });
+}
+
+function filterFiles(type){
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b=>{b.style.background='#fff';b.style.color='#000'});
+  document.getElementById(type==='all'?'fAll':type==='image'?'fImg':type==='video'?'fVid':'fOth').style.background='#667eea';
+  document.getElementById(type==='all'?'fAll':type==='image'?'fImg':type==='video'?'fVid':'fOth').style.color='#fff';
+  renderFiles();
+}
+
+function updateStorageInfo(){
+  const total = filesData.reduce((a,b)=>a+b.size,0);
+  const mb = (total/1024/1024).toFixed(2);
+  document.getElementById('storageInfo').textContent = `Total: ${filesData.length} file • ${mb} MB digunakan (batas browser ~50MB)`;
+}
+
+// panggil saat load
+setTimeout(()=>{renderFiles();updateStorageInfo();},100);
+
 </script>
 </body>
 </html>
