@@ -1,63 +1,33 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login - Nama & Nomor WA</title>
 <style>
-* { box-sizing: border-box; margin:0; padding:0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #7b5cff 0%, #6a7dff 35%, #4a90e2 100%);
-  display:flex; align-items:center; justify-content:center; padding:20px;
-}
-.card {
-  width:100%; max-width:380px; background: rgba(255,255,255,0.96);
-  border-radius:24px; box-shadow:0 20px 60px rgba(0,0,0,0.25);
-  overflow:hidden; border:1px solid rgba(255,255,255,0.5);
-}
-.top-bar { height:5px; background: linear-gradient(90deg, #8b5cf6, #3b82f6, #06b6d4); }
-.content { padding:32px 28px; }
-.header { text-align:center; margin-bottom:28px; }
-.icon {
-  width:64px; height:64px; margin:0 auto 14px;
-  background: linear-gradient(135deg, #6366f1, #3b82f6);
-  border-radius:18px; display:flex; align-items:center; justify-content:center;
-  box-shadow:0 8px 20px rgba(59,130,246,0.3);
-}
-h1 { font-size:24px; color:#1e293b; font-weight:700; }
-p.sub { color:#64748b; font-size:14px; margin-top:4px; }
-label { display:block; font-size:13px; font-weight:600; color:#334155; margin-bottom:6px; margin-left:2px; }
-.input-wrap { position:relative; margin-bottom:18px; }
-.input-wrap svg { position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:0.5; }
-input {
-  width:100%; height:48px; padding:0 14px 0 40px;
-  border:1.5px solid #e2e8f0; border-radius:12px; font-size:15px;
-  background:#f8fafc; transition: all .2s;
-}
-input:focus { outline:none; border-color:#6366f1; background:#fff; box-shadow:0 0 0 4px rgba(99,102,241,0.12); }
-.hint { font-size:11px; color:#94a3b8; margin-top:4px; margin-left:2px; }
-.error { font-size:12px; color:#ef4444; margin-top:4px; display:none; }
-button {
-  width:100%; height:48px; border:none; border-radius:12px;
-  background:linear-gradient(90deg, #2563eb, #3b82f6); color:white;
-  font-size:15px; font-weight:600; cursor:pointer;
-  box-shadow:0 8px 20px rgba(37,99,235,0.3); transition:.2s;
-  margin-top:8px;
-}
-button:hover { transform:translateY(-1px); box-shadow:0 12px 24px rgba(37,99,235,0.35); }
-button:active { transform:translateY(0); }
-button:disabled { opacity:0.7; cursor:not-allowed; }
-.success { text-align:center; display:none; padding:10px 0; }
-.success .check { width:64px; height:64px; background:#dcfce7; border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; }
-.success h2 { font-size:20px; color:#1e293b; margin-bottom:8px; }
-.success p { color:#475569; font-size:14px; }
-.success .wa { font-family: monospace; background:#f1f5f9; padding:4px 8px; border-radius:6px; display:inline-block; margin-top:4px; }
-.logout { margin-top:20px; font-size:13px; color:#64748b; text-decoration:underline; background:none; border:none; cursor:pointer; }
-.footer { text-align:center; margin-top:20px; font-size:12px; color:rgba(255,255,255,0.85); }
-.shake { animation: shake 0.35s; }
-@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+* { box-sizing:border-box;margin:0;padding:0 }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; min-height:100vh; background:linear-gradient(135deg,#7b5cff 0%,#6a7dff 35%,#4a90e2 100%); display:flex; align-items:center; justify-content:center; padding:20px }
+.card { width:100%; max-width:380px; background:rgba(255,255,255,.97); border-radius:24px; box-shadow:0 20px 60px rgba(0,0,0,.25); overflow:hidden }
+.top-bar { height:5px; background:linear-gradient(90deg,#8b5cf6,#3b82f6,#06b6d4) }
+.content { padding:32px 28px }
+.header { text-align:center; margin-bottom:28px }
+.icon { width:64px;height:64px;margin:0 auto 14px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(37,211,102,.3) }
+h1 { font-size:24px;color:#1e293b;font-weight:700 }
+p.sub { color:#64748b;font-size:14px;margin-top:4px }
+label { display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px }
+.input-wrap { position:relative;margin-bottom:18px }
+.input-wrap svg { position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.5 }
+input { width:100%;height:48px;padding:0 14px 0 40px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:15px;background:#f8fafc;transition:.2s }
+input:focus { outline:none;border-color:#25D366;background:#fff;box-shadow:0 0 0 4px rgba(37,211,102,.12) }
+.hint { font-size:11px;color:#94a3b8;margin-top:4px }
+.error { font-size:12px;color:#ef4444;margin-top:4px;display:none }
+button { width:100%;height:48px;border:none;border-radius:12px;background:linear-gradient(90deg,#128C7E,#25D366);color:white;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 8px 20px rgba(18,140,126,.3);transition:.2s;margin-top:8px }
+button:hover { transform:translateY(-1px) }
+button:disabled { opacity:.7;cursor:not-allowed }
+.success { text-align:center;display:none }
+.success .check { width:64px;height:64px;background:#dcfce7;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px }
+.footer { text-align:center;margin-top:20px;font-size:12px;color:rgba(255,255,255,.85) }
+.status { font-size:12px;color:#64748b;text-align:center;margin-top:10px;min-height:16px }
 </style>
 </head>
 <body>
@@ -66,107 +36,108 @@ button:disabled { opacity:0.7; cursor:not-allowed; }
   <div class="content">
     <div class="header">
       <div class="icon">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 4.9 0 11c0 2.1.6 4 1.7 5.6L1 22l5.4-1.6c1.4.8 3 1.2 4.6 1.2 6.6 0 12-4.9 12-11S18.6 0 12 0zm5.3 14.1c-.2.1-1.4.7-1.6.8-.2.1-.4.1-.5-.1-.2-.2-.6-.8-.8-1-.1-.2-.3-.2-.5-.1-1.4.7-2.3 1.2-3.2 2.8-.2.4.3.4.7 1.3.1.1 0 .3 0 .4-.1.1-.5 1.3-.7 1.8-.2.5-.4.4-.5.4h-.5c-.2 0-.4-.1-.6-.3-.2-.2-.8-.8-.8-2s.9-2.3 1-2.5c.1-.2 1.7-2.6 4.1-3.6.6-.2 1-.4 1.4-.5.6-.2 1.1-.1 1.5-.1.5.1 1.4.6 1.6 1.1.2.6.2 1.1.1 1.2 0 .1-.2.2-.5.3z"/></svg>
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 4.9 0 11c0 2.1.6 4 1.7 5.6L1 22l5.4-1.6c1.4.8 3 1.2 4.6 1.2 6.6 0 12-4.9 12-11S18.6 0 12 0z"/></svg>
       </div>
-      <h1>Masuk ke Akun</h1>
-      <p class="sub">Lanjutkan dengan WhatsApp Anda</p>
+      <h1>Login WhatsApp</h1>
+      <p class="sub">Masukkan nama & nomor WA Anda</p>
     </div>
 
     <form id="loginForm">
-      <label for="nama">Nama Lengkap</label>
+      <label>Nama Lengkap</label>
       <div class="input-wrap">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <input id="nama" type="text" placeholder="Masukkan nama Anda" autocomplete="name" required>
+        <input id="nama" type="text" placeholder="Masukkan nama Anda" required>
         <div id="errNama" class="error"></div>
       </div>
 
-      <label for="wa">Nomor WA</label>
+      <label>Nomor WA</label>
       <div class="input-wrap">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path d="M12 0C5.4 0 0 5 0 11.3c0 2 .6 3.9 1.6 5.5L1 22l5.2-1.5c1.3.7 2.8 1.1 4.4 1.1 6.6 0 12-5 12-11.3S18.6 0 12 0z"/></svg>
-        <input id="wa" type="tel" inputmode="numeric" placeholder="08xxxxxxxxxx" autocomplete="tel" required>
-        <div class="hint">Contoh: 081234567890 atau +62812xxx</div>
+        <input id="wa" type="tel" inputmode="numeric" placeholder="08xxxxxxxxxx" required>
+        <div class="hint">Akan dikirim ke Google Sheet Anda</div>
         <div id="errWa" class="error"></div>
       </div>
 
       <button type="submit" id="btn">Masuk</button>
+      <div class="status" id="status"></div>
     </form>
 
     <div class="success" id="success">
       <div class="check">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
       </div>
-      <h2>Berhasil Masuk!</h2>
+      <h2 style="font-size:20px;color:#1e293b;margin-bottom:8px">Berhasil!</h2>
       <p>Halo, <strong id="sNama"></strong></p>
-      <p style="margin-top:6px;">WhatsApp:</p>
-      <div class="wa" id="sWa"></div>
-      <button class="logout" id="logout">Keluar dan ganti akun</button>
-    </div>
-
-    <div style="margin-top:24px; padding-top:16px; border-top:1px solid #e2e8f0; text-align:center;">
-      <p style="font-size:11px; color:#94a3b8;">Dengan masuk, Anda menyetujui syarat & ketentuan</p>
+      <p style="margin-top:6px;color:#475569">Data terkirim ke Sheet</p>
+      <p style="font-family:monospace;background:#f1f5f9;padding:6px 10px;border-radius:8px;display:inline-block;margin-top:8px" id="sWa"></p>
+      <button id="logout" style="margin-top:20px;background:none;color:#64748b;box-shadow:none;text-decoration:underline;font-size:13px">Keluar</button>
     </div>
   </div>
 </div>
-<p class="footer">Dibuat dengan Meta AI</p>
+<p class="footer">Terhubung ke Google Apps Script</p>
 
 <script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzi9XIRr2GrU5RI2Phi7sbLVvFa1h4mppnqMzr84T5aLz6dfL1q7ysPoL5eQM8o4QDh/exec";
 const form = document.getElementById('loginForm');
 const nama = document.getElementById('nama');
 const wa = document.getElementById('wa');
+const btn = document.getElementById('btn');
+const status = document.getElementById('status');
 const errNama = document.getElementById('errNama');
 const errWa = document.getElementById('errWa');
-const btn = document.getElementById('btn');
 const success = document.getElementById('success');
-const sNama = document.getElementById('sNama');
-const sWa = document.getElementById('sWa');
-const logout = document.getElementById('logout');
-
-function showErr(el, msg){ el.textContent = msg; el.style.display='block'; el.previousElementSibling.classList.add('shake'); setTimeout(()=>el.previousElementSibling.classList.remove('shake'),400); }
-function clearErr(el){ el.style.display='none'; }
 
 function normalize(p){ let t = p.replace(/[\s\-\.]/g,''); if(t.startsWith('+62')) t='0'+t.slice(3); else if(t.startsWith('62')) t='0'+t.slice(2); return t; }
 
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  errNama.style.display='none'; errWa.style.display='none';
+  const n = nama.value.trim();
+  const w = wa.value.trim();
+  let ok=true;
+  if(n.length<3){ errNama.textContent='Nama minimal 3 huruf'; errNama.style.display='block'; ok=false; }
+  const norm = normalize(w);
+  if(!/^08[1-9][0-9]{7,11}$/.test(norm)){ errWa.textContent='Format WA salah'; errWa.style.display='block'; ok=false; }
+  if(!ok) return;
+
+  btn.disabled=true; btn.textContent='Mengirim...'; status.textContent='Menghubungkan ke Google Sheet...';
+
+  try{
+    // kirim ke Apps Script
+    await fetch(SCRIPT_URL, {
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({ nama: n, wa: norm, nomor_wa: norm, timestamp: new Date().toISOString() })
+    });
+    // simpan lokal
+    localStorage.setItem('wa_nama', n);
+    localStorage.setItem('wa_nomor', norm);
+    status.textContent='✓ Terkirim!';
+    document.getElementById('sNama').textContent = n;
+    document.getElementById('sWa').textContent = norm;
+    form.style.display='none';
+    success.style.display='block';
+  }catch(err){
+    status.textContent='Gagal kirim, tapi data disimpan lokal';
+    console.error(err);
+  }finally{
+    btn.disabled=false; btn.textContent='Masuk';
+  }
+});
+
+document.getElementById('logout').addEventListener('click', ()=>{
+  localStorage.clear();
+  success.style.display='none';
+  form.style.display='block';
+  nama.value=''; wa.value=''; status.textContent='';
+});
+
+// auto-login jika sudah ada
 window.addEventListener('DOMContentLoaded', ()=>{
   const n = localStorage.getItem('wa_nama');
   const w = localStorage.getItem('wa_nomor');
-  if(n && w){ showSuccess(n,w); }
-});
-
-nama.addEventListener('input', ()=>clearErr(errNama));
-wa.addEventListener('input', ()=>{ clearErr(errWa); wa.value = wa.value.replace(/[^0-9+]/g,''); });
-
-form.addEventListener('submit', e=>{
-  e.preventDefault();
-  let ok = true;
-  const n = nama.value.trim();
-  const w = wa.value.trim();
-  if(n.length<3){ showErr(errNama,'Nama minimal 3 karakter'); ok=false; }
-  const norm = normalize(w);
-  if(!/^08[1-9][0-9]{7,11}$/.test(norm)){ showErr(errWa,'Format: 08xxxxxxxxxx'); ok=false; }
-  if(!ok) return;
-  btn.disabled=true; btn.textContent='Memproses...';
-  setTimeout(()=>{
-    localStorage.setItem('wa_nama', n);
-    localStorage.setItem('wa_nomor', w.startsWith('+')?w:norm);
-    alert(`Halo ${n}, login berhasil! Nomor WA: ${w.startsWith('+')?w:norm}`);
-    showSuccess(n, w.startsWith('+')?w:norm);
-    btn.disabled=false; btn.textContent='Masuk';
-  },600);
-});
-
-function showSuccess(n,w){
-  form.style.display='none';
-  success.style.display='block';
-  sNama.textContent=n;
-  sWa.textContent=w;
-}
-
-logout.addEventListener('click', ()=>{
-  localStorage.removeItem('wa_nama');
-  localStorage.removeItem('wa_nomor');
-  success.style.display='none';
-  form.style.display='block';
-  nama.value=''; wa.value=''; nama.focus();
+  if(n && w){ document.getElementById('sNama').textContent=n; document.getElementById('sWa').textContent=w; form.style.display='none'; success.style.display='block'; }
 });
 </script>
 </body>
