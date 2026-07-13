@@ -61,7 +61,7 @@ input:focus{outline:none;border-color:#667eea;background:#fff}
   </div>
   <div id="pIn" class="panel"><h4>Catat Uang Masuk</h4><div class="row"><input id="inAmt" type="number" placeholder="Jumlah (Rp)"><input id="inDesc" placeholder="Keterangan"></div><div class="row"><select id="inCat"><option>Pemasukan hari ini</option><option>Gaji</option><option>Bonus</option><option>Usaha</option><option>Hadiah</option><option>Lainnya</option></select><button class="add" onclick="addTx('in')">Tambah</button></div><div class="list" id="lIn"></div></div>
   <div id="pOut" class="panel"><h4>Catat Uang Keluar</h4><div class="row"><input id="outAmt" type="number" placeholder="Jumlah (Rp)"><input id="outDesc" placeholder="Keterangan"></div><div class="row"><select id="outCat"><option>Pengeluaran hari ini</option><option>Makan</option><option>Transport</option><option>Belanja</option><option>Tagihan</option><option>Hiburan</option><option>Lainnya</option></select><button class="add" onclick="addTx('out')">Tambah</button></div><div class="list" id="lOut"></div></div>
-  <div id="pData" class="panel">
+  <div id="pData" class="panel active">
     <h4>📁 Ruang Data Khusus - UNLIMITED & SHARED</h4>
     <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:12px 14px;border-radius:10px;font-size:12px;line-height:1.6;margin-bottom:12px">
       ✅ Upload <b>file, foto, video, PDF, dll</b> - penyimpanan <b>UNLIMITED</b> (Google Drive)<br>
@@ -80,48 +80,105 @@ input:focus{outline:none;border-color:#667eea;background:#fff}
       <button onclick="filterFiles('other')" id="fOth" style="padding:6px 12px;border-radius:20px;border:1px solid #e2e8f0;background:#fff;font-size:12px;cursor:pointer">📄 Dokumen</button>
       <button onclick="loadSharedFiles()" style="margin-left:auto;padding:6px 12px;border-radius:20px;border:none;background:#f1f5f9;font-size:12px;cursor:pointer">🔄 Refresh</button>
     </div>
-    <div id="storageInfo" style="font-size:12px;background:#eef2ff;color:#4338ca;padding:8px 12px;border-radius:8px;margin-bottom:8px;font-weight:600">Memuat...</div>
-    <div class="list" id="fileList"></div>
+    <div id="storageInfo" style="font-size:12px;background:#eef2ff;color:#4338ca;padding:8px 12px;border-radius:8px;margin-bottom:8px;font-weight:600">Menghubungkan ke Drive...</div>
+    <div class="list" id="fileList"><div style="text-align:center;padding:30px;color:#94a3b8">⏳ Memuat...</div></div>
   </div>
   <button class="logout" onclick="logout()">Keluar</button>
 </div>
 <script>
+// === CLOCK & USER ===
 function tick(){const n=new Date();document.getElementById('time').textContent=n.toLocaleTimeString('id-ID',{hour12:false});document.getElementById('date').textContent=n.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}setInterval(tick,1000);tick();
-const nama=localStorage.getItem('nama')||localStorage.getItem('wa_nama')||localStorage.getItem('nm')||'User';document.getElementById('hi').textContent='Halo, '+nama+'!';
+const nama=localStorage.getItem('nama')||localStorage.getItem('wa_nama')||'muhammad gibran';document.getElementById('hi').textContent='Halo, '+nama+'!';
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJ2BnTkXqqAz48JoF8Y5sl2M_I2q1XMOYBccsLFdba_viOOUeQJ8cq52kVOYOonQmj/exec';
 let data=JSON.parse(localStorage.getItem('keuangan')||'{"in":[],"out":[]}');
-function save(){localStorage.setItem('keuangan',JSON.stringify(data));render();try{fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'keuangan',nama:nama,data:data})});}catch(e){}}
+function save(){localStorage.setItem('keuangan',JSON.stringify(data));render();}
 function fmt(n){return 'Rp '+Number(n).toLocaleString('id-ID')}
-function render(){const tIn=data.in.reduce((a,b)=>a+b.amt,0);const tOut=data.out.reduce((a,b)=>a+b.amt,0);document.getElementById('tIn').textContent=fmt(tIn);document.getElementById('tOut').textContent=fmt(tOut);document.getElementById('tBal').textContent=fmt(tIn-tOut);document.getElementById('lIn').innerHTML=data.in.map(x=>`<div class="item"><span class="desc">${x.desc} <small style="color:#10b981">[${x.cat}]</small></span><span class="amt in">+${fmt(x.amt)}</span></div>`).reverse().join('');document.getElementById('lOut').innerHTML=data.out.map(x=>`<div class="item"><span class="desc">${x.desc} <small style="color:#dc2626">[${x.cat}]</small></span><span class="amt out">-${fmt(x.amt)}</span></div>`).reverse().join('');}
+function render(){const tIn=data.in.reduce((a,b)=>a+b.amt,0);const tOut=data.out.reduce((a,b)=>a+b.amt,0);document.getElementById('tIn').textContent=fmt(tIn);document.getElementById('tOut').textContent=fmt(tOut);document.getElementById('tBal').textContent=fmt(tIn-tOut);document.getElementById('lIn').innerHTML=data.in.map(x=>`<div class="item"><span class="desc">${x.desc}</span><span class="amt in">+${fmt(x.amt)}</span></div>`).reverse().join('');document.getElementById('lOut').innerHTML=data.out.map(x=>`<div class="item"><span class="desc">${x.desc}</span><span class="amt out">-${fmt(x.amt)}</span></div>`).reverse().join('');}
 function openPanel(t){document.getElementById('pIn').classList.toggle('active',t==='in');document.getElementById('pOut').classList.toggle('active',t==='out');document.getElementById('pData').classList.toggle('active',t==='data');if(t==='data')loadSharedFiles();}
-function addTx(t){const amt=Number(document.getElementById(t==='in'?'inAmt':'outAmt').value);const desc=document.getElementById(t==='in'?'inDesc':'outDesc').value||'-';if(!amt||amt<=0)return alert('Masukkan jumlah');const cat=document.getElementById(t==='in'?'inCat':'outCat').value;data[t].push({amt,desc,cat,t:Date.now()});save();document.getElementById(t==='in'?'inAmt':'outAmt').value='';document.getElementById(t==='in'?'inDesc':'outDesc').value='';}
+function addTx(t){const amt=Number(document.getElementById(t==='in'?'inAmt':'outAmt').value);const desc=document.getElementById(t==='in'?'inDesc':'outDesc').value||'-';if(!amt)return alert('Masukkan jumlah');const cat=document.getElementById(t==='in'?'inCat':'outCat').value;data[t].push({amt,desc,cat,t:Date.now()});save();document.getElementById(t==='in'?'inAmt':'outAmt').value='';document.getElementById(t==='in'?'inDesc':'outDesc').value='';}
 function logout(){localStorage.clear();location.href='index.html'}render();
 
-// === RUANG DATA KHUSUS UNLIMITED SHARED ===
-
-// === FIX CORS + GAGAL LOAD ===
+// === RUANG DATA KHUSUS - FIX ANTI GAGAL LOAD ===
 let sharedFiles=[];let currentFilter='all';
-function cbList(data){sharedFiles=Array.isArray(data)?data:[];document.getElementById('storageInfo').textContent=`📦 ${sharedFiles.length} file • UNLIMITED • Shared • HP/iPad/Laptop`;renderFiles();}
-async function loadSharedFiles(){
-  const list=document.getElementById('fileList');const info=document.getElementById('storageInfo');
-  list.innerHTML='<div style="text-align:center;padding:30px;color:#94a3b8">⏳ Memuat dari Drive...</div>';
-  info.textContent='Menghubungkan ke Drive...';
-  try{
-    const r=await fetch(SCRIPT_URL+'?action=listFiles&t='+Date.now(),{method:'GET'});
-    if(!r.ok) throw new Error('fetch fail');
-    const j=await r.json();
-    cbList(j);
-  }catch(e){
-    // fallback JSONP biar tetap jalan walau CORS diblokir
-    const s=document.createElement('script');
-    s.src=SCRIPT_URL+'?action=listFiles&callback=cbList&t='+Date.now();
-    s.onerror=()=>{info.textContent='⚠️ Gagal load, cek deployment GS harus Anyone';list.innerHTML='<div style="text-align:center;padding:20px;color:#ef4444">Gagal memuat.<br><small>Buka di browser: <br>'+SCRIPT_URL+'?action=listFiles<br>Kalau minta login = deployment belum Anyone</small><br><br><b>Cara fix:</b> Apps Script > Deploy > Manage deployments > Edit > Who has access: <b>Anyone</b> > Save > New Version</div>';};
-    document.body.appendChild(s);
-    setTimeout(()=>{if(s.parentNode)s.parentNode.removeChild(s)},5000);
-  }
+
+// Dipanggil oleh JSONP dari Apps Script
+function cbList(arr){
+  sharedFiles = Array.isArray(arr) ? arr : [];
+  document.getElementById('storageInfo').textContent = `📦 ${sharedFiles.length} file • UNLIMITED • Shared • HP/iPad/Laptop`;
+  renderFiles();
 }
 
-function filterFiles(t){currentFilter=t;document.querySelectorAll('#fAll,#fImg,#fVid,#fOth').forEach(b=>{b.style.background='#fff';b.style.color='#000'});const el=document.getElementById(t=='all'?'fAll':t=='image'?'fImg':t=='video'?'fVid':'fOth');if(el){el.style.background='#667eea';el.style.color='#fff';}renderFiles();}
+function loadSharedFiles(){
+  const list=document.getElementById('fileList');
+  const info=document.getElementById('storageInfo');
+  list.innerHTML='<div style="text-align:center;padding:30px;color:#94a3b8">⏳ Memuat dari Drive...</div>';
+  info.textContent='Menghubungkan ke Drive...';
+  // HAPUS script lama kalau ada
+  document.querySelectorAll('script[data-jsonp]').forEach(s=>s.remove());
+  const s=document.createElement('script');
+  s.dataset.jsonp='1';
+  s.src = SCRIPT_URL + '?action=listFiles&callback=cbList&t=' + Date.now();
+  s.onerror = ()=>{
+    info.textContent='⚠️ Tidak bisa terhubung';
+    list.innerHTML = `<div style="text-align:center;padding:20px;color:#ef4444;line-height:1.7">
+      Gagal memuat Drive.<br>
+      <small style="color:#64748b">Pastikan Kode.gs sudah di-paste versi terbaru lalu Deploy > Kelola deployment > Pensil > Versi baru > Terapkan</small><br>
+      <button onclick="loadSharedFiles()" style="margin-top:10px;padding:8px 14px;background:#667eea;color:#fff;border:none;border-radius:8px;cursor:pointer">🔄 Coba Lagi</button><br>
+      <a href="${SCRIPT_URL}?action=listFiles" target="_blank" style="font-size:12px;color:#667eea;display:inline-block;margin-top:8px">Tes buka link Drive di tab baru (harus keluar [] bukan login)</a>
+    </div>`;
+  };
+  document.body.appendChild(s);
+  // timeout safety
+  setTimeout(()=>{ if(sharedFiles.length===0 && list.innerHTML.includes('Memuat')){ /* biarkan onerror yang handle */ } }, 7000);
+}
+
+function toBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});}
+
+async function uploadFiles(){
+  const input=document.getElementById('fileInput');
+  const files=Array.from(input.files);
+  if(!files.length)return alert('Pilih file dulu');
+  const btn=document.getElementById('upBtn');const st=document.getElementById('upStatus');
+  st.style.display='block';btn.disabled=true;
+  for(let i=0;i<files.length;i++){
+    const f=files[i];
+    st.textContent=`Upload ${i+1}/${files.length}: ${f.name}...`;
+    try{
+      const dataUrl=await toBase64(f);
+      await fetch(SCRIPT_URL,{
+        method:'POST',
+        mode:'no-cors',
+        headers:{'Content-Type':'text/plain'},
+        body: JSON.stringify({action:'uploadFile', fileName:f.name, mimeType:f.type||'application/octet-stream', fileData:dataUrl})
+      });
+    }catch(e){console.log(e)}
+  }
+  st.textContent='✅ Selesai! Refresh...';input.value='';btn.disabled=false;btn.textContent='⬆️ Upload';
+  setTimeout(()=>{st.style.display='none';loadSharedFiles();},1200);
+}
+
+function renderFiles(){
+  const list=document.getElementById('fileList');
+  let filtered=sharedFiles;
+  if(currentFilter==='image')filtered=sharedFiles.filter(f=>(f.type||'').startsWith('image/'));
+  else if(currentFilter==='video')filtered=sharedFiles.filter(f=>(f.type||'').startsWith('video/'));
+  else if(currentFilter==='other')filtered=sharedFiles.filter(f=>{const t=f.type||'';return !t.startsWith('image/')&&!t.startsWith('video/');});
+  if(!filtered.length){list.innerHTML='<div style="text-align:center;padding:40px;color:#94a3b8">Belum ada file<br><small>Upload foto, video, PDF — otomatis bisa dibuka di HP/iPad/Laptop lain</small></div>';return;}
+  list.innerHTML=filtered.map(f=>{
+    const isImg=(f.type||'').includes('image');const isVid=(f.type||'').includes('video');
+    const thumb=isImg?`<img src="${f.viewUrl||f.url}" style="width:56px;height:56px;object-fit:cover;border-radius:8px">`:isVid?`<div style="width:56px;height:56px;background:#000;border-radius:8px;display:flex;align-items:center;justify-content:center">🎬</div>`:`<div style="width:56px;height:56px;background:#f1f5f9;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px">📄</div>`;
+    return `<div class="item"><div style="display:flex;gap:10px;align-items:center;flex:1;min-width:0">${thumb}<div style="flex:1;min-width:0"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.name}</div><div style="font-size:11px;color:#64748b">${(f.size? (f.size/1024).toFixed(0)+' KB • ':'')+(f.type||'')}</div></div></div><div style="display:flex;gap:6px"><a href="${f.downloadUrl||f.viewUrl||f.url}" target="_blank" style="padding:7px 10px;background:#10b981;color:#fff;border-radius:7px;font-size:11px;text-decoration:none;font-weight:600">Download</a><button onclick="deleteShared('${f.id}')" style="padding:7px 10px;background:#ef4444;color:#fff;border:none;border-radius:7px;font-size:11px;cursor:pointer">Hapus</button></div></div>`;
+  }).join('');
+}
+
+async function deleteShared(id){
+  if(!confirm('Hapus file ini?'))return;
+  try{await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'deleteFile',fileId:id})});sharedFiles=sharedFiles.filter(f=>f.id!=id);renderFiles();setTimeout(loadSharedFiles,1000);}catch(e){alert('Gagal hapus')}
+}
+function filterFiles(t){currentFilter=t;['fAll','fImg','fVid','fOth'].forEach(id=>{const b=document.getElementById(id);if(b){b.style.background='#fff';b.style.color='#000'}});const el=document.getElementById(t=='all'?'fAll':t=='image'?'fImg':t=='video'?'fVid':'fOth');if(el){el.style.background='#667eea';el.style.color='#fff';}renderFiles();}
+
+// auto load pertama kali
+loadSharedFiles();
 </script>
 </body>
 </html>
