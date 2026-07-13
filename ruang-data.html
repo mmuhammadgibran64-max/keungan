@@ -6,96 +6,89 @@
 <title>Ruang Data - Galeri Unlimited</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter,system-ui,sans-serif;background:#fafafb;color:#111827;min-height:100vh}
+body{font-family:Inter,system-ui,sans-serif;background:#f6f7fb;color:#111827;min-height:100vh}
 header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.9);backdrop-filter:blur(12px);border-bottom:1px solid #e5e7eb;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
 .logo{font-weight:800;font-size:18px} .logo span{color:#6366f1}
 .container{max-width:1100px;margin:0 auto;padding:18px}
-.drop{border:2px dashed #d1d5db;border-radius:16px;padding:24px;text-align:center;background:#fff;cursor:pointer}
+.upload-box{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.btn{height:44px;padding:0 18px;border-radius:12px;border:none;font-weight:800;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn-p{background:#6366f1;color:#fff;box-shadow:0 6px 18px rgba(99,102,241,.35)} .btn-p:disabled{opacity:.5}
+.btn-s{background:#fff;border:1px solid #e5e7eb}
+.drop{border:2px dashed #d1d5db;border-radius:16px;padding:18px;text-align:center;background:#fff;margin-top:12px;transition:.2s}
 .drop.drag{border-color:#6366f1;background:#eef2ff}
-.btn{height:44px;padding:0 18px;border-radius:12px;border:none;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;justify-content:center}
-.btn-p{background:#6366f1;color:#fff;box-shadow:0 4px 14px rgba(99,102,241,.35)} .btn-p:hover{background:#4f46e5}
-.btn-s{background:#fff;border:1px solid #e5e7eb;color:#111827}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0;align-items:center}
-.search{flex:1;min-width:180px;height:42px;padding:0 14px;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
-.chip{padding:7px 14px;border-radius:999px;border:1px solid #e5e7eb;background:#fff;font-size:12px;font-weight:600;cursor:pointer}
+.white-box{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:16px;margin-top:16px;min-height:320px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.search{flex:1;min-width:180px;height:40px;padding:0 12px;border:1px solid #e5e7eb;border-radius:10px}
+.chip{padding:6px 12px;border-radius:999px;border:1px solid #e5e7eb;background:#fff;font-size:12px;font-weight:700;cursor:pointer}
 .chip.active{background:#111827;color:#fff;border-color:#111827}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
-.card{background:#fff;border:1px solid #eef0f3;border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04);display:flex;flex-direction:column}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:12px}
+.card{border:1px solid #eef0f3;border-radius:14px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
 .thumb{aspect-ratio:1/1;background:#f3f4f6;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .thumb img{width:100%;height:100%;object-fit:cover}
-.info{padding:10px 12px;flex:1}.name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{font-size:11px;color:#6b7280}
-.actions{display:flex;gap:6px;padding:10px 12px;border-top:1px solid #f3f4f6}.btn-sm{flex:1;height:32px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer}
-.btn-down{background:#111827;color:#fff;text-decoration:none;display:flex;align-items:center;justify-content:center}.btn-del{background:#fff;color:#ef4444;border:1px solid #fee2e2}
-.empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:#9ca3af;background:#fff;border-radius:16px;border:1px dashed #e5e7eb}
-.log{font-family:monospace;font-size:11px;background:#111827;color:#a7f3d0;padding:10px;border-radius:10px;margin-top:12px;max-height:120px;overflow:auto;display:none}
+.info{padding:9px 10px}.name{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{font-size:11px;color:#6b7280;margin-top:2px}
+.actions{display:flex;gap:6px;padding:8px;border-top:1px solid #f3f4f6}.a{flex:1;height:30px;border-radius:8px;border:none;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none}
+.a-d{background:#111827;color:#fff}.a-x{background:#fff;color:#ef4444;border:1px solid #fee2e2}
+.empty{text-align:center;padding:70px 10px;color:#9ca3af}
+.log{font-family:monospace;font-size:11px;background:#111827;color:#a7f3d0;padding:10px;border-radius:10px;margin-top:12px;white-space:pre-wrap;max-height:150px;overflow:auto}
 </style>
 </head>
 <body>
 <header>
-<div class="logo">ruang<span>.data</span> <small style="color:#6b7280;font-size:11px;margin-left:6px">UNLIMITED</small></div>
-<a href="dashboard.html" style="text-decoration:none;font-size:12px;font-weight:700;padding:8px 14px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;color:#111827">⬅ Dashboard</a>
+<div class="logo">ruang<span>.data</span> <small style="font-weight:600;color:#6b7280;font-size:11px;margin-left:6px">UNLIMITED</small></div>
+<a href="dashboard.html" style="text-decoration:none;font-size:12px;font-weight:800;padding:8px 12px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;color:#111827">Dashboard</a>
 </header>
 <div class="container">
-<!-- TOMBOL UPLOAD JELAS -->
-<div style="background:#fff;border:1px solid #eef0f3;border-radius:16px;padding:16px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
-<div><div style="font-weight:700">Upload File Baru</div><div style="font-size:12px;color:#6b7280">Foto, Video, PDF, Dokumen apapun • Max 10MB • Masuk Google Drive Unlimited</div></div>
-<div style="display:flex;gap:8px">
-<button class="btn btn-p" id="mainUpBtn" onclick="document.getElementById('fileInput').click()">⬆️ Pilih & Upload File</button>
-<button class="btn btn-s" onclick="loadFiles()">🔄 Refresh</button>
+<div class="upload-box">
+<div><div style="font-weight:800">Upload File Baru</div><div style="font-size:12px;color:#6b7280">Semua file akan masuk ke kotak putih di bawah • Max 9MB per file</div></div>
+<div style="display:flex;gap:8px"><button class="btn btn-p" id="upBtn">⬆️ Pilih & Upload File</button><button class="btn btn-s" onclick="loadFiles()">🔄 Refresh</button></div>
 </div>
+<div class="drop" id="dropZone"><b>Atau seret file kesini</b><div style="font-size:12px;color:#6b7280;margin-top:4px">Foto, video, PDF, Excel keuangan, dll</div><div id="upStatus" style="margin-top:8px;font-size:13px;font-weight:800;color:#6366f1"></div></div>
+
+<!-- INI KOTAK PUTIH TEMPAT FILE MASUK -->
+<div class="white-box">
+<div class="toolbar"><input id="q" class="search" placeholder="Cari file di kotak putih ini..." oninput="render()"><button class="chip active" id="cAll" onclick="setF('all')">Semua</button><button class="chip" id="cImg" onclick="setF('image')">Foto</button><button class="chip" id="cVid" onclick="setF('video')">Video</button><button class="chip" id="cDoc" onclick="setF('other')">Dokumen</button><span id="count" style="font-size:12px;font-weight:800;color:#6b7280;margin-left:auto">0 file</span></div>
+<div id="grid" class="grid"><div class="empty">Belum ada file<br><small>Klik tombol Ungu di atas untuk upload pertama, file akan muncul di sini</small></div></div>
 </div>
 
-<label class="drop" id="dropZone">
+<div id="log" class="log">Siap...</div>
 <input type="file" id="fileInput" multiple hidden>
-<div style="font-size:14px;font-weight:600">Atau seret file kesini</div>
-<div style="font-size:12px;color:#6b7280;margin-top:4px">Drop foto / video langsung untuk upload otomatis</div>
-<div id="upStatus" style="margin-top:10px;font-size:13px;font-weight:700;color:#6366f1"></div>
-</label>
-
-<div class="toolbar">
-<input id="q" class="search" placeholder="Cari file..." oninput="renderFiles()">
-<button class="chip active" id="cAll" onclick="setFilter('all')">Semua</button>
-<button class="chip" id="cImg" onclick="setFilter('image')">Foto</button>
-<button class="chip" id="cVid" onclick="setFilter('video')">Video</button>
-<button class="chip" id="cDoc" onclick="setFilter('other')">Dokumen</button>
-<span id="count" style="margin-left:auto;font-size:12px;font-weight:700;color:#6b7280"></span>
-</div>
-
-<div id="grid" class="grid"><div class="empty">⏳ Memuat dari Drive...</div></div>
-<div id="log" class="log"></div>
-<iframe name="up_iframe" id="up_iframe" style="display:none"></iframe>
 </div>
 
 <script>
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxJ2BnTkXqqAz48JoF8Y5sl2M_I2q1XMOYBccsLFdba_viOOUeQJ8cq52kVOYOonQmj/exec';
 const $=id=>document.getElementById(id);
-function log(m){const el=$('log');el.style.display='block';el.textContent+=`\n[${new Date().toLocaleTimeString()}] ${m}`;el.scrollTop=el.scrollHeight;}
 let files=[],filter='all';
-function cbList(arr){files=Array.isArray(arr)?arr:[];log(`Loaded ${files.length} file`);renderFiles();}
-function loadFiles(){log('Load...');document.querySelectorAll('script[data-j]').forEach(s=>s.remove());const s=document.createElement('script');s.dataset.j=1;s.src=SCRIPT_URL+`?action=listFiles&callback=cbList&t=${Date.now()}`;s.onerror=()=>log('Gagal load, cek deployment Anyone');document.body.appendChild(s);}
-function setFilter(t){filter=t;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));document.getElementById(t==='all'?'cAll':t==='image'?'cImg':t==='video'?'cVid':'cDoc').classList.add('active');renderFiles();}
-function renderFiles(){
-  const q=($('q').value||'').toLowerCase();let list=files;
-  if(filter==='image')list=list.filter(f=>(f.type||'').includes('image'));else if(filter==='video')list=list.filter(f=>(f.type||'').includes('video'));else if(filter==='other')list=list.filter(f=>{const t=f.type||'';return !t.includes('image')&&!t.includes('video');});
-  if(q)list=list.filter(f=>f.name.toLowerCase().includes(q));
-  $('count').textContent=`${list.length} file`;
-  const g=$('grid');
-  if(!list.length){g.innerHTML=`<div class="empty">Belum ada file<br><small>Klik tombol Ungu di atas untuk upload pertama</small></div>`;return;}
-  g.innerHTML=list.map(f=>{
-    const isImg=(f.type||'').includes('image');const thumb=isImg?`<img src="${f.viewUrl}" loading="lazy">`:`<div style="font-size:36px">${(f.type||'').includes('video')?'🎬':'📄'}</div>`;
-    return `<div class="card"><div class="thumb">${thumb}</div><div class="info"><div class="name" title="${f.name}">${f.name}</div><div class="meta">${(f.size/1024).toFixed(0)} KB • ${new Date(f.t).toLocaleDateString('id-ID')}</div></div><div class="actions"><a class="btn-sm btn-down" href="${f.downloadUrl}" target="_blank">Download</a><button class="btn-sm btn-del" onclick="delFile('${f.id}')">Hapus</button></div></div>`;
-  }).join('');
+function slog(m){const el=$('log');el.textContent+=`\n[${new Date().toLocaleTimeString()}] ${m}`;el.scrollTop=el.scrollHeight;}
+function cbList(arr){files=Array.isArray(arr)?arr:[];slog('Loaded '+files.length+' file dari Drive');render();}
+function loadFiles(){slog('Load...');document.querySelectorAll('script[data-j]').forEach(s=>s.remove());const s=document.createElement('script');s.dataset.j=1;s.src=SCRIPT_URL+'?action=listFiles&callback=cbList&t='+Date.now();s.onerror=()=>slog('Gagal load, cek deployment Anyone');document.body.appendChild(s);}
+function setF(t){filter=t;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));document.getElementById(t==='all'?'cAll':t==='image'?'cImg':t==='video'?'cVid':'cDoc').classList.add('active');render();}
+function render(){
+ const q=($('q').value||'').toLowerCase();let list=files;
+ if(filter==='image')list=list.filter(f=>(f.type||'').includes('image'));else if(filter==='video')list=list.filter(f=>(f.type||'').includes('video'));else if(filter==='other')list=list.filter(f=>{const t=f.type||'';return !t.includes('image')&&!t.includes('video');});
+ if(q)list=list.filter(f=>f.name.toLowerCase().includes(q));
+ $('count').textContent=list.length+' file'; const g=$('grid');
+ if(!list.length){g.innerHTML=`<div class="empty">Belum ada file<br><small>Upload foto/video/file keuangan, akan muncul di kotak putih ini</small></div>`;return;}
+ g.innerHTML=list.map(f=>{const isImg=(f.type||'').includes('image');const thumb=isImg?`<img src="${f.viewUrl}" loading="lazy">`:`<div style="font-size:34px">${(f.type||'').includes('video')?'🎬':'📄'}</div>`;return `<div class="card"><div class="thumb">${thumb}</div><div class="info"><div class="name" title="${f.name}">${f.name}</div><div class="meta">${(f.size/1024).toFixed(0)} KB</div></div><div class="actions"><a class="a a-d" href="${f.downloadUrl}" target="_blank">Download</a><button class="a a-x" onclick="delFile('${f.id}')">Hapus</button></div></div>`;}).join('');
 }
 function toDataURL(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});}
-async function handleFiles(fileList){
-  const arr=Array.from(fileList);if(!arr.length)return;const st=$('upStatus');const mainBtn=$('mainUpBtn');mainBtn.disabled=true;mainBtn.textContent='⏳ Mengupload...';
-  for(let i=0;i<arr.length;i++){const f=arr[i];if(f.size>10*1024*1024){log(`SKIP ${f.name} >10MB`);continue;}st.textContent=`Upload ${i+1}/${arr.length}: ${f.name}`;log(`Upload ${f.name}`);
-    try{const dataUrl=await toDataURL(f);const form=document.createElement('form');form.method='POST';form.action=SCRIPT_URL;form.target='up_iframe';form.style.display='none';form.enctype='text/plain';const fields={action:'uploadFile',fileName:f.name,mimeType:f.type||'application/octet-stream',fileData:dataUrl};for(const k in fields){const inp=document.createElement('input');inp.type='hidden';inp.name=k;inp.value=fields[k];form.appendChild(inp);}document.body.appendChild(form);const ifr=$('up_iframe');const p=new Promise(r=>{let d=false;const to=setTimeout(()=>{if(!d){d=true;r();}},4500);ifr.onload=()=>{if(!d){d=true;clearTimeout(to);r();}};});form.submit();await p;form.remove();log(`OK ${f.name}`);await new Promise(r=>setTimeout(r,600));}catch(e){log(`ERR ${f.name}: ${e.message}`);}
-  }st.textContent='✅ Selesai!';mainBtn.disabled=false;mainBtn.textContent='⬆️ Pilih & Upload File';setTimeout(()=>{st.textContent='';loadFiles();},1200);
+async function uploadOne(f){
+ if(f.size>9*1024*1024){slog('SKIP >9MB: '+f.name);return;}
+ $('upStatus').textContent='Upload: '+f.name; slog('Upload '+f.name+' ('+(f.size/1024).toFixed(0)+'KB) via FETCH JSON');
+ const dataUrl=await toDataURL(f);
+ const payload={action:'uploadFile',fileName:f.name,mimeType:f.type||'application/octet-stream',fileData:dataUrl};
+ // PAKAI FETCH JSON, BUKAN INPUT HIDDEN - BIAR NGGAK KEPOTONG
+ await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
+ slog('Terkirim '+f.name+' -> tunggu Drive proses 1-2 detik');
+}
+async function handleFiles(list){
+ const arr=Array.from(list); if(!arr.length) return; const btn=$('upBtn'); btn.disabled=true;
+ for(let i=0;i<arr.length;i++){await uploadOne(arr[i]); await new Promise(r=>setTimeout(r,900));}
+ btn.disabled=false; $('upStatus').textContent='✅ Selesai, me-refresh kotak putih...'; setTimeout(()=>{$('upStatus').textContent='';loadFiles();},1500);
 }
 $('fileInput').addEventListener('change',e=>handleFiles(e.target.files));
+$('upBtn').addEventListener('click',()=>$('fileInput').click());
 const dz=$('dropZone');dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');handleFiles(e.dataTransfer.files);});
-function delFile(id){if(!confirm('Hapus permanen?'))return;log('Hapus '+id);const form=document.createElement('form');form.method='POST';form.action=SCRIPT_URL;form.target='up_iframe';form.style.display='none';form.enctype='text/plain';[['action','deleteFile'],['fileId',id]].forEach(([k,v])=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v;form.appendChild(i);});document.body.appendChild(form);form.submit();setTimeout(()=>{form.remove();loadFiles();},1200);}
+async function delFile(id){if(!confirm('Hapus?'))return; slog('Hapus '+id); await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'deleteFile',fileId:id})}); setTimeout(loadFiles,1000);}
 loadFiles();
 </script>
 </body>
