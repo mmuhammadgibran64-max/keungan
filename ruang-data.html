@@ -7,80 +7,94 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Inter,system-ui,sans-serif;background:#fafafb;color:#111827;min-height:100vh}
-header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid #e5e7eb;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:800;font-size:18px} .logo span{color:#6366f1}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.9);backdrop-filter:blur(12px);border-bottom:1px solid #e5e7eb;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:18px;letter-spacing:-.3px} .logo span{color:#6366f1}
 .container{max-width:1100px;margin:0 auto;padding:18px}
-.top{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:16px;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
-.btn{height:44px;padding:0 18px;border-radius:12px;border:none;font-weight:800;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
-.btn-p{background:#6366f1;color:#fff;box-shadow:0 6px 18px rgba(99,102,241,.35)} .btn-s{background:#fff;border:1px solid #e5e7eb}
-.drop{margin-top:14px;border:2px dashed #d1d5db;border-radius:16px;padding:22px;text-align:center;background:#fff}
+.top{background:#fff;border:1px solid #eef0f3;border-radius:16px;padding:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.btn{height:44px;padding:0 18px;border-radius:12px;border:none;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn-p{background:#6366f1;color:#fff;box-shadow:0 6px 18px rgba(99,102,241,.35)} .btn-s{background:#fff;border:1px solid #e5e7eb;color:#111827}
+.drop{border:2px dashed #d1d5db;border-radius:16px;padding:22px;text-align:center;background:#fff;margin-top:14px;cursor:pointer;transition:.2s}
 .drop.drag{border-color:#6366f1;background:#eef2ff}
-.whiteBox{margin-top:16px;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:14px;min-height:320px}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
-.search{flex:1;min-width:160px;height:40px;padding:0 12px;border:1px solid #e5e7eb;border-radius:10px}
-.chip{padding:6px 12px;border-radius:999px;border:1px solid #e5e7eb;background:#fff;font-size:12px;font-weight:700;cursor:pointer}
+.white-box{background:#fff;border:1px solid #eef0f3;border-radius:16px;padding:14px;margin-top:14px;min-height:360px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.search{flex:1;min-width:180px;height:42px;padding:0 14px;border:1px solid #e5e7eb;border-radius:10px;background:#f9fafb}
+.chip{padding:7px 14px;border-radius:999px;border:1px solid #e5e7eb;background:#fff;font-size:12px;font-weight:600;cursor:pointer}
 .chip.active{background:#111827;color:#fff;border-color:#111827}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-.card{border:1px solid #eef0f3;border-radius:14px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.card{background:#fff;border:1px solid #eef0f3;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:.2s}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.06)}
 .thumb{aspect-ratio:1/1;background:#f3f4f6;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .thumb img{width:100%;height:100%;object-fit:cover}
-.info{padding:8px 10px}.name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{font-size:11px;color:#6b7280}
-.actions{display:flex;gap:6px;padding:8px;border-top:1px solid #f3f4f6}.a{flex:1;height:30px;border-radius:8px;border:none;font-size:11px;font-weight:800;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center}
-.a-down{background:#111827;color:#fff}.a-del{background:#fff;color:#ef4444;border:1px solid #fee2e2}
-.empty{grid-column:1/-1;text-align:center;padding:50px 10px;color:#9ca3af}
-.log{margin-top:12px;font-family:monospace;font-size:11px;background:#111827;color:#a7f3d0;padding:10px;border-radius:10px;max-height:140px;overflow:auto}
+.info{padding:10px 12px}.name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{font-size:11px;color:#6b7280;margin-top:2px}
+.actions{display:flex;gap:6px;padding:10px 12px;border-top:1px solid #f3f4f6}
+.btn-sm{flex:1;height:32px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center}
+.btn-down{background:#111827;color:#fff}.btn-del{background:#fff;color:#ef4444;border:1px solid #fee2e2}
+.empty{text-align:center;padding:70px 20px;color:#9ca3af}
 </style>
 </head>
 <body>
-<header><div class="logo">ruang<span>.data</span> <small style="color:#6b7280;font-weight:600;margin-left:6px">UNLIMITED</small></div><a href="dashboard.html" style="text-decoration:none;font-size:12px;font-weight:800;padding:8px 14px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;color:#111827">Dashboard</a></header>
+<header>
+<div class="logo">ruang<span>.data</span> <small style="color:#6b7280;font-weight:500;font-size:11px;margin-left:6px">UNLIMITED</small></div>
+<a href="dashboard.html" style="text-decoration:none;font-size:12px;font-weight:700;padding:8px 14px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;color:#111827">Dashboard</a>
+</header>
+
 <div class="container">
 <div class="top">
-<div><div style="font-weight:800">Upload File Baru</div><div style="font-size:12px;color:#6b7280">Semua file akan masuk ke kotak putih di bawah • Max 9MB per file</div><div id="status" style="font-size:12px;font-weight:800;color:#6366f1;margin-top:6px"></div></div>
-<div style="display:flex;gap:8px"><button class="btn btn-p" onclick="document.getElementById('fileInput').click()">⬆️ Pilih & Upload File</button><button class="btn btn-s" onclick="loadFiles()">🔄 Refresh</button></div>
+<div><div style="font-weight:800;font-size:15px">Upload File Baru</div><div style="font-size:12px;color:#6b7280;margin-top:2px">Foto, Video, PDF, Excel keuangan, dll • Max 10MB • Masuk Google Drive</div></div>
+<div style="display:flex;gap:8px"><button class="btn btn-p" onclick="document.getElementById('fileInput').click()">⬆️ Pilih & Upload File</button><button class="btn btn-s" onclick="loadFiles()">🔄</button></div>
 </div>
 
-<div class="drop" id="dropZone">Atau seret file kesini<br><small style="color:#6b7280">Foto, video, PDF, Excel keuangan, dll</small><input type="file" id="fileInput" multiple hidden></div>
+<label class="drop" id="dropZone">
+<input type="file" id="fileInput" multiple hidden>
+<div style="font-weight:700;font-size:14px">Atau seret file kesini</div>
+<div style="font-size:12px;color:#6b7280;margin-top:4px">Drop foto / video langsung upload otomatis — akan muncul di kotak putih di bawah</div>
+<div id="upStatus" style="margin-top:10px;font-size:13px;font-weight:700;color:#6366f1"></div>
+</label>
 
-<div class="whiteBox">
-<div class="toolbar"><input id="q" class="search" placeholder="Cari file di kotak putih ini..." oninput="render()"><button class="chip active" id="cAll" onclick="setF('all')">Semua</button><button class="chip" id="cImg" onclick="setF('image')">Foto</button><button class="chip" id="cVid" onclick="setF('video')">Video</button><button class="chip" id="cDoc" onclick="setF('other')">Dokumen</button><span id="count" style="margin-left:auto;font-size:12px;font-weight:700;color:#6b7280">0 file</span></div>
-<div id="grid" class="grid"><div class="empty">Belum ada file<br>Upload foto/video/file keuangan, akan muncul di kotak putih ini</div></div>
+<div class="white-box">
+<div class="toolbar">
+<input id="q" class="search" placeholder="Cari di kotak putih ini..." oninput="renderFiles()">
+<button class="chip active" id="cAll" onclick="setFilter('all')">Semua</button>
+<button class="chip" id="cImg" onclick="setFilter('image')">Foto</button>
+<button class="chip" id="cVid" onclick="setFilter('video')">Video</button>
+<button class="chip" id="cDoc" onclick="setFilter('other')">Dokumen</button>
+<span id="count" style="margin-left:auto;font-size:12px;font-weight:700;color:#6b7280"></span>
 </div>
-<div id="log" class="log">Siap...</div>
+<div id="grid" class="grid"><div class="empty">Belum ada file<br><small>Upload foto / video / file keuangan, akan muncul di kotak putih ini</small></div></div>
 </div>
+
+<iframe name="up_iframe" id="up_iframe" style="display:none"></iframe>
+</div>
+
 <script>
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxJ2BnTkXqqAz48JoF8Y5sl2M_I2q1XMOYBccsLFdba_viOOUeQJ8cq52kVOYOonQmj/exec';
 const $=id=>document.getElementById(id);
-function log(m){$('log').textContent+=`\n[${new Date().toLocaleTimeString()}] ${m}`; $('log').scrollTop=$('log').scrollHeight;}
 let files=[],filter='all';
-function cbList(arr){files=Array.isArray(arr)?arr:[]; log('Loaded '+files.length+' file dari Drive'); render();}
-function loadFiles(){log('Load via JSONP...');document.querySelectorAll('script[data-j]').forEach(s=>s.remove());const s=document.createElement('script');s.dataset.j=1; s.src=SCRIPT_URL+'?action=listFiles&callback=cbList&t='+Date.now(); s.onerror=()=>log('Gagal load, cek deployment Anyone'); document.body.appendChild(s);}
-function setF(t){filter=t;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));document.getElementById(t==='all'?'cAll':t==='image'?'cImg':t==='video'?'cVid':'cDoc').classList.add('active');render();}
-function render(){
- const q=($('q').value||'').toLowerCase(); let list=files;
- if(filter==='image') list=list.filter(f=>(f.type||'').includes('image')); else if(filter==='video') list=list.filter(f=>(f.type||'').includes('video')); else if(filter==='other') list=list.filter(f=>{const t=f.type||'';return !t.includes('image')&&!t.includes('video');});
- if(q) list=list.filter(f=>f.name.toLowerCase().includes(q));
- $('count').textContent=list.length+' file';
- const g=$('grid'); if(!list.length){g.innerHTML='<div class="empty">Belum ada file<br>Upload foto/video/file keuangan, akan muncul di kotak putih ini</div>';return;}
- g.innerHTML=list.map(f=>{const isImg=(f.type||'').includes('image');const thumb=isImg?`<img src="${f.viewUrl}" loading="lazy">`:`<div style="font-size:32px">${(f.type||'').includes('video')?'🎬':'📄'}</div>`;return `<div class="card"><div class="thumb">${thumb}</div><div class="info"><div class="name" title="${f.name}">${f.name}</div><div class="meta">${(f.size/1024).toFixed(0)} KB</div></div><div class="actions"><a class="a a-down" href="${f.downloadUrl}" target="_blank">Download</a><button class="a a-del" onclick="delF('${f.id}')">Hapus</button></div></div>`;}).join('');
+function cbList(arr){files=Array.isArray(arr)?arr:[];renderFiles();}
+function loadFiles(){document.querySelectorAll('script[data-j]').forEach(s=>s.remove());const s=document.createElement('script');s.dataset.j=1;s.src=SCRIPT_URL+'?action=listFiles&callback=cbList&t='+Date.now();document.body.appendChild(s);}
+function setFilter(t){filter=t;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));document.getElementById(t==='all'?'cAll':t==='image'?'cImg':t==='video'?'cVid':'cDoc').classList.add('active');renderFiles();}
+function renderFiles(){
+  const q=($('q').value||'').toLowerCase();let list=files;
+  if(filter==='image')list=list.filter(f=>(f.type||'').includes('image'));else if(filter==='video')list=list.filter(f=>(f.type||'').includes('video'));else if(filter==='other')list=list.filter(f=>{const t=f.type||'';return !t.includes('image')&&!t.includes('video');});
+  if(q)list=list.filter(f=>f.name.toLowerCase().includes(q));
+  $('count').textContent=`${list.length} file`;
+  const g=$('grid');
+  if(!list.length){g.innerHTML=`<div class="empty" style="grid-column:1/-1">Belum ada file<br><small>Upload foto / video / file keuangan, akan muncul di kotak putih ini</small></div>`;return;}
+  g.innerHTML=list.map(f=>{
+    const isImg=(f.type||'').includes('image');const thumb=isImg?`<img src="${f.viewUrl}" loading="lazy">`:`<div style="font-size:36px">${(f.type||'').includes('video')?'🎬':'📄'}</div>`;
+    return `<div class="card"><div class="thumb">${thumb}</div><div class="info"><div class="name" title="${f.name}">${f.name}</div><div class="meta">${(f.size/1024).toFixed(0)} KB</div></div><div class="actions"><a class="btn-sm btn-down" href="${f.downloadUrl}" target="_blank">Download</a><button class="btn-sm btn-del" onclick="delFile('${f.id}')">Hapus</button></div></div>`;
+  }).join('');
 }
-function toDataURL(file){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=()=>r(rd.result);rd.onerror=j;rd.readAsDataURL(file);});}
+function toDataURL(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});}
 async function handleFiles(fileList){
- const arr=Array.from(fileList); if(!arr.length) return;
- for(let i=0;i<arr.length;i++){const f=arr[i]; if(f.size>9*1024*1024){log('SKIP >9MB '+f.name); alert(f.name+' terlalu besar >9MB'); continue;}
-   $('status').textContent=`Upload ${i+1}/${arr.length}: ${f.name}...`; log('Upload '+f.name+' via FETCH JSON');
-   try{
-     const dataUrl=await toDataURL(f);
-     const payload={action:'uploadFile',fileName:f.name,mimeType:f.type||'application/octet-stream',fileData:dataUrl};
-     // FETCH JSON paling tembus untuk Apps Script
-     await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});
-     log('Terkirim '+f.name+' (no-cors, tunggu 2 detik lalu refresh)'); await new Promise(r=>setTimeout(r,1800));
-   }catch(e){log('ERR '+f.name+': '+e.message);}
- }
- $('status').textContent='✅ Selesai, memuat ulang...'; setTimeout(()=>{$('status').textContent=''; loadFiles();},1200);
+  const arr=Array.from(fileList);if(!arr.length)return;const st=$('upStatus');
+  for(let i=0;i<arr.length;i++){const f=arr[i];if(f.size>10*1024*1024){alert(f.name+' >10MB skip');continue;}st.textContent=`Upload ${i+1}/${arr.length}: ${f.name}...`;
+    try{const dataUrl=await toDataURL(f);const form=document.createElement('form');form.method='POST';form.action=SCRIPT_URL;form.target='up_iframe';form.style.display='none';form.enctype='text/plain';const fields={action:'uploadFile',fileName:f.name,mimeType:f.type||'application/octet-stream',fileData:dataUrl};for(const k in fields){const inp=document.createElement('input');inp.type='hidden';inp.name=k;inp.value=fields[k];form.appendChild(inp);}document.body.appendChild(form);const ifr=$('up_iframe');const p=new Promise(r=>{let d=false;const to=setTimeout(()=>{if(!d){d=true;r();}},4000);ifr.onload=()=>{if(!d){d=true;clearTimeout(to);r();}};});form.submit();await p;form.remove();await new Promise(r=>setTimeout(r,600));}catch(e){alert('Gagal '+f.name);}
+  }st.textContent='✅ Selesai, memuat...';setTimeout(()=>{st.textContent='';loadFiles();},800);
 }
 $('fileInput').addEventListener('change',e=>handleFiles(e.target.files));
-const dz=$('dropZone'); dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')}); dz.addEventListener('dragleave',()=>dz.classList.remove('drag')); dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag'); handleFiles(e.dataTransfer.files);});
-async function delF(id){ if(!confirm('Hapus file ini?'))return; log('Hapus '+id); await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'deleteFile',fileId:id})}); setTimeout(loadFiles,1200); }
+const dz=$('dropZone');dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');handleFiles(e.dataTransfer.files);});
+function delFile(id){if(!confirm('Hapus permanen?'))return;const form=document.createElement('form');form.method='POST';form.action=SCRIPT_URL;form.target='up_iframe';form.style.display='none';form.enctype='text/plain';[['action','deleteFile'],['fileId',id]].forEach(([k,v])=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v;form.appendChild(i);});document.body.appendChild(form);form.submit();setTimeout(()=>{form.remove();loadFiles();},900);}
 loadFiles();
 </script>
 </body>
