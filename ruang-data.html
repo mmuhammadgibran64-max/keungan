@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ruang Data Khusus - Unlimited</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f1f5f9;min-height:100vh}
+header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:18px 16px;position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center}
+header a{color:#fff;text-decoration:none;font-weight:600;font-size:13px;background:rgba(255,255,255,.2);padding:8px 12px;border-radius:20px}
+.container{max-width:900px;margin:18px auto;padding:0 16px}
+.panel{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.list{margin-top:14px;max-height:70vh;overflow:auto}
+.item{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #f1f5f9}
+.log{font-family:monospace;font-size:11px;background:#0f172a;color:#a5f3fc;padding:10px;border-radius:8px;margin-top:10px;white-space:pre-wrap;max-height:200px;overflow:auto}
+.btn{border:none;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}
+.btn-p{background:#667eea;color:#fff}
+</style>
+</head>
+<body>
+<header>
+<div><div style="font-weight:700;font-size:16px">📁 Ruang Data Khusus</div><div style="font-size:11px;opacity:.9">UNLIMITED • Shared • HP / iPad / Laptop</div></div>
+<a href="dashboard.html">⬅ Dashboard</a>
+</header>
+<div class="container">
+<div class="panel">
+<div style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:12px 14px;border-radius:10px;font-size:12px;line-height:1.6">
+✅ Upload <b>file, foto, video, PDF, dll</b> - penyimpanan <b>UNLIMITED</b> (Google Drive)<br>
+✅ Bisa dibuka <b>siapapun yang punya link</b> • Tombol Download langsung ke File Manager
+</div>
+<div style="display:flex;gap:8px;align-items:center;background:#f8fafc;padding:12px;border-radius:10px;border:1.5px dashed #cbd5e1;margin:12px 0;flex-wrap:wrap">
+<input type="file" id="fileInput" multiple>
+<button class="btn btn-p" id="upBtn" onclick="uploadFiles()">⬆️ Upload</button>
+<button class="btn" style="background:#f1f5f9" onclick="loadSharedFiles()">🔄 Refresh</button>
+<span id="upStatus" style="font-size:12px;font-weight:700;color:#667eea"></span>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+<button onclick="filterFiles('all')" id="fAll" style="padding:6px 12px;border-radius:20px;border:1px solid #e2e8f0;background:#667eea;color:#fff;font-size:12px;cursor:pointer">Semua</button>
+<button onclick="filterFiles('image')" id="fImg" style="padding:6px 12px;border-radius:20px;border:1px solid #e2e8f0;background:#fff;font-size:12px;cursor:pointer">🖼️ Foto</button>
+<button onclick="filterFiles('video')" id="fVid" style="padding:6px 12px;border-radius:20px;border:1px solid #e2e8f0;background:#fff;font-size:12px;cursor:pointer">🎬 Video</button>
+<button onclick="filterFiles('other')" id="fOth" style="padding:6px 12px;border-radius:20px;border:1px solid #e2e8f0;background:#fff;font-size:12px;cursor:pointer">📄 Dokumen</button>
+</div>
+<div id="storageInfo" style="font-size:12px;background:#eef2ff;color:#4338ca;padding:8px 12px;border-radius:8px;font-weight:600">Menghubungkan ke Drive...</div>
+<div id="log" class="log">Siap...</div>
+<div class="list" id="fileList"><div style="text-align:center;padding:30px;color:#94a3b8">⏳ Memuat...</div></div>
+<iframe name="upload_target" id="upload_target" style="display:none"></iframe>
+</div>
+</div>
+<script>
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxJ2BnTkXqqAz48JoF8Y5sl2M_I2q1XMOYBccsLFdba_viOOUeQJ8cq52kVOYOonQmj/exec';
+function log(m){const el=document.getElementById('log');el.textContent+=`\n[${new Date().toLocaleTimeString()}] ${m}`;el.scrollTop=el.scrollHeight;}
+let sharedFiles=[],currentFilter='all';
+function cbList(arr){sharedFiles=Array.isArray(arr)?arr:[];document.getElementById('storageInfo').textContent=`📦 ${sharedFiles.length} file • UNLIMITED • Shared • HP/iPad/Laptop`;renderFiles();log(`Load OK: ${sharedFiles.length} file`);}
+function loadSharedFiles(){log('Memuat via JSONP...');document.querySelectorAll('script[data-jsonp]').forEach(s=>s.remove());const s=document.createElement('script');s.dataset.jsonp='1';s.src=SCRIPT_URL+'?action=listFiles&callback=cbList&t='+Date.now();s.onerror=()=>log('Gagal JSONP, cek deployment harus Siapa saja (Anyone)');document.body.appendChild(s);}
+function toDataURL(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f);});}
+async function uploadFiles(){
+  const input=document.getElementById('fileInput');const files=Array.from(input.files);if(!files.length)return alert('Pilih file dulu');
+  const btn=document.getElementById('upBtn'),st=document.getElementById('upStatus');btn.disabled=true;
+  for(let i=0;i<files.length;i++){
+    const f=files[i];if(f.size>10*1024*1024){log(`SKIP ${f.name} >10MB`);continue;}
+    st.textContent=`Upload ${i+1}/${files.length}: ${f.name}...`;log(`Baca ${f.name}`);
+    try{
+      const dataUrl=await toDataURL(f);
+      const form=document.createElement('form');form.method='POST';form.action=SCRIPT_URL;form.target='upload_target';form.style.display='none';form.enctype='text/plain';
+      const fields={action:'uploadFile',fileName:f.name,mimeType:f.type||'application/octet-stream',fileData:dataUrl};
+      for(const k in fields){const inp=document.createElement('input');inp.type='hidden';inp.name=k;inp.value=fields[k];form.appendChild(inp);}
+      document.body.appendChild(form);
+      const iframe=document.getElementById('upload_target');
+      const p=new Promise(r=>{let d=false;const to=setTimeout(()=>{if(!d){d=true;r();}},4000);iframe.onload=()=>{if(!d){d=true;clearTimeout(to);r();}};});
+      form.submit();await p;log(`Terkirim ${f.name}`);form.remove();await new Promise(r=>setTimeout(r,700));
+    }catch(e){log(`ERROR ${f.name}: ${e.message}`);}
+  }
+  st.textContent='✅ Selesai!';input.value='';btn.disabled=false;setTimeout(()=>{st.textContent='';loadSharedFiles();},1500);
+}
+function renderFiles(){
+  const list=document.getElementById('fileList');let filtered=sharedFiles;
+  if(currentFilter==='image')filtered=sharedFiles.filter(f=>(f.type||'').startsWith('image/'));
+  else if(currentFilter==='video')filtered=sharedFiles.filter(f=>(f.type||'').startsWith('video/'));
+  else if(currentFilter==='other')filtered=sharedFiles.filter(f=>{const t=f.type||'';return !t.startsWith('image/')&&!t.startsWith('video/');});
+  if(!filtered.length){list.innerHTML='<div style="text-align:center;padding:40px;color:#94a3b8">Belum ada file<br><small>Upload foto, video, PDF</small></div>';return;}
+  list.innerHTML=filtered.map(f=>{
+    const isImg=(f.type||'').includes('image');const thumb=isImg?`<img src="${f.viewUrl}" style="width:56px;height:56px;object-fit:cover;border-radius:8px">`:`<div style="width:56px;height:56px;background:#f1f5f9;border-radius:8px;display:flex;align-items:center;justify-content:center">📄</div>`;
+    return `<div class="item">${thumb}<div style="flex:1;min-width:0"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.name}</div><div style="font-size:11px;color:#64748b">${(f.size/1024).toFixed(0)} KB • ${f.type||''}</div></div><div style="display:flex;gap:6px"><a href="${f.downloadUrl}" target="_blank" style="padding:7px 10px;background:#10b981;color:#fff;border-radius:7px;font-size:11px;text-decoration:none">Download</a><button onclick="deleteShared('${f.id}')" style="padding:7px 10px;background:#ef4444;color:#fff;border:none;border-radius:7px;font-size:11px">Hapus</button></div></div>`;
+  }).join('');
+}
+async function deleteShared(id){if(!confirm('Hapus file ini?'))return;log('Hapus '+id);const form=document.createElement('form');form.method='POST';form.action=SCRIPT_URL;form.target='upload_target';form.style.display='none';form.enctype='text/plain';[['action','deleteFile'],['fileId',id]].forEach(([k,v])=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v;form.appendChild(i);});document.body.appendChild(form);form.submit();setTimeout(()=>{form.remove();loadSharedFiles();},1200);}
+function filterFiles(t){currentFilter=t;['fAll','fImg','fVid','fOth'].forEach(id=>{const b=document.getElementById(id);if(b){b.style.background='#fff';b.style.color='#000'}});const el=document.getElementById(t=='all'?'fAll':t=='image'?'fImg':t=='video'?'fVid':'fOth');if(el){el.style.background='#667eea';el.style.color='#fff';}renderFiles();}
+loadSharedFiles();
+</script>
+</body>
+</html>
