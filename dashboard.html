@@ -88,7 +88,7 @@ input:focus{outline:none;border-color:#667eea;background:#fff}
 <script>
 function tick(){const n=new Date();document.getElementById('time').textContent=n.toLocaleTimeString('id-ID',{hour12:false});document.getElementById('date').textContent=n.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}setInterval(tick,1000);tick();
 const nama=localStorage.getItem('nama')||localStorage.getItem('wa_nama')||localStorage.getItem('nm')||'User';document.getElementById('hi').textContent='Halo, '+nama+'!';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0VslO15hd96EbKG9TewETEDso5EiY6V7kwZ4Jaeh_1egvz5RlFV098VEMImhz7vm2/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJ2BnTkXqqAz48JoF8Y5sl2M_I2q1XMOYBccsLFdba_viOOUeQJ8cq52kVOYOonQmj/exec';
 let data=JSON.parse(localStorage.getItem('keuangan')||'{"in":[],"out":[]}');
 function save(){localStorage.setItem('keuangan',JSON.stringify(data));render();try{fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'keuangan',nama:nama,data:data})});}catch(e){}}
 function fmt(n){return 'Rp '+Number(n).toLocaleString('id-ID')}
@@ -98,46 +98,29 @@ function addTx(t){const amt=Number(document.getElementById(t==='in'?'inAmt':'out
 function logout(){localStorage.clear();location.href='index.html'}render();
 
 // === RUANG DATA KHUSUS UNLIMITED SHARED ===
+
+// === FIX CORS + GAGAL LOAD ===
 let sharedFiles=[];let currentFilter='all';
+function cbList(data){sharedFiles=Array.isArray(data)?data:[];document.getElementById('storageInfo').textContent=`📦 ${sharedFiles.length} file • UNLIMITED • Shared • HP/iPad/Laptop`;renderFiles();}
 async function loadSharedFiles(){
   const list=document.getElementById('fileList');const info=document.getElementById('storageInfo');
   list.innerHTML='<div style="text-align:center;padding:30px;color:#94a3b8">⏳ Memuat dari Drive...</div>';
+  info.textContent='Menghubungkan ke Drive...';
   try{
-    const r=await fetch(SCRIPT_URL+'?action=listFiles&t='+Date.now());
+    const r=await fetch(SCRIPT_URL+'?action=listFiles&t='+Date.now(),{method:'GET'});
+    if(!r.ok) throw new Error('fetch fail');
     const j=await r.json();
-    sharedFiles=Array.isArray(j)?j:(j.files||[]);
-    info.textContent=`📦 ${sharedFiles.length} file • Penyimpanan UNLIMITED • Bisa dilihat siapapun yang punya link • HP / iPad / Laptop`;
-    renderFiles();
-  }catch(e){info.textContent='⚠️ Gagal load, cek deployment GS (Anyone)';list.innerHTML='<div style="text-align:center;padding:20px;color:#ef4444">Gagal memuat. Pastikan GS sudah Deploy Anyone</div>';}
-}
-function toB64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const s=r.result;res(s.indexOf(',')>-1?s.split(',')[1]:s)};r.onerror=rej;r.readAsDataURL(file);});}
-async function uploadFiles(){
-  const input=document.getElementById('fileInput');const files=[...input.files];if(!files.length)return alert('Pilih file/foto/video dulu');
-  const btn=document.getElementById('upBtn');const st=document.getElementById('upStatus');btn.disabled=true;st.style.display='block';
-  for(let i=0;i<files.length;i++){
-    const f=files[i];st.textContent=`Upload ${i+1}/${files.length}: ${f.name} (${(f.size/1024/1024).toFixed(2)} MB)...`;
-    try{
-      const b64=await toB64(f);
-      await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'uploadFile',nama:nama,file:{name:f.name,type:f.type||'application/octet-stream',size:f.size,data:b64}})});
-    }catch(err){console.log(err)}
+    cbList(j);
+  }catch(e){
+    // fallback JSONP biar tetap jalan walau CORS diblokir
+    const s=document.createElement('script');
+    s.src=SCRIPT_URL+'?action=listFiles&callback=cbList&t='+Date.now();
+    s.onerror=()=>{info.textContent='⚠️ Gagal load, cek deployment GS harus Anyone';list.innerHTML='<div style="text-align:center;padding:20px;color:#ef4444">Gagal memuat.<br><small>Buka di browser: <br>'+SCRIPT_URL+'?action=listFiles<br>Kalau minta login = deployment belum Anyone</small><br><br><b>Cara fix:</b> Apps Script > Deploy > Manage deployments > Edit > Who has access: <b>Anyone</b> > Save > New Version</div>';};
+    document.body.appendChild(s);
+    setTimeout(()=>{if(s.parentNode)s.parentNode.removeChild(s)},5000);
   }
-  st.textContent='✅ Selesai upload! Refresh...';input.value='';btn.disabled=false;
-  setTimeout(()=>{st.style.display='none';loadSharedFiles();},1200);
 }
-function renderFiles(){
-  const list=document.getElementById('fileList');let filtered=sharedFiles;
-  if(currentFilter=='image')filtered=sharedFiles.filter(f=>(f.type||'').startsWith('image/'));
-  else if(currentFilter=='video')filtered=sharedFiles.filter(f=>(f.type||'').startsWith('video/'));
-  else if(currentFilter=='other')filtered=sharedFiles.filter(f=>{const t=f.type||'';return !t.startsWith('image/')&&!t.startsWith('video/');});
-  if(!filtered.length){list.innerHTML='<div style="text-align:center;padding:40px;color:#94a3b8">Belum ada file<br><small>Upload foto, video, PDF — otomatis masuk Drive & bisa dilihat semua orang</small></div>';return;}
-  list.innerHTML=filtered.map(f=>{
-    const isImg=(f.type||'').startsWith('image/');const isVid=(f.type||'').startsWith('video/');
-    const thumb=isImg?`<img src="${f.viewUrl||f.url}" style="width:56px;height:56px;object-fit:cover;border-radius:8px" loading="lazy">`:isVid?`<div style="width:56px;height:56px;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;border-radius:8px">🎬</div>`:`<div style="width:56px;height:56px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:22px">📄</div>`;
-    const size=f.size? (f.size/1024/1024).toFixed(2)+' MB':'';
-    return `<div class="item"><div style="display:flex;gap:12px;align-items:center;flex:1;min-width:0">${thumb}<div style="flex:1;min-width:0"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px">${f.name}</div><div style="font-size:11px;color:#64748b">${size} • ${f.type||''}</div><div style="font-size:10px;color:#10b981">🔗 Shared - bisa dibuka HP/iPad</div></div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button onclick="window.open('${f.downloadUrl||f.url}','_blank')" style="padding:7px 10px;background:#10b981;color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer">Download</button><button onclick="navigator.clipboard.writeText('${f.url}').then(()=>alert('Link disalin!'))" style="padding:7px 10px;background:#3b82f6;color:#fff;border:none;border-radius:7px;font-size:11px;cursor:pointer">Link</button><button onclick="hapusFile('${f.id}')" style="padding:7px 10px;background:#ef4444;color:#fff;border:none;border-radius:7px;font-size:11px;cursor:pointer">Hapus</button></div></div>`;
-  }).join('');
-}
-async function hapusFile(id){if(!confirm('Hapus file ini dari Drive? Semua orang tidak bisa lihat lagi.'))return;try{await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'deleteFile',fileId:id})});sharedFiles=sharedFiles.filter(f=>f.id!=id);renderFiles();setTimeout(loadSharedFiles,1000);}catch(e){alert('Gagal hapus');}}
+
 function filterFiles(t){currentFilter=t;document.querySelectorAll('#fAll,#fImg,#fVid,#fOth').forEach(b=>{b.style.background='#fff';b.style.color='#000'});const el=document.getElementById(t=='all'?'fAll':t=='image'?'fImg':t=='video'?'fVid':'fOth');if(el){el.style.background='#667eea';el.style.color='#fff';}renderFiles();}
 </script>
 </body>
