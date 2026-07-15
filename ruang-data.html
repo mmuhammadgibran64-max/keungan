@@ -10,7 +10,7 @@
 <div class="white-box"><div style="display:flex;gap:8px"><input id="q" class="search" style="flex:1" placeholder="Cari..." oninput="renderFiles()"><span id="count" style="font-size:12px;font-weight:700;color:#6b7280;align-self:center"></span></div><div id="grid" class="grid"><div class="empty">Memuat...</div></div></div>
 </div>
 <script>
-var SCRIPT_URL='https://script.google.com/macros/s/AKfycbx7J03Jf8foZnjh3YUUqtsiEgTUpbWf-wrXcCm7RDnYKVYoEgAEtkbnxEbefDbb2hIH/exec';
+var SCRIPT_URL='https://script.google.com/macros/s/AKfycbxJ2BnTkXqqAz48JoF8Y5sl2M_I2q1XMOYBccsLFdba_viOOUeQJ8cq52kVOYOonQmj/exec';
 var $=function(id){return document.getElementById(id)},files=[],folderId=null,token=null;
 function cbToken(d){ if(d&&d.ok){ token=d.token; folderId=d.folderId; } }
 function getToken(cb){ var s=document.createElement('script'); s.src=SCRIPT_URL+'?action=getToken&callback=cbToken&t='+Date.now(); s.onload=function(){ if(cb)cb(); s.remove(); }; document.body.appendChild(s); }
