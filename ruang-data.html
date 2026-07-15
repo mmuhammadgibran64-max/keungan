@@ -72,7 +72,7 @@ function loadFiles(){
   let s=document.createElement('script'); s.id='jsonp'; s.src=SCRIPT_URL+'?action=list&callback='+cb+'&_='+Date.now();
   document.body.appendChild(s);
 }
-function renderFilesProxy(files){
+function renderFilesProxy_OLD(files){
   const box=document.getElementById('fileList')||document.getElementById('grid')||document.getElementById('fileGrid');
   if(!box) return;
   if(!files.length){ box.innerHTML='<div style="padding:30px;text-align:center;color:#888">Belum ada file</div>'; return; }
@@ -110,4 +110,30 @@ function openPreview(url,type){
 window.loadFiles = loadFiles;
 window.renderFiles = renderFilesProxy;
 setTimeout(loadFiles,500);
+</script><script>
+function renderFilesProxy(files){
+  const box=document.getElementById('fileList')||document.getElementById('grid')||document.getElementById('fileGrid');
+  if(!box) return;
+  if(!files.length){ box.innerHTML='<div style="padding:30px;text-align:center;color:#888">Belum ada file</div>'; return; }
+  let h='';
+  files.forEach(f=>{
+    const isImg = (f.type||'').startsWith('image/');
+    // PRIORITAS: pakai thumbData base64 dulu biar pasti kelihatan
+    let imgSrc = f.thumbData ? f.thumbData : f.thumb;
+    const thTag = isImg?`<img src="${imgSrc}" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.src='${f.thumb}'">`:`<div style="font-size:32px">📄</div>`;
+    h+=`
+    <div class="file-card" style="background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden;display:flex;flex-direction:column">
+      <div onclick="openPreview('${f.thumbData ? f.thumbData : f.viewUrl}','${f.type}')" style="height:160px;background:#f6f6f7;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden">${thTag}</div>
+      <div style="padding:10px">
+        <div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.name}</div>
+        <div style="font-size:11px;color:#16a34a;margin-top:2px">${(f.size/1024/1024).toFixed(2)} MB • via Script ✓</div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <a href="${f.downloadUrl}" target="_blank" style="flex:1;text-align:center;background:#111;color:#fff;padding:7px;border-radius:8px;text-decoration:none;font-size:12px">Download</a>
+          <button onclick="hapusFile('${f.id}')" style="background:#fff1f2;color:#e11d48;border:1px solid #fecdd3;padding:7px 8px;border-radius:8px;font-size:12px;cursor:pointer">Hapus</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  box.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px">'+h+'</div>';
+}
 </script></body></html>
