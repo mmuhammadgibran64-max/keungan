@@ -1,134 +1,113 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ruang Data - Unlimited</title>
-<style>
-body{font-family:Inter,system-ui;margin:0;background:#fafafb;color:#111}
-.header{position:sticky;top:0;background:#fff;border-bottom:1px solid #eee;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;z-index:10}
-.logo b{color:#4f46e5}.badge{color:#16a34a;font-size:12px;font-weight:700}
-.card{max-width:1000px;margin:18px auto;background:#fff;border:1px solid #eee;border-radius:16px;padding:16px}
-.btn{border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer}
-.btn-primary{background:#4f46e5;color:#fff}
-.btn-ghost{background:#f4f4f5}
-.drop{border:2px dashed #ddd;border-radius:14px;padding:22px;text-align:center;color:#666;margin-top:12px}
-.drop.drag{background:#eef2ff;border-color:#4f46e5;color:#4f46e5}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
-.item{background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
-.thumb{height:140px;background:#f6f6f7;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.thumb img{width:100%;height:100%;object-fit:cover}
-.meta{padding:10px}
-</style>
-</head>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Inter,system-ui,sans-serif;background:#fafafb;color:#111827}header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #e5e7eb;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}.logo{font-weight:800} .logo span{color:#6366f1}.container{max-width:1080px;margin:0 auto;padding:14px}.card{background:#fff;border:1px solid #eef0f3;border-radius:16px;padding:14px}.btn{height:42px;padding:0 16px;border-radius:12px;border:none;font-weight:700;cursor:pointer}.btn-p{background:#6366f1;color:#fff;box-shadow:0 6px 16px rgba(99,102,241,.3)}.btn-s{background:#fff;border:1px solid #e5e7eb}.drop{border:2px dashed #d1d5db;border-radius:14px;padding:18px;text-align:center;margin-top:12px;background:#fff}.drop.drag{border-color:#6366f1;background:#eef2ff}.white-box{background:#fff;border:1px solid #eef0f3;border-radius:16px;padding:12px;margin-top:12px;min-height:420px}.search{height:40px;border:1px solid #e5e7eb;border-radius:10px;padding:0 12px;width:100%;background:#f9fafb}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:12px}.thumb{aspect-ratio:1;background:#f3f4f6;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center}.thumb img{width:100%;height:100%;object-fit:cover}.item{border:1px solid #eef0f3;border-radius:12px;overflow:hidden;background:#fff}.empty{padding:60px 10px;text-align:center;color:#9ca3af}progress{width:100%;height:8px;border-radius:999px;margin-top:8px}</style></head>
 <body>
-<div class="header"><div class="logo">ruang<b>.data</b> <span class="badge">✓ UNLIMITED • Bebas Ukuran</span></div><a href="#" style="text-decoration:none;color:#111;border:1px solid #eee;padding:6px 12px;border-radius:20px;font-size:13px">Dashboard</a></div>
-
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-<div><div style="font-weight:800;font-size:18px">Upload File Unlimited</div><div style="font-size:12px;color:#777">Video 2GB pun masuk • Langsung ke Google Drive • Tanpa batas</div></div>
-<div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">⬆️ Pilih File Bebas Ukuran</button><button class="btn btn-ghost" onclick="loadFiles()">🔄 Refresh</button></div>
+<header><div class="logo">ruang<span>.data</span> <small style="color:#16a34a;font-weight:800;margin-left:6px">✓ UNLIMITED • Bebas Ukuran</small></div><a href="dashboard.html" style="font-size:12px;font-weight:700;text-decoration:none;padding:8px 12px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;color:#111">Dashboard</a></header>
+<div class="container">
+<div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><b>Upload File Unlimited</b><div style="font-size:12px;color:#6b7280">Video 2GB pun masuk • Langsung ke Google Drive • Tanpa batas</div><div id="upStatus" style="font-size:12px;font-weight:800;color:#6366f1;margin-top:4px"></div><progress id="prog" value="0" max="100" style="display:none"></progress></div><div><button class="btn btn-p" onclick="document.getElementById('fileInput').click()">⬆️ Pilih File Bebas Ukuran</button> <button class="btn btn-s" onclick="loadFiles()">🔄 Refresh</button></div></div>
+<label class="drop" id="dropZone"><input type="file" id="fileInput" multiple hidden><b>Seret file berapa pun kesini — unlimited</b><div style="font-size:12px;color:#6b7280">1MB, 100MB, 1GB semua bisa</div></label>
+<div class="white-box"><div style="display:flex;gap:8px"><input id="q" class="search" style="flex:1" placeholder="Cari..." oninput="renderFiles()"><span id="count" style="font-size:12px;font-weight:700;color:#6b7280;align-self:center"></span></div><div id="grid" class="grid"><div class="empty">Memuat...</div></div></div>
 </div>
-<div id="drop" class="drop"><b>Seret file berapa pun kesini — unlimited</b><div style="font-size:12px;margin-top:4px">1MB, 100MB, 1GB semua bisa</div></div>
-<input id="fileInput" type="file" multiple hidden>
-<div style="margin-top:14px"><input id="search" placeholder="Cari..." style="width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px"></div>
-<div id="fileList" style="margin-top:16px"></div>
-</div>
-
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx7J03Jf8foZnjh3YUUqtsiEgTUpbWf-wrXcCm7RDnYKVYoEgAEtkbnxEbefDbb2hIH/exec"; // PROXY MODE
-const FOLDER_NAME = "Ruang Data Khusus";
-
-// --- LOAD pakai JSONP biar anti CORS & cepat ---
+var SCRIPT_URL='https://script.google.com/macros/s/AKfycbx7J03Jf8foZnjh3YUUqtsiEgTUpbWf-wrXcCm7RDnYKVYoEgAEtkbnxEbefDbb2hIH/exec';
+var $=function(id){return document.getElementById(id)},files=[],folderId=null,token=null;
+function cbToken(d){ if(d&&d.ok){ token=d.token; folderId=d.folderId; } }
+function getToken(cb){ var s=document.createElement('script'); s.src=SCRIPT_URL+'?action=getToken&callback=cbToken&t='+Date.now(); s.onload=function(){ if(cb)cb(); s.remove(); }; document.body.appendChild(s); }
+function cbList(a){ files=Array.isArray(a)?a:[]; if(a&&a.error){$('grid').innerHTML='<div class=empty style="color:#ef4444">'+a.error+'</div>';return;} renderFiles(); }
+function loadFiles(){ var s=document.createElement('script'); s.src=SCRIPT_URL+'?action=listFiles&callback=cbList&t='+Date.now(); document.querySelectorAll('script[data-j]').forEach(function(x){x.remove()}); s.setAttribute('data-j','1'); document.body.appendChild(s); }
+function renderFiles(){ var q=($('q').value||'').toLowerCase(); var list=files.slice(); if(q) list=list.filter(function(f){return f.name.toLowerCase().indexOf(q)!==-1}); $('count').textContent=list.length+' file'; var g=$('grid'); if(!list.length){g.innerHTML='<div class=empty style="grid-column:1/-1">Belum ada file<br><small>Upload bebas ukuran, langsung muncul di sini</small></div>';return;} g.innerHTML=list.map(function(f){ var isImg=(f.type||'').indexOf('image')!==-1; var th=isImg?'<img src="'+f.viewUrl+'" loading=lazy>':'<div style="font-size:32px">'+((f.type||'').indexOf('video')!==-1?'🎬':'📄')+'</div>'; return '<div class=item><div class=thumb>'+th+'</div><div style="padding:8px 10px"><div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+f.name+'</div><div style="font-size:10px;color:#6b7280">'+(f.size/1024/1024).toFixed(2)+' MB</div></div><div style="display:flex;gap:6px;padding:8px"><a href="'+f.downloadUrl+'" target=_blank style="flex:1;text-align:center;background:#111827;color:#fff;border-radius:8px;padding:6px 0;font-size:11px;font-weight:700;text-decoration:none">Download</a><button onclick="delFile(\''+f.id+'\')" style="flex:1;background:#fff;border:1px solid #fee2e2;color:#ef4444;border-radius:8px;font-size:11px;font-weight:700">Hapus</button></div></div>';}).join('');}
+async function uploadDirect(file, onProg){
+  return new Promise(function(resolve, reject){
+    var xhr=new XMLHttpRequest();
+    var boundary='-------314159265358979323846';
+    var metadata=JSON.stringify({name:file.name, parents:folderId?[folderId]:[], mimeType:file.type||'application/octet-stream'});
+    var delimiter="\r\n--"+boundary+"\r\n";
+    var closeDelim="\r\n--"+boundary+"--";
+    var reader=new FileReader();
+    reader.onload=function(e){
+      var base64=e.target.result.split(',')[1];
+      var multipart=delimiter+'Content-Type: application/json\r\n\r\n'+metadata+delimiter+'Content-Type: '+(file.type||'application/octet-stream')+'\r\nContent-Transfer-Encoding: base64\r\n\r\n'+base64+closeDelim;
+      xhr.open('POST','https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true',true);
+      xhr.setRequestHeader('Authorization','Bearer '+token);
+      xhr.setRequestHeader('Content-Type','multipart/related; boundary="'+boundary+'"');
+      xhr.upload.onprogress=function(ev){ if(ev.lengthComputable && onProg) onProg(ev.loaded/ev.total*100); };
+      xhr.onload=function(){ if(xhr.status>=200&&xhr.status<300) resolve(JSON.parse(xhr.responseText)); else reject(xhr.responseText); };
+      xhr.onerror=function(){ reject('network'); };
+      xhr.send(multipart);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+async function handleFiles(list){
+  var arr=Array.from(list); if(!arr.length) return;
+  if(!token || !folderId){ $('upStatus').textContent='Mengambil akses Drive...'; await new Promise(function(r){ getToken(r); }); }
+  var prog=$('prog'); prog.style.display='block'; prog.value=0;
+  for(var i=0;i<arr.length;i++){
+    var f=arr[i];
+    $('upStatus').textContent='Upload '+(i+1)+'/'+arr.length+': '+f.name+' ('+(f.size/1024/1024).toFixed(1)+' MB) - UNLIMITED';
+    try{
+      await uploadDirect(f, function(p){ prog.value = (i/arr.length*100) + (p/arr.length); });
+    }catch(e){ alert('Gagal '+f.name+': '+e); }
+  }
+  prog.style.display='none'; $('upStatus').textContent='✅ Selesai, refresh...'; setTimeout(function(){ $('upStatus').textContent=''; loadFiles(); },700);
+}
+$('fileInput').addEventListener('change',function(e){handleFiles(e.target.files);});
+var dz=$('dropZone'); dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('drag')}); dz.addEventListener('dragleave',function(){dz.classList.remove('drag')}); dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('drag');handleFiles(e.dataTransfer.files);});
+function delFile(id){ if(!confirm('Hapus permanen?'))return; var form=document.createElement('form'); form.method='POST'; form.action=SCRIPT_URL; form.target='_blank'; form.style.display='none'; [['action','deleteFile'],['fileId',id]].forEach(function(kv){var inp=document.createElement('input');inp.type='hidden';inp.name=kv[0];inp.value=kv[1];form.appendChild(inp);}); document.body.appendChild(form); form.submit(); setTimeout(function(){form.remove();loadFiles();},1200);}
+loadFiles(); getToken();
+</script>
+<script>
+// === OVERRIDE FULL PROXY VIA SCRIPT - ANTI AKSES DITOLAK ===
+const PROXY_MODE = true;
 function loadFiles(){
-  const box=document.getElementById('fileList'); box.innerHTML='<div style="padding:20px;color:#888">Memuat...</div>';
+  const box=document.getElementById('fileList')||document.getElementById('grid')||document.querySelector('[id*=list]');
+  if(box) box.innerHTML='<div style="padding:24px;text-align:center;color:#888">Memuat dari Script...</div>';
   const cb='cb_'+Date.now();
   window[cb]=function(res){
-    cleanup();
-    if(!res || !res.ok){ box.innerHTML='<div style="padding:20px">Gagal memuat: '+(res?res.error:'no response')+'</div>'; return; }
-    render(res.files||[]);
+    delete window[cb]; document.getElementById('jsonp')?.remove();
+    if(!res||!res.ok){ if(box) box.innerHTML='<div style="padding:20px">Gagal memuat: '+(res?res.error:'')+'</div>'; return; }
+    renderFilesProxy(res.files||[]);
   };
-  function cleanup(){ delete window[cb]; document.getElementById('jsonp')?.remove(); }
   let s=document.createElement('script'); s.id='jsonp'; s.src=SCRIPT_URL+'?action=list&callback='+cb+'&_='+Date.now();
-  s.onerror=function(){ cleanup(); box.innerHTML='<div style="padding:20px">Error koneksi - klik Refresh</div>'; };
   document.body.appendChild(s);
-  setTimeout(()=>{ if(document.getElementById('jsonp')){ cleanup(); box.innerHTML='<div style="padding:20px">Timeout - server lambat, klik Refresh lagi</div>'; } }, 8000);
 }
-function render(files){
-  const box=document.getElementById('fileList'); 
-  if(!files.length){ box.innerHTML='<div style="text-align:center;padding:30px;color:#888">Belum ada file</div>'; return; }
-  let html='<div class="grid">';
+function renderFilesProxy(files){
+  const box=document.getElementById('fileList')||document.getElementById('grid')||document.getElementById('fileGrid');
+  if(!box) return;
+  if(!files.length){ box.innerHTML='<div style="padding:30px;text-align:center;color:#888">Belum ada file</div>'; return; }
+  let h='';
   files.forEach(f=>{
-    const isImg=(f.type||'').startsWith('image/');
-    const thumb=f.thumb || ('https://lh3.googleusercontent.com/d/'+f.id);
-    const th=isImg?`<img src="${thumb}" loading="lazy" onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?id=${f.id}&sz=w400'">`:`<div style="font-size:36px">${(f.type||'').includes('video')?'🎬':'📄'}</div>`;
-    html+=`<div class="item"><div class="thumb" onclick="window.open('${f.viewUrl}','_blank')" style="cursor:pointer">${th}</div><div class="meta"><div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.name}</div><div style="font-size:11px;color:#888">${(f.size/1024/1024).toFixed(2)} MB</div><div style="display:flex;gap:6px;margin-top:8px"><a href="${f.downloadUrl}" target="_blank" style="flex:1;text-align:center;background:#111;color:#fff;padding:6px;border-radius:8px;text-decoration:none;font-size:12px">Download</a><button onclick="hapus('${f.id}')" style="background:#fff1f2;color:#e11d48;border:1px solid #fecdd3;padding:6px 8px;border-radius:8px;font-size:12px;cursor:pointer">Hapus</button></div></div></div>`;
+    // SEMUA LEWAT SCRIPT
+    const thumb = f.thumb; // sudah proxy dari server
+    const view = f.viewUrl; // sudah proxy view
+    const dl = f.downloadUrl; // sudah proxy download
+    const isImg = (f.type||'').startsWith('image/');
+    const thTag = isImg?`<img src="${thumb}" loading="lazy" style="width:100%;height:100%;object-fit:cover">`:`<div style="font-size:32px">📄</div>`;
+    h+=`
+    <div class="file-card" style="background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden;display:flex;flex-direction:column">
+      <div onclick="openPreview('${view}','${f.type}')" style="height:160px;background:#f6f6f7;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden">${thTag}</div>
+      <div style="padding:10px">
+        <div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${f.name}">${f.name}</div>
+        <div style="font-size:11px;color:#888;margin-top:2px">${(f.size/1024/1024).toFixed(2)} MB • via Script</div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <a href="${dl}" target="_blank" style="flex:1;text-align:center;background:#111;color:#fff;padding:7px;border-radius:8px;text-decoration:none;font-size:12px">Download</a>
+          <button onclick="hapusFile('${f.id}')" style="background:#fff1f2;color:#e11d48;border:1px solid #fecdd3;padding:7px 8px;border-radius:8px;font-size:12px;cursor:pointer">Hapus</button>
+        </div>
+      </div>
+    </div>`;
   });
-  html+='</div>'; box.innerHTML=html;
-  // filter
-  const q=document.getElementById('search'); if(q){ q.oninput=(e)=>{ const v=e.target.value.toLowerCase(); document.querySelectorAll('.item').forEach(el=>{ el.style.display=el.textContent.toLowerCase().includes(v)?'':'none'; }); }; }
+  // keep original grid style
+  box.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px">'+h+'</div>';
 }
-async function hapus(id){
-  if(!confirm('Hapus file?')) return;
-  const fd=new FormData(); fd.append('action','deleteFile'); fd.append('fileId',id);
-  const r=await fetch(SCRIPT_URL,{method:'POST',body:fd}); const j=await r.json(); if(j.ok) loadFiles(); else alert(j.error);
+function openPreview(url,type){
+  if(type.startsWith('image/')){
+    let m=document.getElementById('imgModal'); if(!m){ m=document.createElement('div'); m.id='imgModal'; m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px'; m.innerHTML='<img id="modalImg" style="max-width:90vw;max-height:90vh;border-radius:12px"><button onclick="this.parentElement.style.display=\'none\'" style="position:absolute;top:20px;right:20px;background:#fff;border:0;padding:8px 14px;border-radius:20px;font-weight:700;cursor:pointer">✕</button>'; document.body.appendChild(m); }
+    document.getElementById('modalImg').src=url; m.style.display='flex';
+  } else { window.open(url,'_blank'); }
 }
-
-// --- UPLOAD UNLIMITED pakai gapi (langsung ke Drive, bypass 50MB) ---
-let token=null;
-async function getToken(){
-  if(token) return token;
-  return new Promise((resolve,reject)=>{
-    if(!window.gapi){ let s=document.createElement('script'); s.src='https://apis.google.com/js/api.js'; s.onload=init; document.body.appendChild(s); } else init();
-    function init(){ gapi.load('client:auth2', async()=>{
-      await gapi.client.init({clientId:'', scope:'https://www.googleapis.com/auth/drive', discoveryDocs:["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"]});
-      // pakai token dari Apps Script
-      fetch(SCRIPT_URL+'?action=debug').then(r=>r.text()).then(()=>{}).catch(()=>{});
-      // ambil token via google auth popup? fallback pakai Apps Script token via server
-      // Untuk unlimited tanpa batas, kita minta token dari user via gapi.auth2 (akan popup sekali)
-      const auth = gapi.auth2.getAuthInstance();
-      if(!auth.isSignedIn.get()){ await auth.signIn(); }
-      token = auth.currentUser.get().getAuthResponse().access_token;
-      resolve(token);
-    });}
-  });
-}
-// Simpler direct upload tanpa gapi sign-in: pakai resumable upload dengan token dari Apps Script (kita ambil dari ScriptApp.getOAuthToken via action=token)
-async function getServerToken(){
-  return new Promise(res=>{
-    const cb='t_'+Date.now(); window[cb]=d=>{ delete window[cb]; document.getElementById('jt')?.remove(); res(d.token||''); };
-    let s=document.createElement('script'); s.id='jt'; s.src=SCRIPT_URL+'?action=token&callback='+cb; document.body.appendChild(s);
-    setTimeout(()=>res(''),4000);
-  });
-}
-async function uploadFile(file){
-  const box=document.getElementById('fileList'); 
-  // coba pakai server token dulu
-  let t = await getServerToken();
-  if(!t){ alert('Token belum siap, klik Refresh lalu coba lagi'); return; }
-  // buat metadata
-  const metadata = {name:file.name, parents:[]};
-  // get folder id dulu via list
-  // upload multipart
-  const form = new FormData();
-  form.append('metadata', new Blob([JSON.stringify(metadata)],{type:'application/json'}));
-  form.append('file', file);
-  // resumable simple: pakai fetch multipart
-  const url = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,size,mimeType';
-  let resp = await fetch(url,{method:'POST', headers:{'Authorization':'Bearer '+t}, body:form});
-  if(!resp.ok){ const txt=await resp.text(); alert('Upload gagal: '+txt); return; }
-  let data = await resp.json();
-  // jadi publik biar thumbnail muncul
-  await fetch('https://www.googleapis.com/drive/v3/files/'+data.id+'/permissions',{method:'POST',headers:{'Authorization':'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({role:'reader',type:'anyone'})}).catch(()=>{});
-  // pindahkan ke folder Ruang Data Khusus via Apps Script move (opsional, biar rapi)
-  fetch(SCRIPT_URL,{method:'POST',body:new URLSearchParams({action:'moveToFolder', fileId:data.id})});
-  loadFiles();
-}
-document.getElementById('fileInput').onchange=e=>{ [...e.target.files].forEach(uploadFile); };
-const drop=document.getElementById('drop'); drop.ondragover=e=>{e.preventDefault();drop.classList.add('drag')}; drop.ondragleave=()=>drop.classList.remove('drag'); drop.ondrop=e=>{e.preventDefault();drop.classList.remove('drag'); [...e.dataTransfer.files].forEach(uploadFile);};
-loadFiles();
-</script>
-<script>
-// tambahan endpoint token & move di Apps Script perlu, kita sudah siapkan di Kode.gs
-</script>
-</body>
-</html>
+// alias for old functions
+window.loadFiles = loadFiles;
+window.renderFiles = renderFilesProxy;
+setTimeout(loadFiles,500);
+</script></body></html>
