@@ -39,7 +39,7 @@ input,select{flex:1;min-width:120px;height:42px;padding:0 12px;border:1.5px soli
 <button class="btn" onclick="openPanel('in')"><span>💰</span>Uang Masuk</button>
 <button class="btn" onclick="openPanel('out')"><span>💸</span>Uang Keluar</button>
 <a class="btn" href="ruang-data.html"><span>📁</span>Ruang Data Khusus<br><small style="font-size:10px;color:#667eea;font-weight:600">Buka →</small></a>
-<button class="btn" onclick="openPanel('sales')" style="border:2px solid #ede9fe"><span>📦</span>Jualan Laku<br><small style="font-size:10px;color:#7c3aed;font-weight:700" id="menuSalesCount">0 laku</small></button>
+<a class="btn" href="jualan-laku.html" style="border:2px solid #ede9fe"><span>📦</span>Jualan Laku<br><small style="font-size:10px;color:#7c3aed;font-weight:700">Buka Layar Baru →</small><small style="font-size:10px;color:#7c3aed;font-weight:700" id="menuSalesCount">0 laku</small></a>
 </div>
 <div id="pIn" class="panel"><h4>Catat Uang Masuk</h4><div class="row"><input id="inAmt" type="number" placeholder="Jumlah"><input id="inDesc" placeholder="Keterangan"></div><div class="row"><select id="inCat"><option>Gaji</option><option>Bonus</option><option>Usaha</option><option>Lainnya</option></select><button class="add" onclick="addTx('in')">Tambah</button></div><div class="list" id="lIn"></div></div>
 <div id="pOut" class="panel"><h4>Catat Uang Keluar</h4><div class="row"><input id="outAmt" type="number" placeholder="Jumlah"><input id="outDesc" placeholder="Keterangan"></div><div class="row"><select id="outCat"><option>Makan</option><option>Transport</option><option>Belanja</option><option>Tagihan</option><option>Lainnya</option></select><button class="add" onclick="addTx('out')">Tambah</button></div><div class="list" id="lOut"></div></div>
