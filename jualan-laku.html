@@ -1,131 +1,57 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Jualan Laku - Dashboard</title>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Laku Berapa PUBLIC</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;background:#f8fafc;min-height:100vh}
-header{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;padding:18px 16px;position:sticky;top:0;z-index:10}
-.top{max-width:900px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
-.container{max-width:900px;margin:18px auto;padding:0 16px}
-.card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 16px rgba(0,0,0,.06);margin-bottom:16px}
-.card h3{font-size:15px;margin-bottom:12px}
-.row{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-.row>div{flex:1;min-width:140px}
-label{font-size:12px;font-weight:600;color:#475569;display:block;margin-bottom:4px}
-input,select{width:100%;height:44px;padding:0 12px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;background:#f8fafc}
-.btn{height:44px;padding:0 18px;border:none;border-radius:10px;font-weight:700;cursor:pointer}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;background:#f8fafc}
+header{background:#7c3aed;color:#fff;padding:16px;position:sticky;top:0}
+.container{max-width:800px;margin:16px auto;padding:0 16px}
+.card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+input{width:100%;height:42px;border:1.5px solid #e2e8f0;border-radius:8px;padding:0 10px;margin-top:4px}
+label{font-size:12px;font-weight:600;color:#475569}
+.row{display:flex;gap:10px;margin-bottom:10px} .row>div{flex:1}
+.btn{height:42px;border:none;border-radius:8px;font-weight:700;cursor:pointer;padding:0 16px}
 .btn-p{background:#7c3aed;color:#fff;flex:1}
-.btn-s{background:#fff;border:1px solid #e2e8f0;color:#475569}
-.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
-.stat{background:#fff;border-radius:14px;padding:14px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.05)}
-.stat b{font-size:22px;display:block;color:#7c3aed}
-.stat small{font-size:11px;color:#64748b}
-.item{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f1f5f9;font-size:13px}
-.badge{background:#ede9fe;color:#7c3aed;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700}
-</style>
-</head>
+</style></head>
 <body>
-<header><div class="top"><div><a href="dashboard.html" style="color:#fff;text-decoration:none;font-size:13px">← Dashboard</a><h2 style="margin-top:6px">📦 Jualan Laku Berapa</h2><p style="font-size:12px;opacity:.9">Catat hari laku, pendapatan, dan lihat grafik</p></div><div style="text-align:right"><div id="todayCount" style="font-size:28px;font-weight:800">0</div><div style="font-size:11px;opacity:.9">laku hari ini</div></div></div></header>
+<header><h3>📦 Laku Berapa - PUBLIC Sheet 1FVP...</h3><p style="font-size:12px;opacity:.9">Script ID: 1TZKfkwTMClrXdoHePqzwhT0kll10WC-04d-vOw1atUpHfA0zKSpH6TcS</p></header>
 <div class="container">
-<div class="stats">
-<div class="stat"><small>Hari Ini</small><b id="sToday">0</b><small>pcs</small></div>
-<div class="stat"><small>Pendapatan Hari Ini</small><b id="pToday" style="color:#16a34a">Rp 0</b></div>
-<div class="stat"><small>Total Laku</small><b id="sTotal">0</b><small>pcs</small></div>
+<div class="card">
+<div class="row"><div><label>SCRIPT_URL (paste exec url baru setelah Terapkan)</label><input id="url" value="https://script.google.com/macros/s/PASTE_EXEC_URL_BARU_DISINI/exec"></div></div>
+<div class="row"><div><label>Hari Apa Laku *</label><input type="date" id="hari"></div><div><label>Laku Berapa pcs *</label><input type="number" id="qty"></div></div>
+<div class="row"><div><label>Pendapatan Hari Berapa *</label><input type="number" id="pend"></div><div><label>Ket</label><input id="ket"></div></div>
+<button class="btn btn-p" onclick="kirim()">Kirim</button><div id="st" style="font-size:12px;color:#7c3aed;margin-top:8px"></div>
 </div>
-
-<div class="card"><h3>➕ Input Jualan Laku</h3>
-<div class="row">
-<div><label>Hari Apa Yang Laku *</label><input type="date" id="hari"></div>
-<div><label>Laku Berapa (pcs) *</label><input type="number" id="qty" placeholder="mis: 15"></div>
+<div class="card"><canvas id="c1"></canvas></div>
+<div class="card"><canvas id="c2"></canvas></div>
+<div class="card"><div id="list"></div></div>
 </div>
-<div class="row">
-<div><label>Pendapatan Hari Berapa (Rp) *</label><input type="number" id="pendapatan" placeholder="mis: 500000"></div>
-<div><label>Keterangan (opsional)</label><input type="text" id="ket" placeholder="mis: Jualan di pasar"></div>
-</div>
-<div class="row"><button class="btn btn-p" onclick="kirim()">🚀 Kirim & Masuk Dashboard Laku</button><a href="dashboard.html" class="btn btn-s" style="display:flex;align-items:center;justify-content:center;text-decoration:none">Dashboard</a></div>
-</div>
-
-<div class="card"><h3>📈 Grafik Laku Per Hari</h3><canvas id="chartLaku" height="120"></canvas></div>
-<div class="card"><h3>📈 Grafik Pendapatan Per Hari</h3><canvas id="chartUang" height="120"></canvas></div>
-
-<div class="card"><h3>📋 Riwayat Laku Per Hari</h3><div id="list"></div></div>
-</div>
-
 <script>
-const KEY='jualanLaku';
-let data=JSON.parse(localStorage.getItem(KEY)||'[]');
 document.getElementById('hari').valueAsDate=new Date();
-
-function save(){localStorage.setItem(KEY,JSON.stringify(data)); render();}
+let chart1,chart2,all=[];
 function fmt(n){return 'Rp '+Number(n).toLocaleString('id-ID')}
-function fmtDate(d){return new Date(d).toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'short'})}
-
-function kirim(){
-  const hari=document.getElementById('hari').value;
-  const qty=Number(document.getElementById('qty').value);
-  const pendapatan=Number(document.getElementById('pendapatan').value);
-  const ket=document.getElementById('ket').value||'-';
-  if(!hari) return alert('Pilih hari apa yang laku');
-  if(!qty || qty<=0) return alert('Masukkan laku berapa pcs');
-  if(!pendapatan) return alert('Masukkan pendapatan hari berapa');
-  data.push({hari, qty, pendapatan, ket, t:Date.now()});
-  save();
-  document.getElementById('qty').value=''; document.getElementById('pendapatan').value=''; document.getElementById('ket').value='';
-  alert('✅ Berhasil! Masuk ke dashboard laku');
-  // setelah kirim tetap di halaman ini biar grafik update, user bisa klik Dashboard kalo mau
+function getUrl(){return document.getElementById('url').value.trim()}
+async function load(){
+ const url=getUrl(); if(url.includes('PASTE')){document.getElementById('list').textContent='Paste exec URL dulu di atas';return}
+ try{
+  const r=await fetch(url+'?action=listJualan&t='+Date.now()); const j=await r.json(); all=j.data||[]; render();
+ }catch(e){document.getElementById('list').textContent='Gagal: '+e}
 }
-
-let chart1, chart2;
+async function kirim(){
+ const hari=document.getElementById('hari').value; const qty=document.getElementById('qty').value; const pend=document.getElementById('pend').value; const ket=document.getElementById('ket').value;
+ if(!hari||!qty||!pend) return alert('Lengkapi hari, laku, pendapatan');
+ const url=getUrl();
+ document.getElementById('st').textContent='Mengirim...';
+ const fd=new FormData(); fd.append('action','saveJualan'); fd.append('hari',hari); fd.append('qty',qty); fd.append('pendapatan',pend); fd.append('ket',ket);
+ try{ const r=await fetch(url,{method:'POST',body:fd}); const j=await r.json(); if(!j.ok) throw j.error; document.getElementById('st').textContent='Berhasil public!'; load(); }catch(e){document.getElementById('st').textContent='Gagal: '+e; alert(e)}
+}
 function render(){
-  const today=new Date().toISOString().split('T')[0];
-  const todayItems=data.filter(d=>d.hari===today);
-  const todayQty=todayItems.reduce((a,b)=>a+b.qty,0);
-  const todayPend=todayItems.reduce((a,b)=>a+b.pendapatan,0);
-  const totalQty=data.reduce((a,b)=>a+b.qty,0);
-  document.getElementById('todayCount').textContent=todayQty;
-  document.getElementById('sToday').textContent=todayQty;
-  document.getElementById('pToday').textContent=fmt(todayPend);
-  document.getElementById('sTotal').textContent=totalQty;
-
-  // group by hari
-  const grouped={};
-  data.forEach(d=>{
-    if(!grouped[d.hari]) grouped[d.hari]={qty:0,pend:0};
-    grouped[d.hari].qty+=d.qty;
-    grouped[d.hari].pend+=d.pendapatan;
-  });
-  const labels=Object.keys(grouped).sort();
-  const qtyVals=labels.map(k=>grouped[k].qty);
-  const pendVals=labels.map(k=>grouped[k].pend);
-  const labelFmt=labels.map(d=>fmtDate(d));
-
-  // chart laku
-  if(chart1) chart1.destroy();
-  chart1=new Chart(document.getElementById('chartLaku'),{
-    type:'bar',
-    data:{labels:labelFmt,datasets:[{label:'Laku pcs',data:qtyVals,backgroundColor:'#7c3aed',borderRadius:6}]},
-    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
-  });
-  if(chart2) chart2.destroy();
-  chart2=new Chart(document.getElementById('chartUang'),{
-    type:'line',
-    data:{labels:labelFmt,datasets:[{label:'Pendapatan',data:pendVals,borderColor:'#16a34a',backgroundColor:'rgba(22,163,74,.15)',fill:true,tension:.4}]},
-    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>'Rp '+(v/1000)+'k'}}}}
-  });
-
-  // list
-  document.getElementById('list').innerHTML=data.slice().reverse().map(d=>`
-    <div class="item">
-      <div><b>${d.qty} pcs</b> - ${fmt(d.pendapatan)}<div style="font-size:11px;color:#64748b">${fmtDate(d.hari)} • ${d.hari} • ${d.ket}</div></div>
-      <div><span class="badge">${d.hari}</span> <button onclick="hapus(${d.t})" style="border:none;background:none;color:#ef4444;cursor:pointer;margin-left:8px">✕</button></div>
-    </div>
-  `).join('') || '<div style="text-align:center;color:#94a3b8;padding:20px">Belum ada data</div>';
+ const grouped={}; all.forEach(d=>{if(!grouped[d.hari]) grouped[d.hari]={qty:0,pend:0}; grouped[d.hari].qty+=d.qty; grouped[d.hari].pend+=d.pendapatan});
+ const labels=Object.keys(grouped).sort(); const q=labels.map(k=>grouped[k].qty); const p=labels.map(k=>grouped[k].pend);
+ if(chart1) chart1.destroy(); chart1=new Chart(document.getElementById('c1'),{type:'bar',data:{labels,datasets:[{label:'Laku',data:q,backgroundColor:'#7c3aed'}]},options:{plugins:{legend:{display:false}}}}});
+ if(chart2) chart2.destroy(); chart2=new Chart(document.getElementById('c2'),{type:'line',data:{labels,datasets:[{label:'Pendapatan',data:p,borderColor:'#16a34a',fill:true}]},options:{plugins:{legend:{display:false}}}}});
+ document.getElementById('list').innerHTML=all.slice().reverse().map(d=>'<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;font-size:13px"><div><b>'+d.qty+' pcs</b> - '+fmt(d.pendapatan)+' - '+d.hari+' - '+d.ket+'</div></div>').join('')||'Kosong';
 }
-function hapus(t){if(!confirm('Hapus?'))return; data=data.filter(d=>d.t!==t); save();}
-render();
+document.getElementById('url').addEventListener('change',load);
 </script>
-</body>
-</html>
+</body></html>
