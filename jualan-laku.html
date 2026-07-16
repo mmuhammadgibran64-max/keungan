@@ -1,57 +1,135 @@
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Laku Berapa PUBLIC</title>
+<title>Laku Berapa PUBLIC - FIX</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;background:#f8fafc}
-header{background:#7c3aed;color:#fff;padding:16px;position:sticky;top:0}
+header{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;padding:16px;position:sticky;top:0;z-index:10}
 .container{max-width:800px;margin:16px auto;padding:0 16px}
-.card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-input{width:100%;height:42px;border:1.5px solid #e2e8f0;border-radius:8px;padding:0 10px;margin-top:4px}
-label{font-size:12px;font-weight:600;color:#475569}
-.row{display:flex;gap:10px;margin-bottom:10px} .row>div{flex:1}
-.btn{height:42px;border:none;border-radius:8px;font-weight:700;cursor:pointer;padding:0 16px}
-.btn-p{background:#7c3aed;color:#fff;flex:1}
+.card{background:#fff;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+input{width:100%;height:44px;border:1.5px solid #e2e8f0;border-radius:10px;padding:0 12px;margin-top:4px;background:#f8fafc}
+label{font-size:11px;font-weight:700;color:#475569;letter-spacing:.3px}
+.row{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap} .row>div{flex:1;min-width:140px}
+.btn{height:46px;border:none;border-radius:12px;font-weight:800;cursor:pointer;padding:0 18px;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-p{background:#7c3aed;color:#fff;flex:1;box-shadow:0 4px 12px rgba(124,58,237,.3)}
+.btn-p:active{transform:scale(.97)}
+.btn-p:disabled{background:#a78bfa;cursor:not-allowed;transform:none}
+.btn-s{background:#fff;border:1.5px solid #e2e8f0;color:#475569}
+.badge{background:#ede9fe;color:#7c3aed;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:700}
+#st{font-size:12px;margin-top:10px;padding:10px;border-radius:8px;display:none}
+#st.ok{display:block;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0}
+#st.err{display:block;background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+#st.load{display:block;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe}
 </style></head>
 <body>
-<header><h3>📦 Laku Berapa - PUBLIC Sheet 1FVP...</h3><p style="font-size:12px;opacity:.9">Script ID: 1TZKfkwTMClrXdoHePqzwhT0kll10WC-04d-vOw1atUpHfA0zKSpH6TcS</p></header>
+<header><div style="max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center"><div><h3>📦 Laku Berapa - PUBLIC</h3><p style="font-size:11px;opacity:.9">Sheet: 1FVP_JzF4kcTrdlzXPc48CQo2jVwVRmu1vvoaL4TpOT0 • Script: 1TZK...</p></div><div style="text-align:right"><div id="todayBig" style="font-size:22px;font-weight:800">0</div><div style="font-size:10px;opacity:.9">pcs hari ini</div></div></div></header>
 <div class="container">
 <div class="card">
-<div class="row"><div><label>SCRIPT_URL (paste exec url baru setelah Terapkan)</label><input id="url" value="https://script.google.com/macros/s/PASTE_EXEC_URL_BARU_DISINI/exec"></div></div>
-<div class="row"><div><label>Hari Apa Laku *</label><input type="date" id="hari"></div><div><label>Laku Berapa pcs *</label><input type="number" id="qty"></div></div>
-<div class="row"><div><label>Pendapatan Hari Berapa *</label><input type="number" id="pend"></div><div><label>Ket</label><input id="ket"></div></div>
-<button class="btn btn-p" onclick="kirim()">Kirim</button><div id="st" style="font-size:12px;color:#7c3aed;margin-top:8px"></div>
+<h4 style="font-size:14px;margin-bottom:12px">➕ Input - Hari Apa Yang Laku</h4>
+<details style="margin-bottom:12px"><summary style="font-size:11px;color:#64748b;cursor:pointer">⚙️ Ganti SCRIPT_URL (jika deploy baru)</summary><input id="url" style="margin-top:8px" placeholder="https://script.google.com/macros/s/.../exec" value=""></details>
+<div class="row"><div><label>HARI APA LAKU *</label><input type="date" id="hari"></div><div><label>LAKU BERAPA (pcs) *</label><input type="number" id="qty" placeholder="contoh: 15"></div></div>
+<div class="row"><div><label>PENDAPATAN HARI BERAPA (Rp) *</label><input type="number" id="pend" placeholder="contoh: 500000"></div><div><label>KETERANGAN</label><input id="ket" placeholder="mis: Pasar pagi"></div></div>
+<button class="btn btn-p" id="btnKirim" onclick="kirim()"><span id="btnTxt">🚀 KIRIM - BIAR PUBLIC</span></button>
+<div id="st"></div>
 </div>
-<div class="card"><canvas id="c1"></canvas></div>
-<div class="card"><canvas id="c2"></canvas></div>
-<div class="card"><div id="list"></div></div>
+<div class="card"><h4 style="font-size:13px;margin-bottom:8px">📈 Grafik Laku Per Hari</h4><canvas id="c1" height="110"></canvas></div>
+<div class="card"><h4 style="font-size:13px;margin-bottom:8px">📈 Grafik Pendapatan Per Hari</h4><canvas id="c2" height="110"></canvas></div>
+<div class="card"><h4 style="font-size:13px;margin-bottom:8px">📋 Riwayat Public - Keliatan Semua Orang</h4><div id="list">Memuat...</div></div>
 </div>
 <script>
-document.getElementById('hari').valueAsDate=new Date();
+const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbxJ2BnTkXqqAz48JoF8Y5sl2M_I2q1XMOYBccsLFdba_viOOUeQJ8cq52kVOYOonQmj/exec";
+const savedUrl = localStorage.getItem('laku_script_url');
+document.getElementById('url').value = savedUrl || DEFAULT_URL;
+document.getElementById('hari').valueAsDate = new Date();
 let chart1,chart2,all=[];
+
 function fmt(n){return 'Rp '+Number(n).toLocaleString('id-ID')}
-function getUrl(){return document.getElementById('url').value.trim()}
+function fmtDate(d){return new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}
+function getUrl(){ const u=document.getElementById('url').value.trim(); localStorage.setItem('laku_script_url',u); return u; }
+function showStatus(type,msg){ const el=document.getElementById('st'); el.className=type; el.textContent=msg; el.style.display='block'; }
+
 async function load(){
- const url=getUrl(); if(url.includes('PASTE')){document.getElementById('list').textContent='Paste exec URL dulu di atas';return}
+ const url=getUrl(); if(!url || url.includes('PASTE')){document.getElementById('list').textContent='Paste exec URL dulu di atas';return}
  try{
-  const r=await fetch(url+'?action=listJualan&t='+Date.now()); const j=await r.json(); all=j.data||[]; render();
- }catch(e){document.getElementById('list').textContent='Gagal: '+e}
+  document.getElementById('list').textContent='Memuat data public...';
+  const r=await fetch(url+'?action=listJualan&t='+Date.now()); 
+  const j=await r.json(); 
+  if(!j.ok) throw j.error||'gagal';
+  all=j.data||[]; 
+  render();
+ }catch(e){ document.getElementById('list').innerHTML='<span style="color:#dc2626">Gagal load: '+e+'<br><small>Pastikan sudah Terapkan deployment = Siapa saja</small></span>'; }
 }
+
 async function kirim(){
- const hari=document.getElementById('hari').value; const qty=document.getElementById('qty').value; const pend=document.getElementById('pend').value; const ket=document.getElementById('ket').value;
- if(!hari||!qty||!pend) return alert('Lengkapi hari, laku, pendapatan');
+ const hari=document.getElementById('hari').value; 
+ const qty=document.getElementById('qty').value; 
+ const pend=document.getElementById('pend').value; 
+ const ket=document.getElementById('ket').value;
+ if(!hari||!qty||!pend){ showStatus('err','❌ Lengkapi: Hari, Laku Berapa, Pendapatan'); return; }
  const url=getUrl();
- document.getElementById('st').textContent='Mengirim...';
- const fd=new FormData(); fd.append('action','saveJualan'); fd.append('hari',hari); fd.append('qty',qty); fd.append('pendapatan',pend); fd.append('ket',ket);
- try{ const r=await fetch(url,{method:'POST',body:fd}); const j=await r.json(); if(!j.ok) throw j.error; document.getElementById('st').textContent='Berhasil public!'; load(); }catch(e){document.getElementById('st').textContent='Gagal: '+e; alert(e)}
+ if(!url || url.includes('PASTE')){ showStatus('err','❌ Paste exec URL dulu'); return; }
+ 
+ const btn=document.getElementById('btnKirim'); const txt=document.getElementById('btnTxt');
+ btn.disabled=true; txt.textContent='⏳ MENGIRIM...'; showStatus('load','⏳ Menyimpan ke Sheet public 1FVP... tunggu...');
+
+ try{
+  const fd=new FormData(); 
+  fd.append('action','saveJualan'); 
+  fd.append('hari',hari); 
+  fd.append('qty',qty); 
+  fd.append('pendapatan',pend); 
+  fd.append('ket',ket||'-');
+  const r=await fetch(url,{method:'POST',body:fd}); 
+  const j=await r.json(); 
+  if(!j.ok) throw j.error||'gagal simpan';
+  
+  showStatus('ok','✅ BERHASIL! Data hari '+hari+' - '+qty+' pcs - '+fmt(pend)+' sudah public, keliatan semua orang');
+  document.getElementById('qty').value=''; document.getElementById('pend').value=''; document.getElementById('ket').value='';
+  // vibrate jika HP
+  if(navigator.vibrate) navigator.vibrate(50);
+  await load();
+ }catch(e){ 
+  showStatus('err','❌ Gagal kirim: '+e+' - Coba klik Terapkan ulang di Apps Script'); 
+ }finally{
+  btn.disabled=false; txt.textContent='🚀 KIRIM - BIAR PUBLIC';
+ }
 }
+
 function render(){
- const grouped={}; all.forEach(d=>{if(!grouped[d.hari]) grouped[d.hari]={qty:0,pend:0}; grouped[d.hari].qty+=d.qty; grouped[d.hari].pend+=d.pendapatan});
- const labels=Object.keys(grouped).sort(); const q=labels.map(k=>grouped[k].qty); const p=labels.map(k=>grouped[k].pend);
- if(chart1) chart1.destroy(); chart1=new Chart(document.getElementById('c1'),{type:'bar',data:{labels,datasets:[{label:'Laku',data:q,backgroundColor:'#7c3aed'}]},options:{plugins:{legend:{display:false}}}}});
- if(chart2) chart2.destroy(); chart2=new Chart(document.getElementById('c2'),{type:'line',data:{labels,datasets:[{label:'Pendapatan',data:p,borderColor:'#16a34a',fill:true}]},options:{plugins:{legend:{display:false}}}}});
- document.getElementById('list').innerHTML=all.slice().reverse().map(d=>'<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;font-size:13px"><div><b>'+d.qty+' pcs</b> - '+fmt(d.pendapatan)+' - '+d.hari+' - '+d.ket+'</div></div>').join('')||'Kosong';
+ const today=new Date().toISOString().split('T')[0];
+ const todayQty=all.filter(d=>d.hari===today).reduce((a,b)=>a+b.qty,0);
+ document.getElementById('todayBig').textContent=todayQty;
+
+ const grouped={}; 
+ all.forEach(d=>{
+   if(!grouped[d.hari]) grouped[d.hari]={qty:0,pend:0}; 
+   grouped[d.hari].qty+=Number(d.qty||0); 
+   grouped[d.hari].pend+=Number(d.pendapatan||0);
+ });
+ const labels=Object.keys(grouped).sort(); 
+ const q=labels.map(k=>grouped[k].qty); 
+ const p=labels.map(k=>grouped[k].pend);
+ const labelFmt=labels.map(fmtDate);
+
+ if(chart1) chart1.destroy(); 
+ chart1=new Chart(document.getElementById('c1'),{
+   type:'bar',
+   data:{labels:labelFmt,datasets:[{label:'Laku pcs',data:q,backgroundColor:'#7c3aed',borderRadius:8}]},
+   options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
+ });
+ if(chart2) chart2.destroy(); 
+ chart2=new Chart(document.getElementById('c2'),{
+   type:'line',
+   data:{labels:labelFmt,datasets:[{label:'Pendapatan',data:p,borderColor:'#16a34a',backgroundColor:'rgba(22,163,74,.15)',fill:true,tension:.4}]},
+   options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
+ });
+
+ document.getElementById('list').innerHTML=all.slice().reverse().map(d=>{
+   return '<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px"><div><b>'+d.qty+' pcs</b> - '+fmt(d.pendapatan)+'<div style="font-size:11px;color:#64748b">'+d.hari+' • '+(d.ket||'-')+'</div></div><div><span class="badge">'+fmtDate(d.hari)+'</span></div></div>';
+ }).join('') || '<div style="text-align:center;color:#94a3b8;padding:20px">Belum ada data - isi form di atas biar public</div>';
 }
+
 document.getElementById('url').addEventListener('change',load);
+load();
 </script>
 </body></html>
