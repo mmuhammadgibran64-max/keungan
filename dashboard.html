@@ -14,43 +14,94 @@ header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:20p
 .card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
 .card h3{font-size:14px;color:#64748b;margin-bottom:6px}
 .card .val{font-size:24px;font-weight:700}
-.in{color:#16a34a}.out{color:#dc2626}.bal{color:#2563eb}
-.menu{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
-.btn{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;border:none;border-radius:16px;padding:24px 16px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.06);transition:.2s;font-size:15px;font-weight:600;color:#1e293b;text-decoration:none}
+.in{color:#16a34a}.out{color:#dc2626}.bal{color:#2563eb}.sales{color:#7c3aed}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+@media(min-width:600px){.menu{grid-template-columns:1fr 1fr 1fr 1fr}}
+.btn{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;border:none;border-radius:16px;padding:22px 12px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.06);transition:.2s;font-size:14px;font-weight:600;color:#1e293b;text-decoration:none;text-align:center}
 .btn:hover{transform:translateY(-3px)}
-.btn span{font-size:32px;margin-bottom:8px}
-.panel{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,.06);display:none}
+.btn span{font-size:30px;margin-bottom:8px}
+.panel{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,.06);display:none;margin-bottom:20px}
 .panel.active{display:block}
-.row{display:flex;gap:8px;margin-bottom:10px}
-input,select{flex:1;height:42px;padding:0 12px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;background:#f8fafc}
+.row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+input,select{flex:1;min-width:120px;height:42px;padding:0 12px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;background:#f8fafc}
 .add{height:42px;padding:0 16px;background:#667eea;color:#fff;border:none;border-radius:10px;font-weight:600;cursor:pointer}
 .list{margin-top:14px;max-height:400px;overflow:auto}
-.item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:14px}
+.item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:14px;align-items:center}
 .logout{margin:30px auto;display:block;background:none;border:none;color:#64748b;text-decoration:underline;font-size:13px;cursor:pointer}
+.badge{background:#ede9fe;color:#7c3aed;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;margin-top:6px}
 </style>
 </head>
 <body>
 <header><div class="top"><div><h2 id="hi">Halo!</h2><p style="font-size:13px;opacity:.9">Pantau keuangan real-time</p></div><div style="text-align:right"><div class="time" id="time" style="font-size:24px;font-weight:700">00:00:00</div><div class="date" id="date" style="font-size:12px;opacity:.9">-</div></div></div></header>
 <div class="container">
-<div class="cards"><div class="card"><h3>💰 Masuk</h3><div class="val in" id="tIn">Rp 0</div></div><div class="card"><h3>💸 Keluar</h3><div class="val out" id="tOut">Rp 0</div></div><div class="card" style="grid-column:1/-1"><h3>Saldo</h3><div class="val bal" id="tBal">Rp 0</div></div></div>
+<div class="cards"><div class="card"><h3>💰 Masuk</h3><div class="val in" id="tIn">Rp 0</div></div><div class="card"><h3>💸 Keluar</h3><div class="val out" id="tOut">Rp 0</div></div><div class="card"><h3>Saldo</h3><div class="val bal" id="tBal">Rp 0</div></div><div class="card"><h3>📦 Jualan Laku</h3><div class="val sales" id="tSales">0 pcs</div><small style="color:#64748b;font-size:11px" id="tSalesToday">Hari ini: 0</small></div></div>
 <div class="menu">
 <button class="btn" onclick="openPanel('in')"><span>💰</span>Uang Masuk</button>
 <button class="btn" onclick="openPanel('out')"><span>💸</span>Uang Keluar</button>
-<a class="btn" href="ruang-data.html"><span>📁</span>Ruang Data Khusus<br><small style="font-size:11px;color:#667eea;font-weight:600">Buka Layar Baru →</small></a>
+<a class="btn" href="ruang-data.html"><span>📁</span>Ruang Data Khusus<br><small style="font-size:10px;color:#667eea;font-weight:600">Buka →</small></a>
+<button class="btn" onclick="openPanel('sales')" style="border:2px solid #ede9fe"><span>📦</span>Jualan Laku<br><small style="font-size:10px;color:#7c3aed;font-weight:700" id="menuSalesCount">0 laku</small></button>
 </div>
 <div id="pIn" class="panel"><h4>Catat Uang Masuk</h4><div class="row"><input id="inAmt" type="number" placeholder="Jumlah"><input id="inDesc" placeholder="Keterangan"></div><div class="row"><select id="inCat"><option>Gaji</option><option>Bonus</option><option>Usaha</option><option>Lainnya</option></select><button class="add" onclick="addTx('in')">Tambah</button></div><div class="list" id="lIn"></div></div>
 <div id="pOut" class="panel"><h4>Catat Uang Keluar</h4><div class="row"><input id="outAmt" type="number" placeholder="Jumlah"><input id="outDesc" placeholder="Keterangan"></div><div class="row"><select id="outCat"><option>Makan</option><option>Transport</option><option>Belanja</option><option>Tagihan</option><option>Lainnya</option></select><button class="add" onclick="addTx('out')">Tambah</button></div><div class="list" id="lOut"></div></div>
+<div id="pSales" class="panel"><h4>📦 Jualan Laku Berapa</h4><div class="row"><input id="salesQty" type="number" placeholder="Berapa pcs laku? ex: 5"><input id="salesDesc" placeholder="Nama barang / keterangan"></div><div class="row"><select id="salesCat"><option>Produk Utama</option><option>Reseller</option><option>Online</option><option>Offline</option><option>Lainnya</option></select><button class="add" style="background:#7c3aed" onclick="addSales()">+ Laku</button></div><div style="display:flex;gap:8px;margin-top:12px"><div style="flex:1;background:#f5f3ff;border-radius:10px;padding:10px;text-align:center"><div style="font-size:12px;color:#64748b">Hari ini</div><b id="salesTodayBig" style="font-size:20px;color:#7c3aed">0</b><div style="font-size:11px">pcs</div></div><div style="flex:1;background:#f5f3ff;border-radius:10px;padding:10px;text-align:center"><div style="font-size:12px;color:#64748b">Minggu ini</div><b id="salesWeekBig" style="font-size:20px;color:#7c3aed">0</b><div style="font-size:11px">pcs</div></div><div style="flex:1;background:#f5f3ff;border-radius:10px;padding:10px;text-align:center"><div style="font-size:12px;color:#64748b">Total</div><b id="salesTotalBig" style="font-size:20px;color:#7c3aed">0</b><div style="font-size:11px">pcs</div></div></div><div class="list" id="lSales"></div></div>
 <button class="logout" onclick="localStorage.clear();location.href='index.html'">Keluar</button>
 </div>
 <script>
 function tick(){const n=new Date();document.getElementById('time').textContent=n.toLocaleTimeString('id-ID',{hour12:false});document.getElementById('date').textContent=n.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}setInterval(tick,1000);tick();
 const nama=localStorage.getItem('nama')||'muhammad gibran';document.getElementById('hi').textContent='Halo, '+nama+'!';
-let data=JSON.parse(localStorage.getItem('keuangan')||'{"in":[],"out":[]}');
+let data=JSON.parse(localStorage.getItem('keuangan')||'{"in":[],"out":[],"sales":[]}');
+if(!data.sales) data.sales=[];
 function save(){localStorage.setItem('keuangan',JSON.stringify(data));render();}
 function fmt(n){return 'Rp '+Number(n).toLocaleString('id-ID')}
-function render(){const tIn=data.in.reduce((a,b)=>a+b.amt,0),tOut=data.out.reduce((a,b)=>a+b.amt,0);document.getElementById('tIn').textContent=fmt(tIn);document.getElementById('tOut').textContent=fmt(tOut);document.getElementById('tBal').textContent=fmt(tIn-tOut);document.getElementById('lIn').innerHTML=data.in.map(x=>`<div class="item"><span>${x.desc}</span><b class="in">+${fmt(x.amt)}</b></div>`).reverse().join('');document.getElementById('lOut').innerHTML=data.out.map(x=>`<div class="item"><span>${x.desc}</span><b class="out">-${fmt(x.amt)}</b></div>`).reverse().join('');}
-function openPanel(t){document.getElementById('pIn').classList.toggle('active',t==='in');document.getElementById('pOut').classList.toggle('active',t==='out');}
-function addTx(t){const amt=Number(document.getElementById(t==='in'?'inAmt':'outAmt').value),desc=document.getElementById(t==='in'?'inDesc':'outDesc').value||'-';if(!amt)return alert('Masukkan jumlah');const cat=document.getElementById(t==='in'?'inCat':'outCat').value;data[t].push({amt,desc,cat,t:Date.now()});save();document.getElementById(t==='in'?'inAmt':'outAmt').value='';document.getElementById(t==='in'?'inDesc':'outDesc').value='';}
+function render(){
+  const tIn=data.in.reduce((a,b)=>a+b.amt,0),tOut=data.out.reduce((a,b)=>a+b.amt,0);
+  const totalSales=data.sales.reduce((a,b)=>a+(b.qty||1),0);
+  const today=new Date().toDateString();
+  const todaySales=data.sales.filter(s=>new Date(s.t).toDateString()===today).reduce((a,b)=>a+(b.qty||1),0);
+  const weekAgo=Date.now()-7*24*60*60*1000;
+  const weekSales=data.sales.filter(s=>s.t>weekAgo).reduce((a,b)=>a+(b.qty||1),0);
+  document.getElementById('tIn').textContent=fmt(tIn);
+  document.getElementById('tOut').textContent=fmt(tOut);
+  document.getElementById('tBal').textContent=fmt(tIn-tOut);
+  document.getElementById('tSales').textContent=totalSales+' pcs';
+  document.getElementById('tSalesToday').textContent='Hari ini: '+todaySales+' pcs';
+  document.getElementById('menuSalesCount').textContent=todaySales+' laku hari ini';
+  document.getElementById('salesTodayBig').textContent=todaySales;
+  document.getElementById('salesWeekBig').textContent=weekSales;
+  document.getElementById('salesTotalBig').textContent=totalSales;
+  document.getElementById('lIn').innerHTML=data.in.map(x=>`<div class="item"><span>${x.desc}</span><b class="in">+${fmt(x.amt)}</b></div>`).reverse().join('');
+  document.getElementById('lOut').innerHTML=data.out.map(x=>`<div class="item"><span>${x.desc}</span><b class="out">-${fmt(x.amt)}</b></div>`).reverse().join('');
+  document.getElementById('lSales').innerHTML=data.sales.map(x=>{
+    const d=new Date(x.t); const ds=d.toLocaleDateString('id-ID')+' '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="item"><div><b>${x.qty} pcs</b> - ${x.desc}<div style="font-size:11px;color:#64748b">${ds} • ${x.cat}</div></div><div><span class="badge">LAKU</span> <button onclick="delSales(${x.t})" style="border:none;background:none;color:#ef4444;cursor:pointer;margin-left:6px">✕</button></div></div>`;
+  }).reverse().join('') || '<div style="text-align:center;color:#94a3b8;padding:20px;font-size:13px">Belum ada penjualan, tambah dulu</div>';
+}
+function openPanel(t){
+  document.getElementById('pIn').classList.toggle('active',t==='in');
+  document.getElementById('pOut').classList.toggle('active',t==='out');
+  document.getElementById('pSales').classList.toggle('active',t==='sales');
+  if(document.getElementById('p'+(t==='in'?'In':t==='out'?'Out':'Sales')).classList.contains('active')){
+    setTimeout(()=>{ document.getElementById('p'+(t==='in'?'In':t==='out'?'Out':'Sales')).scrollIntoView({behavior:'smooth'}); },100);
+  }
+}
+function addTx(t){
+  const amt=Number(document.getElementById(t==='in'?'inAmt':'outAmt').value),
+  desc=document.getElementById(t==='in'?'inDesc':'outDesc').value||'-';
+  if(!amt)return alert('Masukkan jumlah');
+  const cat=document.getElementById(t==='in'?'inCat':'outCat').value;
+  data[t].push({amt,desc,cat,t:Date.now()});save();
+  document.getElementById(t==='in'?'inAmt':'outAmt').value='';
+  document.getElementById(t==='in'?'inDesc':'outDesc').value='';
+}
+function addSales(){
+  const qty=Number(document.getElementById('salesQty').value)||1;
+  const desc=document.getElementById('salesDesc').value||'Penjualan';
+  if(qty<=0) return alert('Masukkan jumlah laku');
+  const cat=document.getElementById('salesCat').value;
+  data.sales.push({qty,desc,cat,t:Date.now()});save();
+  document.getElementById('salesQty').value=''; document.getElementById('salesDesc').value='';
+}
+function delSales(t){ if(!confirm('Hapus data laku ini?')) return; data.sales=data.sales.filter(s=>s.t!==t); save(); }
 render();
 </script>
 </body>
