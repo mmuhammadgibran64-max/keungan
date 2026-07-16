@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Laku Berapa PUBLIC - FINAL</title>
+<title>Laku Berapa PUBLIC - FINAL HAPUS DOWNLOAD</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;background:#f8fafc}
@@ -8,38 +8,49 @@ header{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;padding:16p
 .container{max-width:800px;margin:16px auto;padding:0 16px}
 .card{background:#fff;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
 input{width:100%;height:44px;border:1.5px solid #e2e8f0;border-radius:10px;padding:0 12px;margin-top:4px;background:#f8fafc}
-label{font-size:11px;font-weight:700;color:#475569;letter-spacing:.3px}
+label{font-size:11px;font-weight:700;color:#475569}
 .row{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap} .row>div{flex:1;min-width:140px}
-.btn{height:50px;border:none;border-radius:12px;font-weight:800;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s}
-.btn-p{background:#7c3aed;color:#fff;box-shadow:0 4px 12px rgba(124,58,237,.3)}
-.btn-p:disabled{background:#a78bfa}
+.btn{height:46px;border:none;border-radius:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 14px}
+.btn-p{background:#7c3aed;color:#fff;flex:1;box-shadow:0 4px 12px rgba(124,58,237,.3)} .btn-p:disabled{background:#a78bfa}
+.btn-del{background:#fee2e2;color:#dc2626;border:1px solid #fecaca;height:32px;font-size:11px}
+.btn-dl{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;height:36px;font-size:11px}
 #st{font-size:12px;margin-top:10px;padding:10px;border-radius:8px;display:none}
 #st.ok{display:block;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0}
 #st.err{display:block;background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
 #st.load{display:block;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe}
+.item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f1f5f9}
 </style></head>
 <body>
-<header><div style="max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center"><div><h3>📦 Laku Berapa - PUBLIC FINAL</h3><p style="font-size:11px;opacity:.9">Sheet: 1FVP_JzF4kcTrdlz... | Exec: AKfycbzNXJ... (1TZK)</p></div><div style="text-align:right"><div id="todayBig" style="font-size:24px;font-weight:800">0</div><div style="font-size:10px;opacity:.9">pcs hari ini</div></div></div></header>
+<header><div style="max-width:800px;margin:0 auto;display:flex;justify-content:space-between"><div><h3>📦 Laku Berapa - PUBLIC</h3><p style="font-size:11px;opacity:.9">FINAL + HAPUS + DOWNLOAD</p></div><div style="text-align:right"><div id="todayBig" style="font-size:24px;font-weight:800">0</div><div style="font-size:10px">pcs hari ini</div></div></div></header>
 <div class="container">
 <div class="card">
-<div class="row"><div><label>HARI APA LAKU *</label><input type="date" id="hari"></div><div><label>LAKU BERAPA pcs *</label><input type="number" id="qty" placeholder="contoh: 15"></div></div>
-<div class="row"><div><label>PENDAPATAN HARI BERAPA (Rp) *</label><input type="number" id="pend" placeholder="contoh: 100000"></div><div><label>KETERANGAN</label><input id="ket" placeholder="contoh: peye kacang"></div></div>
+<div class="row"><div><label>HARI APA LAKU *</label><input type="date" id="hari"></div><div><label>LAKU BERAPA pcs *</label><input type="number" id="qty" placeholder="15"></div></div>
+<div class="row"><div><label>PENDAPATAN (Rp) *</label><input type="number" id="pend" placeholder="100000"></div><div><label>KETERANGAN</label><input id="ket" placeholder="peye kacang"></div></div>
 <button class="btn btn-p" id="btnKirim" onclick="kirim()"><span id="btnTxt">🚀 KIRIM - BIAR PUBLIC</span></button>
 <div id="st"></div>
 </div>
 <div class="card"><h4 style="font-size:13px;margin-bottom:8px">📈 Grafik Laku Per Hari</h4><canvas id="c1" height="120"></canvas></div>
-<div class="card"><h4 style="font-size:13px;margin-bottom:8px">💰 Grafik Pendapatan Per Hari</h4><canvas id="c2" height="120"></canvas></div>
-<div class="card"><h4 style="font-size:13px;margin-bottom:8px">📋 Riwayat Public - Keliatan Semua Orang</h4><div id="list">Memuat...</div></div>
+<div class="card"><h4 style="font-size:13px;margin-bottom:8px">💰 Grafik Pendapatan</h4><canvas id="c2" height="120"></canvas></div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+<h4 style="font-size:13px">📋 Riwayat Public - Siapapun Bisa Hapus & Download</h4>
+<div style="display:flex;gap:6px">
+<button class="btn btn-dl" onclick="downloadCSV()">⬇️ Download CSV</button>
+<button class="btn btn-dl" style="background:#fffbeb;border-color:#fde68a;color:#92400e" onclick="downloadJSON()">⬇️ Download JSON</button>
+</div>
+</div>
+<div id="list">Memuat...</div>
+</div>
 </div>
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNXJLewDCZ_f6V1aFxXcfm_D2Ph-h0NCpWpihB1fv72W5_Pf9mnTx3jcucybzUJpwp/exec";
 document.getElementById('hari').valueAsDate=new Date();
 let chart1,chart2,all=[];
 function fmt(n){return 'Rp '+Number(n).toLocaleString('id-ID')}
-function show(type,msg){const el=document.getElementById('st'); el.className=type; el.textContent=msg; el.style.display='block'}
+function show(t,m){const el=document.getElementById('st'); el.className=t; el.textContent=m; el.style.display='block'}
+
 async function load(){
  try{
-  document.getElementById('list').textContent='Memuat...';
   const r=await fetch(SCRIPT_URL+'?action=listJualan&t='+Date.now());
   const j=await r.json();
   if(!j.ok) throw j.error;
@@ -51,32 +62,55 @@ async function kirim(){
  const qty=document.getElementById('qty').value;
  const pend=document.getElementById('pend').value;
  const ket=document.getElementById('ket').value;
- if(!hari||!qty||!pend){show('err','❌ Lengkapi: Hari, Laku Berapa, Pendapatan'); return}
+ if(!hari||!qty||!pend){show('err','❌ Lengkapi hari, qty, pendapatan'); return}
  const btn=document.getElementById('btnKirim'); const txt=document.getElementById('btnTxt');
- btn.disabled=true; txt.textContent='⏳ MENGIRIM...'; show('load','Menyimpan ke Sheet public...');
+ btn.disabled=true; txt.textContent='⏳ MENGIRIM...'; show('load','Menyimpan...');
  try{
-  const fd=new FormData();
-  fd.append('hari',hari);
-  fd.append('qty',qty);
-  fd.append('pendapatan',pend);
-  fd.append('ket',ket||'-');
+  const fd=new FormData(); fd.append('hari',hari); fd.append('qty',qty); fd.append('pendapatan',pend); fd.append('ket',ket||'-');
   const r=await fetch(SCRIPT_URL,{method:'POST',body:fd});
-  const j=await r.json();
-  if(!j.ok) throw j.error;
-  show('ok','✅ BERHASIL! '+qty+' pcs - '+fmt(pend)+' hari '+hari+' sudah public');
-  document.getElementById('qty').value=''; document.getElementById('pend').value=''; document.getElementById('ket').value='';
+  const j=await r.json(); if(!j.ok) throw j.error;
+  show('ok','✅ Berhasil! '+qty+' pcs - '+fmt(pend)); document.getElementById('qty').value=''; document.getElementById('pend').value=''; document.getElementById('ket').value='';
   await load();
- }catch(e){show('err','❌ Gagal: '+e)}
+ }catch(e){show('err','❌ '+e)}
  btn.disabled=false; txt.textContent='🚀 KIRIM - BIAR PUBLIC';
+}
+async function hapus(row){
+ if(!confirm('Hapus data baris '+row+'? Siapapun bisa hapus!')) return;
+ try{
+  const fd=new FormData(); fd.append('action','deleteJualan'); fd.append('row',row);
+  const r=await fetch(SCRIPT_URL,{method:'POST',body:fd});
+  const j=await r.json(); if(!j.ok) throw j.error;
+  show('ok','🗑️ Dihapus!'); await load();
+ }catch(e){show('err','Gagal hapus: '+e)}
+}
+function downloadCSV(){
+ if(!all.length) return alert('Data kosong');
+ let csv='row,hari,qty,pendapatan,keterangan\n';
+ all.forEach(d=>{csv+=`${d.row},${d.hari},${d.qty},${d.pendapatan},"${(d.ket||'').replace(/"/g,'""')}"\n`});
+ const blob=new Blob([csv],{type:'text/csv'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a'); a.href=url; a.download='laku-berapa-'+new Date().toISOString().split('T')[0]+'.csv'; a.click();
+ show('ok','⬇️ CSV didownload ke File Manager!');
+}
+function downloadJSON(){
+ if(!all.length) return alert('Data kosong');
+ const blob=new Blob([JSON.stringify(all,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a'); a.href=url; a.download='laku-berapa-'+new Date().toISOString().split('T')[0]+'.json'; a.click();
+ show('ok','⬇️ JSON didownload ke File Manager!');
 }
 function render(){
  const today=new Date().toISOString().split('T')[0];
  document.getElementById('todayBig').textContent=all.filter(d=>d.hari===today).reduce((a,b)=>a+b.qty,0);
  const g={}; all.forEach(d=>{if(!g[d.hari]) g[d.hari]={qty:0,pend:0}; g[d.hari].qty+=d.qty; g[d.hari].pend+=d.pendapatan});
  const labels=Object.keys(g).sort(); const q=labels.map(k=>g[k].qty); const p=labels.map(k=>g[k].pend);
- if(chart1) chart1.destroy(); chart1=new Chart(document.getElementById('c1'),{type:'bar',data:{labels,datasets:[{label:'pcs',data:q,backgroundColor:'#7c3aed',borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
- if(chart2) chart2.destroy(); chart2=new Chart(document.getElementById('c2'),{type:'line',data:{labels,datasets:[{label:'Rp',data:p,borderColor:'#16a34a',backgroundColor:'rgba(22,163,74,.15)',fill:true,tension:.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
- document.getElementById('list').innerHTML=all.slice().reverse().map(d=>'<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px"><div><b>'+d.qty+' pcs</b> - '+fmt(d.pendapatan)+' - '+d.hari+'<div style="font-size:11px;color:#64748b">'+(d.ket||'')+'</div></div></div>').join('')||'Belum ada data';
+ if(chart1) chart1.destroy(); chart1=new Chart(document.getElementById('c1'),{type:'bar',data:{labels,datasets:[{data:q,backgroundColor:'#7c3aed',borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+ if(chart2) chart2.destroy(); chart2=new Chart(document.getElementById('c2'),{type:'line',data:{labels,datasets:[{data:p,borderColor:'#16a34a',backgroundColor:'rgba(22,163,74,.15)',fill:true,tension:.4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+ document.getElementById('list').innerHTML=all.slice().reverse().map(d=>`
+  <div class="item">
+   <div><b>${d.qty} pcs</b> - ${fmt(d.pendapatan)} - ${d.hari}<div style="font-size:11px;color:#64748b">${d.ket||''} • row ${d.row}</div></div>
+   <div style="display:flex;gap:6px"><button class="btn btn-del" onclick="hapus(${d.row})">🗑️ Hapus</button></div>
+  </div>`).join('')||'Belum ada data';
 }
 load();
 </script>
