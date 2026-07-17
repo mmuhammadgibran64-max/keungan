@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Laku Berapa PUBLIC - FINAL HAPUS DOWNLOAD</title>
+<title>Laku Berapa PUBLIC - FINAL</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;background:#f8fafc}
-header{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;padding:16px;position:sticky;top:0;z-index:10}
+header{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:10}
+.btn-top{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-top:hover{background:rgba(255,255,255,.3)}
 .container{max-width:800px;margin:16px auto;padding:0 16px}
 .card{background:#fff;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
 input{width:100%;height:44px;border:1.5px solid #e2e8f0;border-radius:10px;padding:0 12px;margin-top:4px;background:#f8fafc}
@@ -21,7 +23,18 @@ label{font-size:11px;font-weight:700;color:#475569}
 .item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f1f5f9}
 </style></head>
 <body>
-<header><div style="max-width:800px;margin:0 auto;display:flex;justify-content:space-between"><div><h3>📦 Laku Berapa - PUBLIC</h3><p style="font-size:11px;opacity:.9">FINAL + HAPUS + DOWNLOAD</p></div><div style="text-align:right"><div id="todayBig" style="font-size:24px;font-weight:800">0</div><div style="font-size:10px">pcs hari ini</div></div></div></header>
+<header>
+<div style="max-width:800px;margin:0 auto;">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+<a href="https://mmuhammadgibran64-max.github.io/keungan/" class="btn-top">⬅️ Dashboard ATML</a>
+
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div><h3>📦 Laku Berapa - PUBLIC</h3><p style="font-size:11px;opacity:.9">FINAL + HAPUS + DOWNLOAD + DASHBOARD</p></div>
+<div style="text-align:right"><div id="todayBig" style="font-size:24px;font-weight:800">0</div><div style="font-size:10px">pcs hari ini</div></div>
+</div>
+</div>
+</header>
 <div class="container">
 <div class="card">
 <div class="row"><div><label>HARI APA LAKU *</label><input type="date" id="hari"></div><div><label>LAKU BERAPA pcs *</label><input type="number" id="qty" placeholder="15"></div></div>
@@ -35,8 +48,8 @@ label{font-size:11px;font-weight:700;color:#475569}
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
 <h4 style="font-size:13px">📋 Riwayat Public - Siapapun Bisa Hapus & Download</h4>
 <div style="display:flex;gap:6px">
-<button class="btn btn-dl" onclick="downloadCSV()">⬇️ Download CSV</button>
-<button class="btn btn-dl" style="background:#fffbeb;border-color:#fde68a;color:#92400e" onclick="downloadJSON()">⬇️ Download JSON</button>
+<button class="btn btn-dl" onclick="downloadCSV()">⬇️ CSV</button>
+<button class="btn btn-dl" style="background:#fffbeb;border-color:#fde68a;color:#92400e" onclick="downloadJSON()">⬇️ JSON</button>
 </div>
 </div>
 <div id="list">Memuat...</div>
@@ -44,42 +57,36 @@ label{font-size:11px;font-weight:700;color:#475569}
 </div>
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNXJLewDCZ_f6V1aFxXcfm_D2Ph-h0NCpWpihB1fv72W5_Pf9mnTx3jcucybzUJpwp/exec";
+const DASHBOARD_URL = "https://mmuhammadgibran64-max.github.io/keungan/";
 document.getElementById('hari').valueAsDate=new Date();
 let chart1,chart2,all=[];
 function fmt(n){return 'Rp '+Number(n).toLocaleString('id-ID')}
 function show(t,m){const el=document.getElementById('st'); el.className=t; el.textContent=m; el.style.display='block'}
-
 async function load(){
  try{
   const r=await fetch(SCRIPT_URL+'?action=listJualan&t='+Date.now());
-  const j=await r.json();
-  if(!j.ok) throw j.error;
+  const j=await r.json(); if(!j.ok) throw j.error;
   all=j.data||[]; render();
  }catch(e){document.getElementById('list').textContent='Gagal load: '+e}
 }
 async function kirim(){
- const hari=document.getElementById('hari').value;
- const qty=document.getElementById('qty').value;
- const pend=document.getElementById('pend').value;
- const ket=document.getElementById('ket').value;
+ const hari=document.getElementById('hari').value; const qty=document.getElementById('qty').value; const pend=document.getElementById('pend').value; const ket=document.getElementById('ket').value;
  if(!hari||!qty||!pend){show('err','❌ Lengkapi hari, qty, pendapatan'); return}
  const btn=document.getElementById('btnKirim'); const txt=document.getElementById('btnTxt');
  btn.disabled=true; txt.textContent='⏳ MENGIRIM...'; show('load','Menyimpan...');
  try{
   const fd=new FormData(); fd.append('hari',hari); fd.append('qty',qty); fd.append('pendapatan',pend); fd.append('ket',ket||'-');
-  const r=await fetch(SCRIPT_URL,{method:'POST',body:fd});
-  const j=await r.json(); if(!j.ok) throw j.error;
+  const r=await fetch(SCRIPT_URL,{method:'POST',body:fd}); const j=await r.json(); if(!j.ok) throw j.error;
   show('ok','✅ Berhasil! '+qty+' pcs - '+fmt(pend)); document.getElementById('qty').value=''; document.getElementById('pend').value=''; document.getElementById('ket').value='';
   await load();
  }catch(e){show('err','❌ '+e)}
  btn.disabled=false; txt.textContent='🚀 KIRIM - BIAR PUBLIC';
 }
 async function hapus(row){
- if(!confirm('Hapus data baris '+row+'? Siapapun bisa hapus!')) return;
+ if(!confirm('Hapus baris '+row+'?')) return;
  try{
   const fd=new FormData(); fd.append('action','deleteJualan'); fd.append('row',row);
-  const r=await fetch(SCRIPT_URL,{method:'POST',body:fd});
-  const j=await r.json(); if(!j.ok) throw j.error;
+  const r=await fetch(SCRIPT_URL,{method:'POST',body:fd}); const j=await r.json(); if(!j.ok) throw j.error;
   show('ok','🗑️ Dihapus!'); await load();
  }catch(e){show('err','Gagal hapus: '+e)}
 }
@@ -87,17 +94,15 @@ function downloadCSV(){
  if(!all.length) return alert('Data kosong');
  let csv='row,hari,qty,pendapatan,keterangan\n';
  all.forEach(d=>{csv+=`${d.row},${d.hari},${d.qty},${d.pendapatan},"${(d.ket||'').replace(/"/g,'""')}"\n`});
- const blob=new Blob([csv],{type:'text/csv'});
- const url=URL.createObjectURL(blob);
+ const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob);
  const a=document.createElement('a'); a.href=url; a.download='laku-berapa-'+new Date().toISOString().split('T')[0]+'.csv'; a.click();
- show('ok','⬇️ CSV didownload ke File Manager!');
+ show('ok','⬇️ CSV ke File Manager!');
 }
 function downloadJSON(){
  if(!all.length) return alert('Data kosong');
- const blob=new Blob([JSON.stringify(all,null,2)],{type:'application/json'});
- const url=URL.createObjectURL(blob);
+ const blob=new Blob([JSON.stringify(all,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob);
  const a=document.createElement('a'); a.href=url; a.download='laku-berapa-'+new Date().toISOString().split('T')[0]+'.json'; a.click();
- show('ok','⬇️ JSON didownload ke File Manager!');
+ show('ok','⬇️ JSON ke File Manager!');
 }
 function render(){
  const today=new Date().toISOString().split('T')[0];
@@ -109,7 +114,7 @@ function render(){
  document.getElementById('list').innerHTML=all.slice().reverse().map(d=>`
   <div class="item">
    <div><b>${d.qty} pcs</b> - ${fmt(d.pendapatan)} - ${d.hari}<div style="font-size:11px;color:#64748b">${d.ket||''} • row ${d.row}</div></div>
-   <div style="display:flex;gap:6px"><button class="btn btn-del" onclick="hapus(${d.row})">🗑️ Hapus</button></div>
+   <div><button class="btn btn-del" onclick="hapus(${d.row})">🗑️ Hapus</button></div>
   </div>`).join('')||'Belum ada data';
 }
 load();
