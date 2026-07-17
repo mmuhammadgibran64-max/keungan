@@ -16,10 +16,11 @@ header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:20p
 .card .val{font-size:24px;font-weight:700}
 .in{color:#16a34a}.out{color:#dc2626}.bal{color:#2563eb}.sales{color:#7c3aed}
 .menu{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
-@media(min-width:600px){.menu{grid-template-columns:1fr 1fr 1fr 1fr}}
-.btn{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;border:none;border-radius:16px;padding:22px 12px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.06);transition:.2s;font-size:14px;font-weight:600;color:#1e293b;text-decoration:none;text-align:center}
+@media(min-width:600px){.menu{grid-template-columns:1fr 1fr 1fr 1fr 1fr}}
+.btn{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;border:none;border-radius:16px;padding:22px 12px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.06);transition:.2s;font-size:14px;font-weight:600;color:#1e293b;text-decoration:none;text-align:center;position:relative}
 .btn:hover{transform:translateY(-3px)}
 .btn span{font-size:30px;margin-bottom:8px}
+.gear-icon{position:absolute;top:8px;right:8px;background:#f1f5f9;border:1px solid #e2e8f0;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer}
 .panel{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,.06);display:none;margin-bottom:20px}
 .panel.active{display:block}
 .row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
@@ -35,15 +36,21 @@ input,select{flex:1;min-width:120px;height:42px;padding:0 12px;border:1.5px soli
 <header><div class="top"><div><h2 id="hi">Halo!</h2><p style="font-size:13px;opacity:.9">Pantau keuangan real-time</p></div><div style="text-align:right"><div class="time" id="time" style="font-size:24px;font-weight:700">00:00:00</div><div class="date" id="date" style="font-size:12px;opacity:.9">-</div></div></div></header>
 <div class="container">
 <div class="cards"><div class="card"><h3>💰 Masuk</h3><div class="val in" id="tIn">Rp 0</div></div><div class="card"><h3>💸 Keluar</h3><div class="val out" id="tOut">Rp 0</div></div><div class="card"><h3>Saldo</h3><div class="val bal" id="tBal">Rp 0</div></div><div class="card"><h3>📦 Jualan Laku</h3><div class="val sales" id="tSales">0 pcs</div><small style="color:#64748b;font-size:11px" id="tSalesToday">Hari ini: 0</small></div></div>
+
 <div class="menu">
 <button class="btn" onclick="openPanel('in')"><span>💰</span>Uang Masuk</button>
 <button class="btn" onclick="openPanel('out')"><span>💸</span>Uang Keluar</button>
 <a class="btn" href="ruang-data.html"><span>📁</span>Ruang Data Khusus<br><small style="font-size:10px;color:#667eea;font-weight:600">Buka →</small></a>
-<a class="btn" href="jualan-laku.html" style="border:2px solid #ede9fe"><span>📦</span>Jualan Laku<br><small style="font-size:10px;color:#7c3aed;font-weight:700">Buka Layar Baru →</small><small style="font-size:10px;color:#7c3aed;font-weight:700" id="menuSalesCount">0 laku</small></a>
+<a class="btn" href="jualan-laku.html" style="border:2px solid #ede9fe"><div class="gear-icon">⚙️</div><span>📦</span>Jualan Laku<br><small style="font-size:10px;color:#7c3aed;font-weight:700">Buka Layar Baru →</small><small style="font-size:10px;color:#7c3aed;font-weight:700" id="menuSalesCount">0 laku</small></a>
+<button class="btn" onclick="openPanel('settings')" style="border:2px dashed #c4b5fd;background:#f5f3ff"><span>⚙️</span>Pengaturan</button>
 </div>
+
 <div id="pIn" class="panel"><h4>Catat Uang Masuk</h4><div class="row"><input id="inAmt" type="number" placeholder="Jumlah"><input id="inDesc" placeholder="Keterangan"></div><div class="row"><select id="inCat"><option>Gaji</option><option>Bonus</option><option>Usaha</option><option>Lainnya</option></select><button class="add" onclick="addTx('in')">Tambah</button></div><div class="list" id="lIn"></div></div>
 <div id="pOut" class="panel"><h4>Catat Uang Keluar</h4><div class="row"><input id="outAmt" type="number" placeholder="Jumlah"><input id="outDesc" placeholder="Keterangan"></div><div class="row"><select id="outCat"><option>Makan</option><option>Transport</option><option>Belanja</option><option>Tagihan</option><option>Lainnya</option></select><button class="add" onclick="addTx('out')">Tambah</button></div><div class="list" id="lOut"></div></div>
 <div id="pSales" class="panel"><h4>📦 Jualan Laku Berapa</h4><div class="row"><input id="salesQty" type="number" placeholder="Berapa pcs laku? ex: 5"><input id="salesDesc" placeholder="Nama barang / keterangan"></div><div class="row"><select id="salesCat"><option>Produk Utama</option><option>Reseller</option><option>Online</option><option>Offline</option><option>Lainnya</option></select><button class="add" style="background:#7c3aed" onclick="addSales()">+ Laku</button></div><div style="display:flex;gap:8px;margin-top:12px"><div style="flex:1;background:#f5f3ff;border-radius:10px;padding:10px;text-align:center"><div style="font-size:12px;color:#64748b">Hari ini</div><b id="salesTodayBig" style="font-size:20px;color:#7c3aed">0</b><div style="font-size:11px">pcs</div></div><div style="flex:1;background:#f5f3ff;border-radius:10px;padding:10px;text-align:center"><div style="font-size:12px;color:#64748b">Minggu ini</div><b id="salesWeekBig" style="font-size:20px;color:#7c3aed">0</b><div style="font-size:11px">pcs</div></div><div style="flex:1;background:#f5f3ff;border-radius:10px;padding:10px;text-align:center"><div style="font-size:12px;color:#64748b">Total</div><b id="salesTotalBig" style="font-size:20px;color:#7c3aed">0</b><div style="font-size:11px">pcs</div></div></div><div class="list" id="lSales"></div></div>
+
+<div id="pSettings" class="panel"><h4>⚙️ Pengaturan</h4><p style="font-size:13px;color:#64748b;margin-top:8px">Kosong dulu - nanti lo isi sendiri ya bro</p></div>
+
 <button class="logout" onclick="localStorage.clear();location.href='index.html'">Keluar</button>
 </div>
 <script>
@@ -77,12 +84,11 @@ function render(){
   }).reverse().join('') || '<div style="text-align:center;color:#94a3b8;padding:20px;font-size:13px">Belum ada penjualan, tambah dulu</div>';
 }
 function openPanel(t){
-  document.getElementById('pIn').classList.toggle('active',t==='in');
-  document.getElementById('pOut').classList.toggle('active',t==='out');
-  document.getElementById('pSales').classList.toggle('active',t==='sales');
-  if(document.getElementById('p'+(t==='in'?'In':t==='out'?'Out':'Sales')).classList.contains('active')){
-    setTimeout(()=>{ document.getElementById('p'+(t==='in'?'In':t==='out'?'Out':'Sales')).scrollIntoView({behavior:'smooth'}); },100);
-  }
+  document.getElementById('pIn').classList.remove('active');
+  document.getElementById('pOut').classList.remove('active');
+  document.getElementById('pSales').classList.remove('active');
+  document.getElementById('pSettings').classList.remove('active');
+  if(t) document.getElementById('p'+t.charAt(0).toUpperCase()+t.slice(1)).classList.add('active');
 }
 function addTx(t){
   const amt=Number(document.getElementById(t==='in'?'inAmt':'outAmt').value),
