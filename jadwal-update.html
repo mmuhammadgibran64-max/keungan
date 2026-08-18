@@ -1,54 +1,21 @@
-
 <!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Jadwal Update - File Terpisah</title>
-<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;background:#f8fafc}header{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;padding:12px 16px;position:sticky;top:0}.btn-top{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none}.container{max-width:600px;margin:20px auto;padding:0 16px}.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 4px 14px rgba(0,0,0,.06)}.row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f1f5f9}.badge{background:#dbeafe;color:#1d4ed8;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:700}input{height:36px;border:1.5px solid #e2e8f0;border-radius:8px;padding:0 8px;font-size:13px;width:90px}.toggle{width:44px;height:24px;background:#e2e8f0;border-radius:999px;position:relative;cursor:pointer}.toggle.on{background:#2563eb}.toggle::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:.2s}.toggle.on::after{left:23px}</style>
-</head>
-<body>
-<header><div style="max-width:600px;margin:0 auto;display:flex;justify-content:space-between"><a href="pengaturan-sistem.html" class="btn-top">⬅ Pengaturan</a><div style="font-weight:800">🕒 Jadwal Update</div></div></header>
-<div class="container">
-<div class="card"><b>Jadwal Update Sistem</b><div style="font-size:11px;color:#64748b;margin-top:4px">Real Time sama kayak simpan otomatis, buka layar baru. Contoh: Senin 01.00-05.00</div></div>
-
-<div class="card" id="list"></div>
-
-<div class="card" style="background:#eff6ff;border:1px dashed #93c5fd"><div style="font-size:12px;color:#1e40af"><b>Info:</b> Ini file terpisah <code>jadwal-update.html</code> dibuka dari bawah Simpan Otomatis Aktif. Nanti jadwalnya bisa diubah: Senin, Rabu, Kamis, Sabtu jam 01.00 sampai 05.00 (contoh lo). Data kesimpen ke Sheet 192eRGeW... link AKfycbxIybV0vc...</div></div>
-</div>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jadwal Update</title>
+<style>body{font-family:system-ui;background:#f8fafc}header{background:#2563eb;color:#fff;padding:12px 16px;position:sticky;top:0}.container{max-width:600px;margin:16px auto;padding:0 16px}.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 4px 12px rgba(0,0,0,.06)}.row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f1f5f9}.toggle{width:44px;height:24px;background:#e2e8f0;border-radius:999px;position:relative;cursor:pointer}.toggle.on{background:#2563eb}.toggle::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:.2s}.toggle.on::after{left:23px}input{height:34px;border:1.5px solid #e2e8f0;border-radius:8px;padding:0 8px;width:85px}</style>
+</head><body>
+<header><div style="max-width:600px;margin:0 auto;display:flex;justify-content:space-between"><a href="pengaturan-sistem.html" style="background:rgba(255,255,255,.2);padding:6px 12px;border-radius:8px;color:#fff;text-decoration:none;font-size:12px;font-weight:700">⬅ Pengaturan</a><b>🕒 Jadwal Update</b></div></header>
+<div class="container"><div class="card"><b>Jadwal Update Sistem</b><div style="font-size:11px;color:#64748b">Real Time kayak simpan otomatis, buka layar baru. Senin, Rabu, Kamis, Sabtu jam 01.00-05.00</div></div><div class="card" id="list"></div></div>
 <script>
-const URL = 'https://script.google.com/macros/s/AKfycbxIybV0vcBP6B0ts4vzT2jZUJNTOhNcf5MGOYJsTfPDvar1JU8syK9UmBPbftHbiZKN/exec';
-const defaultJadwal = [
-  {hari:'Senin', aktif:true, jamMulai:'01:00', jamSelesai:'05:00'},
-  {hari:'Rabu', aktif:true, jamMulai:'01:00', jamSelesai:'05:00'},
-  {hari:'Kamis', aktif:true, jamMulai:'01:00', jamSelesai:'05:00'},
-  {hari:'Sabtu', aktif:true, jamMulai:'01:00', jamSelesai:'05:00'},
-  {hari:'Selasa', aktif:false, jamMulai:'02:00', jamSelesai:'04:00'},
-  {hari:'Jumat', aktif:false, jamMulai:'02:00', jamSelesai:'04:00'},
-  {hari:'Minggu', aktif:false, jamMulai:'02:00', jamSelesai:'04:00'},
+let jadwal = JSON.parse(localStorage.getItem('jadwalUpdate')||'null') || [
+{hari:'Senin', aktif:true, mulai:'01:00', selesai:'05:00'},
+{hari:'Rabu', aktif:true, mulai:'01:00', selesai:'05:00'},
+{hari:'Kamis', aktif:true, mulai:'01:00', selesai:'05:00'},
+{hari:'Sabtu', aktif:true, mulai:'01:00', selesai:'05:00'},
+{hari:'Selasa', aktif:false, mulai:'02:00', selesai:'04:00'},
+{hari:'Jumat', aktif:false, mulai:'02:00', selesai:'04:00'},
+{hari:'Minggu', aktif:false, mulai:'02:00', selesai:'04:00'},
 ];
-let jadwal = JSON.parse(localStorage.getItem('jadwalUpdate')||'null') || defaultJadwal;
-
-function render(){
-  document.getElementById('list').innerHTML = jadwal.map((j,i)=>`
-    <div class="row">
-      <div style="display:flex;align-items:center;gap:10px"><div class="toggle ${j.aktif?'on':''}" onclick="toggleHari(${i})"></div><b style="font-size:14px;width:60px">${j.hari}</b><span class="badge">${j.aktif?'AKTIF':'OFF'}</span></div>
-      <div style="display:flex;gap:6px;align-items:center"><input type="time" value="${j.jamMulai}" onchange="setJam(${i},'jamMulai',this.value)"><span style="font-size:12px">-</span><input type="time" value="${j.jamSelesai}" onchange="setJam(${i},'jamSelesai',this.value)"></div>
-    </div>
-  `).join('') + `<button onclick="saveJadwal()" style="width:100%;height:44px;background:#2563eb;color:#fff;border:none;border-radius:10px;font-weight:700;margin-top:12px">💾 Simpan Jadwal ke Sheet</button><div id="log" style="font-size:11px;text-align:center;margin-top:6px;color:#64748b"></div>`;
-}
-function toggleHari(i){ jadwal[i].aktif=!jadwal[i].aktif; saveLocal(); render(); }
-function setJam(i,k,v){ jadwal[i][k]=v; saveLocal(); }
-function saveLocal(){ localStorage.setItem('jadwalUpdate', JSON.stringify(jadwal)); }
-async function saveJadwal(){
-  saveLocal();
-  document.getElementById('log').textContent='Menyimpan ke link...';
-  try{
-    const fd=new FormData(); fd.append('action','saveJadwalUpdate'); fd.append('data', JSON.stringify(jadwal));
-    const r=await fetch(URL,{method:'POST',body:fd}); const j=await r.json();
-    document.getElementById('log').textContent=j.ok?'✅ Tersimpan ke Sheet 192eRGeW...':'❌ '+j.error;
-  }catch(e){ document.getElementById('log').textContent='⚠️ Lokal tersimpan: '+e; }
-}
+function render(){ document.getElementById('list').innerHTML = jadwal.map((j,i)=>`<div class="row"><div style="display:flex;gap:8px;align-items:center"><div class="toggle ${j.aktif?'on':''}" onclick="jadwal[${i}].aktif=!jadwal[${i}].aktif;save()"></div><b style="width:55px">${j.hari}</b></div><div style="display:flex;gap:6px;align-items:center"><input type="time" value="${j.mulai}" onchange="jadwal[${i}].mulai=this.value;save()"><span>-</span><input type="time" value="${j.selesai}" onchange="jadwal[${i}].selesai=this.value;save()"></div></div>`).join('') + `<button onclick="saveGS()" style="width:100%;height:44px;background:#2563eb;color:#fff;border:none;border-radius:10px;font-weight:700;margin-top:12px">💾 Simpan ke Sheet 192eRGeW...</button><div id="log" style="font-size:11px;text-align:center;margin-top:6px;color:#64748b"></div>`; }
+function save(){ localStorage.setItem('jadwalUpdate', JSON.stringify(jadwal)); render(); }
+async function saveGS(){ save(); const fd=new FormData(); fd.append('action','saveJadwalUpdate'); fd.append('data',JSON.stringify(jadwal)); try{ const r=await fetch('https://script.google.com/macros/s/AKfycbxIybV0vcBP6B0ts4vzT2jZUJNTOhNcf5MGOYJsTfPDvar1JU8syK9UmBPbftHbiZKN/exec',{method:'POST',body:fd}); const j=await r.json(); document.getElementById('log').textContent=j.ok?'✅ Tersimpan':'❌'; }catch(e){ document.getElementById('log').textContent='Lokal ok'; } }
 render();
-</script>
-</body>
-</html>
+</script></body></html>
