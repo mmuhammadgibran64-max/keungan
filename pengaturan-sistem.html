@@ -3,23 +3,34 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pengaturan Sistem</title>
-<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;background:#f8fafc}header{background:#1e293b;color:#fff;padding:12px 16px;position:sticky;top:0}.btn-top{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none}.container{max-width:600px;margin:20px auto;padding:0 16px}.card{background:#fff;border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:0 4px 14px rgba(0,0,0,.06)}.row{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #f1f5f9}.toggle{width:48px;height:28px;background:#e2e8f0;border-radius:999px;position:relative;cursor:pointer}.toggle.on{background:#7c3aed}.toggle::after{content:'';position:absolute;width:22px;height:22px;background:#fff;border-radius:50%;top:3px;left:3px;transition:.2s}.toggle.on::after{left:23px}.badge{background:#ede9fe;color:#7c3aed;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700}select{height:38px;border:1.5px solid #e2e8f0;border-radius:8px;padding:0 10px;background:#f8fafc}.btn-save{width:100%;height:46px;background:#7c3aed;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;margin-top:12px}.icon-box{margin-top:16px;background:#f5f3ff;border:1px dashed #c4b5fd;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px}</style>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;background:#f8fafc}header{background:#1e293b;color:#fff;padding:12px 16px;position:sticky;top:0;z-index:10}.btn-top{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none}.container{max-width:600px;margin:20px auto;padding:0 16px}.card{background:#fff;border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:0 4px 14px rgba(0,0,0,.06)}.row{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #f1f5f9}.toggle{width:48px;height:28px;background:#e2e8f0;border-radius:999px;position:relative;cursor:pointer}.toggle.on{background:#7c3aed}.toggle::after{content:'';position:absolute;width:22px;height:22px;background:#fff;border-radius:50%;top:3px;left:3px;transition:.2s}.toggle.on::after{left:23px}.badge{background:#ede9fe;color:#7c3aed;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700}select{height:38px;border:1.5px solid #e2e8f0;border-radius:8px;padding:0 10px;background:#f8fafc}.btn-save{width:100%;height:46px;background:#7c3aed;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;margin-top:12px}.icon-box{margin-top:12px;background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1px dashed #c4b5fd;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+</style>
 </head>
 <body>
-<header><div style="max-width:600px;margin:0 auto;display:flex;justify-content:space-between"><a href="index.html" class="btn-top">⬅ Dashboard</a><div style="font-weight:800">⚙ Pengaturan Sistem</div></div></header>
+<header><div style="max-width:600px;margin:0 auto;display:flex;justify-content:space-between;align-items:center"><a href="index.html" class="btn-top">⬅ Dashboard</a><div style="font-weight:800">⚙ Pengaturan Sistem</div></div></header>
 <div class="container"><div class="card">
-<div class="row"><div><b>💾 Simpan File Otomatis</b></div><div class="toggle on" id="togAuto" onclick="this.classList.toggle('on'); save()"></div></div>
-<div class="row"><div><b>🕒 Jadwal Update</b></div><select id="jadwal" onchange="save()"><option value="realtime">Realtime</option><option value="harian">Harian</option><option value="mingguan">Mingguan</option><option value="manual">Manual</option></select></div>
-<div class="row"><div><b>📱 Versi Sekarang</b></div><div style="text-align:right"><div class="badge">v2.8.9 STABLE</div><div style="font-size:10px;color:#64748b">Sheet: 192eRGeW...</div></div></div>
-<div class="icon-box" id="box"><div style="width:44px;height:44px;background:#7c3aed;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff">💾</div><div style="flex:1"><b id="t">Simpan Otomatis Aktif</b><div style="font-size:11px;color:#6d28d9">Dibawah Versi Sekarang - Icon Simpan Otomatis</div></div><div id="stIcon">✅</div></div>
-<button class="btn-save" id="btn" onclick="save()">💾 Simpan ke Link Baru</button>
-<div id="log" style="font-size:11px;text-align:center;margin-top:8px;color:#64748b"></div>
+<div class="row"><div><b>💾 Simpan File Otomatis</b><div style="font-size:11px;color:#64748b">Otomatis simpan ke Drive</div></div><div class="toggle on" id="togAuto"></div></div>
+<div class="row"><div><b>🕒 Jadwal Update</b><div style="font-size:11px;color:#64748b">Realtime / Harian</div></div><select id="jadwal"><option value="realtime">Realtime</option><option value="harian">Harian</option><option value="mingguan">Mingguan</option><option value="manual">Manual</option></select></div>
+<div class="row"><div><b>📱 Versi Sekarang</b><div style="font-size:11px;color:#64748b">ATML Unlimited</div></div><div style="text-align:right"><div class="badge">v2.9.0 FINAL</div><div style="font-size:10px;color:#64748b">Sheet: 192eRGeW...</div></div></div>
+
+<a class="icon-box" href="simpan-otomatis.html">
+<div style="width:44px;height:44px;background:#7c3aed;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px">💾</div>
+<div style="flex:1"><b>Simpan Otomatis Aktif</b><div style="font-size:11px;color:#6d28d9">Dibawah Versi Sekarang - Icon Simpan Otomatis</div></div><div>✅</div>
+</a>
+
+<a class="icon-box" href="jadwal-update.html" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-color:#93c5fd">
+<div style="width:44px;height:44px;background:#2563eb;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px">🗓️</div>
+<div style="flex:1"><b>Jadwal Update Sistem</b><div style="font-size:11px;color:#1d4ed8">Senin, Rabu, Kamis, Sabtu • 01.00-05.00 • Buka Layar Baru →</div></div><div>›</div>
+</a>
+
+<button class="btn-save" onclick="save()">💾 Simpan ke Link Baru</button>
+<div style="font-size:9px;text-align:center;color:#64748b;margin-top:8px">AKfycbxIybV0vcBP6B0ts4vzT2jZUJNTOhNcf5MGOYJsTfPDvar1JU8syK9UmBPbftHbiZKN/exec • 192eRGeWmNZGmfWBjQzqhmnNRz9wcvTunLGmbD4brb4M • 15KtPqenMx7aILiqYfebMYQNWxAXAJPqvG-AAGdjmv7ZBe8pxa2RTGpvE</div>
 </div></div>
 <script>
-const URL = 'https://script.google.com/macros/s/AKfycbxIybV0vcBP6B0ts4vzT2jZUJNTOhNcf5MGOYJsTfPDvar1JU8syK9UmBPbftHbiZKN/exec';
-function upd(){ const on=document.getElementById('togAuto').classList.contains('on'); document.getElementById('t').textContent=on?'Simpan Otomatis Aktif':'Simpan Otomatis Mati'; document.getElementById('stIcon').textContent=on?'✅':'⏸️'; }
-async function save(){ const auto=document.getElementById('togAuto').classList.contains('on'); const jadwal=document.getElementById('jadwal').value; localStorage.setItem('pengaturanSistem', JSON.stringify({auto,jadwal})); upd(); document.getElementById('btn').textContent='⏳ Menyimpan...'; try{ const fd=new FormData(); fd.append('action','savePengaturan'); fd.append('auto',auto); fd.append('jadwal',jadwal); fd.append('versi','v2.5.0'); fd.append('data',JSON.stringify({auto,jadwal})); const r=await fetch(URL,{method:'POST',body:fd}); const j=await r.json(); document.getElementById('btn').textContent=j.ok?'✅ Tersimpan!':'❌ Gagal'; document.getElementById('log').textContent=j.ok?'Tersimpan ke sheet 192eRGeW... - PUBLIC':j.error; }catch(e){ document.getElementById('btn').textContent='⚠️ Lokal ok, cek Sheet'; document.getElementById('log').textContent=e; } }
-(function(){ const s=JSON.parse(localStorage.getItem('pengaturanSistem')||'{}'); if(s.auto===false) document.getElementById('togAuto').classList.remove('on'); if(s.jadwal) document.getElementById('jadwal').value=s.jadwal; upd(); })();
+const URL='https://script.google.com/macros/s/AKfycbxIybV0vcBP6B0ts4vzT2jZUJNTOhNcf5MGOYJsTfPDvar1JU8syK9UmBPbftHbiZKN/exec';
+function save(){ const fd=new FormData(); fd.append('action','savePengaturan'); fd.append('auto',document.getElementById('togAuto').classList.contains('on')); fd.append('jadwal',document.getElementById('jadwal').value); fetch(URL,{method:'POST',body:fd}); alert('✅ Tersimpan ke Sheet 192eRGeW...'); }
+document.getElementById('togAuto').onclick=function(){ this.classList.toggle('on'); };
 </script>
 </body>
 </html>
